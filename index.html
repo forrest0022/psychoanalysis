@@ -169,7 +169,7 @@ const P={
  bion:["London, then Los Angeles from 1968 to 1979","Europe · West Coast"],
  independents:["London and Edinburgh","Europe"],
  interpersonal:["New York and Washington–Baltimore","East Coast"],
- "self-psychology":["Chicago","Midwest"],
+ "self-psychology":["","Chicago"],
  "field-theory":["Buenos Aires and Montevideo, Pavia, San Francisco and Los Angeles","West Coast"],
  "american-or":["New York, New Haven and Topeka","East Coast"],
  attachment:["London, at the Tavistock Clinic","Europe"],
@@ -371,7 +371,7 @@ const kids=id=>ids.filter(k=>N[k].parents.includes(id));
 let selected=null, view=null, hlLine=null, picking=false, picks=[];
 const LINE={freud:"origins",klein:"origins",ferenczi:"origins","ego-psychology":"self","american-or":"self",attachment:"british",bion:"british",independents:"british","field-theory":"british",interpersonal:"relational",relational:"relational","self-psychology":"self",intersubjective:"self",jung:"side",lacan:"side"};
 const KEYLAB="How change happens";
-const KEY={freud:["Making the","unconscious conscious"],jung:["Integrating the","unconscious into a whole"],lacan:["Speech uncovers","unconscious desire"],klein:["Interpreting phantasy","in the transference"],ferenczi:["A responsive analyst","repairs trauma's damage"],"ego-psychology":["Analyzing defenses","strengthens the ego"],bion:["Containment makes","thinking possible"],independents:["A holding environment","frees the true self"],interpersonal:["Inquiry expands awareness","of patterns with others"],"self-psychology":["Empathy and repair","rebuild the self"],"american-or":["Integrating split images","of self and other"],"field-theory":["Dreaming together","what was never dreamt"],attachment:["Security makes","reflection possible"],relational:["Negotiating enactments","inside the relationship"],intersubjective:["Making organizing","principles visible"]};
+const KEY={freud:["Making the","unconscious conscious"],jung:["Integrating the","unconscious into a whole"],lacan:["Speech uncovers","unconscious desire"],klein:["Interpreting phantasy","in the transference"],ferenczi:["A responsive analyst","repairs trauma's damage"],"ego-psychology":["Analyzing defenses","strengthens the ego"],bion:["Containment makes","thinking possible"],independents:["A holding environment","frees the true self"],interpersonal:["Inquiry expands awareness","of patterns with others"],"self-psychology":["Empathy builds","the self"],"american-or":["Integrating split images","of self and other"],"field-theory":["Dreaming together","what was never dreamt"],attachment:["Security makes","reflection possible"],relational:["Negotiating enactments","inside the relationship"],intersubjective:["Making organizing","principles visible"]};
 const COAST=new Set(["self-psychology","field-theory","relational","intersubjective"]);
 const STACK={"american-or":["American","object","relations"],ferenczi:["Budapest","school"],independents:["British","object","relations"],"field-theory":["Contemporary","Bionians"],"ego-psychology":["Ego","psychology"],"self-psychology":["Self","psychology"]};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -383,7 +383,7 @@ function nodeDetail(id){
   return `<h2>${esc(n.full)}</h2>
     ${KEY[id]?`<div class="change"><span class="lab">${KEYLAB}</span><p>${esc(KEY[id][0]+" "+KEY[id][1])}</p></div>`:""}
     <div class="meta"><span class="tag fill">${esc(n.yrs)}</span>${COAST.has(id)?reg.split(" · ").map(r=>`<span class="tag">${esc(r)}</span>`).join(""):""}</div>
-    ${COAST.has(id)?`<p class="place">${esc(place)}</p>`:""}
+    ${COAST.has(id)&&place?`<p class="place">${esc(place)}</p>`:""}
     <div class="dgrid">
     <div class="dcol">
       <p class="lede">${esc(n.sum)}</p>
@@ -550,7 +550,7 @@ function renderCompare(){
   let h=`<div class="lab"></div>`+picks.map(k=>`<div class="colhead"><span class="colname">${esc(N[k].name)}</span><span class="colyr">${esc(N[k].yrs)}</span><button type="button" class="colrm" data-rm="${k}">Remove</button></div>`).join("");
   h+=row("How change happens",k=>KEY[k]?`<b>${esc(KEY[k][0]+" "+KEY[k][1])}</b>`:"");
   h+=row("Line",k=>esc(NAV[LINE[k]]));
-  if(anyCoast) h+=row("Where",k=>COAST.has(k)?`${esc(P[k][0])}<br><b>${esc(P[k][1])}</b>`:`<span class="none">—</span>`);
+  if(anyCoast) h+=row("Where",k=>COAST.has(k)?`${P[k][0]?esc(P[k][0])+"<br>":""}<b>${esc(P[k][1])}</b>`:`<span class="none">—</span>`);
   h+=row("Descends from",(k,n)=>names(n.parents)+((n.infl||[]).length?`<br><span class="none">Influenced by</span> ${names(n.infl)}`:""));
   h+=row("In brief",(k,n)=>esc(n.sum));
   h+=row("What makes it distinct",(k,n)=>list(n.dist));
