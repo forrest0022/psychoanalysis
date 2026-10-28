@@ -457,7 +457,7 @@ function stackLines(k){
 }
 
 function renderTree(scrollTo){
-  treeEl.querySelectorAll(".row").forEach(r=>r.remove());
+  const keepY=window.scrollY, frag=document.createDocumentFragment();
   for(let g=0; g<GENS.length; g++){
     const inGen=ids.filter(k=>N[k].gen===g);
     if(!inGen.length) continue;
@@ -472,8 +472,12 @@ function renderTree(scrollTo){
         ${sel?`<div class="detail"><button type="button" class="x" data-close aria-label="Close">×</button>${view.t==="thinker"?thinkerDetail(view.id,k):nodeDetail(k)}</div>`:""}`;
       row.appendChild(el);
     });
-    treeEl.appendChild(row);
+    frag.appendChild(row);
   }
+  treeEl.querySelectorAll(".row").forEach(r=>r.remove());
+  treeEl.appendChild(frag);
+  layout();
+  if(!scrollTo && window.scrollY!==keepY) window.scrollTo(0,keepY);
   requestAnimationFrame(()=>{ layout();
     if(scrollTo){const el=treeEl.querySelector(`[data-id="${scrollTo}"]`); if(el) el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});}
   });
@@ -569,6 +573,10 @@ fab.addEventListener("click",e=>{
   else if(a==="show"){ picking=false; renderCompare(); renderTree(); renderFab(); cmpEl.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}); }
 });
 function renderCompare(){
+  const keepY=window.scrollY;
+  try{ renderCompareInner(); } finally { if(window.scrollY!==keepY) window.scrollTo(0,keepY); }
+}
+function renderCompareInner(){
   if(picks.length<2){ cmpEl.hidden=true; cmpEl.innerHTML=""; return; }
   const cols=picks.map(k=>N[k]);
   const anyCoast=picks.some(k=>COAST.has(k));
