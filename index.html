@@ -132,6 +132,7 @@ body.picking .head{cursor:cell}
 .cmptop .acts{display:flex;gap:8px;align-items:center}
 .cmptop .acts button{font:600 13px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.05em;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
 .cmptop .acts button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.cmptop .acts .cx{width:38px;height:38px;padding:0;border-radius:50%;font-size:20px;letter-spacing:0;display:grid;place-items:center}
 .cmpscroll{overflow-x:auto}
 .cmp{display:grid;min-width:min-content}
 .cmp > div{padding:14px 18px;border-top:1.6px solid var(--ink);font-size:15.5px;line-height:1.55;min-width:0}
@@ -584,7 +585,7 @@ function renderCompare(){
   h+=row("Key concepts",(k,n)=>list(n.co.map(c=>C[c][0])));
   h+=row("Transference",k=>TCT[k]?esc(TCT[k]):"");
   h+=row("Key thinkers",(k,n)=>list(n.th.map(t=>T[t][0])));
-  cmpEl.innerHTML=`<div class="cmptop"><h2>Compare</h2><div class="acts"><button type="button" data-cmp="edit">Add or remove</button><button type="button" data-cmp="close" aria-label="Close comparison">Close ×</button></div></div>
+  cmpEl.innerHTML=`<div class="cmptop"><h2>Compare</h2><div class="acts"><button type="button" class="cx" data-cmp="close" aria-label="Close comparison">×</button></div></div>
     <div class="cmpscroll"><div class="cmp" style="grid-template-columns:minmax(150px,170px) repeat(${cols.length}, minmax(260px,1fr))">${h}</div></div>`;
   cmpEl.hidden=false;
 }
