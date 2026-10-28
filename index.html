@@ -27,7 +27,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:
 
 header{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start;margin-bottom:56px}
 h1{margin:0 0 calc(clamp(2.8rem,8.6vw,7.4rem) * -0.5);font-weight:900;font-stretch:125%;font-size:clamp(2.8rem,8.6vw,7.4rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;transform:scaleY(.72);transform-origin:top left}
-.kicker{margin:0 0 10px;color:var(--link);font-style:italic;text-transform:uppercase;font-weight:700;font-stretch:125%;font-size:clamp(1.6rem,3.6vw,2.9rem);line-height:1;letter-spacing:-.01em}
+.kicker{margin:0 0 calc(10px + clamp(1.6rem,3.6vw,2.9rem) * .35);color:var(--link);font-style:italic;text-transform:uppercase;font-weight:700;font-stretch:125%;font-size:clamp(1.6rem,3.6vw,2.9rem);line-height:1;letter-spacing:-.01em;transform:scaleY(1.35);transform-origin:top left}
 h1 span{display:block;width:fit-content}
 h1 span + span{padding-left:clamp(2.5rem,16vw,15rem)}
 .titlewrap{position:relative}
@@ -35,8 +35,8 @@ h1 span + span{padding-left:clamp(2.5rem,16vw,15rem)}
 @media (prefers-reduced-motion: no-preference){
 .spool .turn{animation:turn 6.4s linear infinite;transform-box:fill-box;transform-origin:50% 50%}
 @keyframes turn{0%{transform:scaleX(1)}25%{transform:scaleX(.08)}50%{transform:scaleX(-1)}75%{transform:scaleX(.08)}100%{transform:scaleX(1)}}
-.spool .thread{stroke-dasharray:440;stroke-dashoffset:440;animation:unspool 14s ease-in-out infinite}
-@keyframes unspool{0%{stroke-dashoffset:440}45%{stroke-dashoffset:0}72%{stroke-dashoffset:0}100%{stroke-dashoffset:440}}
+.spool .thread{stroke-dasharray:480;stroke-dashoffset:480;animation:unspool 14s ease-in-out infinite}
+@keyframes unspool{0%{stroke-dashoffset:480}45%{stroke-dashoffset:0}72%{stroke-dashoffset:0}100%{stroke-dashoffset:480}}
 }
 nav{position:absolute;top:calc(28px + env(safe-area-inset-top, 0px));right:max(16px, env(safe-area-inset-right, 0px));z-index:5;display:flex;flex-direction:column;align-items:flex-end;text-align:right;text-transform:uppercase;font-size:13px;font-stretch:112%;letter-spacing:.04em;line-height:1.3;padding-top:10px}
 nav button{font:inherit;text-transform:inherit;letter-spacing:inherit;color:var(--ink);background:none;border:0;padding:0;text-align:right;cursor:pointer;font-weight:400}
@@ -158,9 +158,9 @@ body.picking .head{cursor:cell}
 <div class="wrap">
   <header>
     <div class="titlewrap" id="titlewrap"><p class="kicker">Psychoanalytic</p><h1><span id="linesof">Lines of</span><span id="descent">Descent</span></h1>
-    <svg class="spool" id="spool" viewBox="0 0 220 270" aria-hidden="true">
-      <path class="thread" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" d="M70 70 C120 50 165 70 178 118 S158 188 172 226 S162 256 170 262">
-        <animate attributeName="d" dur="4.8s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" values="M70 70 C120 50 165 70 178 118 S158 188 172 226 S162 256 170 262;M70 70 C122 56 172 80 172 124 S184 186 164 228 S178 256 166 262;M70 70 C120 50 165 70 178 118 S158 188 172 226 S162 256 170 262"/>
+    <svg class="spool" id="spool" viewBox="0 0 220 305" aria-hidden="true">
+      <path class="thread" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" d="M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300">
+        <animate attributeName="d" dur="4.8s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" values="M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300;M70 70 C122 56 172 80 172 124 S184 190 164 238 S180 282 166 300;M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300"/>
       </path>
       <g transform="rotate(-45 70 70)"><g class="turn">
         <rect x="30" y="24" width="80" height="16" rx="5" fill="var(--ink)"/>
