@@ -409,7 +409,7 @@ function nodeDetail(id){
   const n=N[id], up=n.parents, down=kids(id), [place,reg]=P[id], infIn=n.infl||[], infOut=ids.filter(k=>(N[k].infl||[]).includes(id));
   return `<h2>${esc(n.full)}</h2>
     ${KEY[id]?`<div class="change"><span class="lab">${KEYLAB}</span><p>${esc(KEY[id][0]+" "+KEY[id][1])}</p></div>`:""}
-    <div class="meta"><span class="tag fill">${esc(n.yrs)}</span>${COAST.has(id)?reg.split(" · ").map(r=>`<span class="tag">${esc(r)}</span>`).join(""):""}</div>
+    <div class="meta"><span class="tag fill">${esc(n.yrs)}</span>${ORIGIN[id]?`<span class="tag">Origin: ${esc(ORIGIN[id])}</span>`:""}${COAST.has(id)?reg.split(" · ").map(r=>`<span class="tag">${esc(r)}</span>`).join(""):""}</div>
     ${COAST.has(id)&&place?`<p class="place">${esc(place)}</p>`:""}
     <div class="dgrid">
     <div class="dcol">
