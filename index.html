@@ -574,9 +574,9 @@ function renderCompare(){
   const row=(label,fn)=>`<div class="lab">${label}</div>`+picks.map(k=>`<div>${fn(k,N[k])}</div>`).join("");
   const list=a=>a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<span class="none">None</span>`;
   const names=a=>a.length?a.map(k=>esc(N[k].name)).join(", "):`<span class="none">None</span>`;
-  let h=`<div class="lab">School</div>`+picks.map(k=>`<div class="colhead"><div class="colrow"><span class="colname">${esc(N[k].name)}</span><button type="button" class="colrm" data-rm="${k}" aria-label="Remove ${esc(N[k].name)}">×</button></div><span class="colyr">${esc(N[k].yrs)}</span></div>`).join("");
+  let h=`<div class="lab">School</div>`+picks.map(k=>`<div class="colhead"><div class="colrow"><span class="colname">${esc(N[k].name)}</span><button type="button" class="colrm" data-rm="${k}" aria-label="Remove ${esc(N[k].name)}">×</button></div></div>`).join("");
   h+=row("Theory of change",k=>KEY[k]?`<b>${esc(KEY[k][0]+" "+KEY[k][1])}</b>`:"");
-  h+=row("Line",k=>esc(NAV[LINE[k]]));
+  h+=row("When",(k,n)=>esc(n.yrs));
   h+=row("Origin",k=>ORIGIN[k]?esc(ORIGIN[k]):`<span class="none">—</span>`);
   h+=row("Descends from",(k,n)=>names(n.parents)+((n.infl||[]).length?`<br><span class="none">Influenced by</span> ${names(n.infl)}`:""));
   h+=row("New contributions",k=>list(NEWC[k]||[]));
@@ -584,7 +584,6 @@ function renderCompare(){
   h+=row("Key concepts",(k,n)=>list(n.co.map(c=>C[c][0])));
   h+=row("Transference",k=>TCT[k]?esc(TCT[k]):"");
   h+=row("Key thinkers",(k,n)=>list(n.th.map(t=>T[t][0])));
-  h+=row("Key texts",(k,n)=>`<dl>${n.tx.map(([y,ti,by])=>`<div><span class="yr">${y}</span><i>${esc(ti)}</i> <span class="none">· ${esc(by)}</span></div>`).join("")}</dl>`);
   cmpEl.innerHTML=`<div class="cmptop"><h2>Compare</h2><div class="acts"><button type="button" data-cmp="edit">Add or remove</button><button type="button" data-cmp="close" aria-label="Close comparison">Close ×</button></div></div>
     <div class="cmpscroll"><div class="cmp" style="grid-template-columns:minmax(150px,170px) repeat(${cols.length}, minmax(260px,1fr))">${h}</div></div>`;
   cmpEl.hidden=false;
