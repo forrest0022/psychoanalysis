@@ -24,8 +24,16 @@ body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:
 header{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start;margin-bottom:56px}
 h1{margin:0 0 calc(clamp(2.8rem,8.6vw,7.4rem) * -0.5);font-weight:900;font-stretch:125%;font-size:clamp(2.8rem,8.6vw,7.4rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;transform:scaleY(.72);transform-origin:top left}
 .kicker{margin:0 0 10px;color:var(--link);font-style:italic;text-transform:uppercase;font-weight:700;font-stretch:125%;font-size:clamp(1.6rem,3.6vw,2.9rem);line-height:1;letter-spacing:-.01em}
-h1 span{display:block}
+h1 span{display:block;width:fit-content}
 h1 span + span{padding-left:clamp(2.5rem,16vw,15rem)}
+.titlewrap{position:relative}
+.spool{position:absolute;width:clamp(54px,13.5vw,185px);height:auto;pointer-events:none;overflow:visible}
+@media (prefers-reduced-motion: no-preference){
+.spool .turn{animation:turn 6.4s linear infinite;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes turn{0%{transform:scaleX(1)}25%{transform:scaleX(.08)}50%{transform:scaleX(-1)}75%{transform:scaleX(.08)}100%{transform:scaleX(1)}}
+.spool .thread{stroke-dasharray:440;stroke-dashoffset:440;animation:unspool 14s ease-in-out infinite}
+@keyframes unspool{0%{stroke-dashoffset:440}45%{stroke-dashoffset:0}72%{stroke-dashoffset:0}100%{stroke-dashoffset:440}}
+}
 nav{position:absolute;top:calc(28px + env(safe-area-inset-top, 0px));right:max(16px, env(safe-area-inset-right, 0px));z-index:5;display:flex;flex-direction:column;align-items:flex-end;text-align:right;text-transform:uppercase;font-size:13px;font-stretch:112%;letter-spacing:.04em;line-height:1.3;padding-top:10px}
 nav button{font:inherit;text-transform:inherit;letter-spacing:inherit;color:var(--ink);background:none;border:0;padding:0;text-align:right;cursor:pointer;font-weight:400}
 nav button:hover,nav button.on{font-weight:700;color:var(--link)}
@@ -142,7 +150,18 @@ body.picking .head{cursor:cell}
 <body>
 <div class="wrap">
   <header>
-    <div><p class="kicker">Psychoanalysis</p><h1><span>Lines of</span><span>Descent</span></h1></div>
+    <div class="titlewrap" id="titlewrap"><p class="kicker">Psychoanalysis</p><h1><span id="linesof">Lines of</span><span id="descent">Descent</span></h1>
+    <svg class="spool" id="spool" viewBox="0 0 220 270" aria-hidden="true">
+      <path class="thread" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" d="M70 70 C120 50 165 70 178 118 S158 188 172 226 S162 256 170 262">
+        <animate attributeName="d" dur="4.8s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" values="M70 70 C120 50 165 70 178 118 S158 188 172 226 S162 256 170 262;M70 70 C122 56 172 80 172 124 S184 186 164 228 S178 256 166 262;M70 70 C120 50 165 70 178 118 S158 188 172 226 S162 256 170 262"/>
+      </path>
+      <g transform="rotate(-45 70 70)"><g class="turn">
+        <rect x="30" y="24" width="80" height="16" rx="5" fill="var(--ink)"/>
+        <rect x="30" y="100" width="80" height="16" rx="5" fill="var(--ink)"/>
+        <rect x="48" y="40" width="44" height="60" fill="var(--link)"/>
+        <path d="M48 50h44M48 60h44M48 70h44M48 80h44M48 90h44" stroke="var(--paper)" stroke-width="1.4" opacity=".55"/>
+      </g></g>
+    </svg></div>
     <nav aria-label="Lineages">
       <button type="button" data-line="origins">Origins</button>
       <button type="button" data-line="british">Kleinian and British</button>
@@ -578,6 +597,15 @@ navBtns.forEach(b=>{
   b.addEventListener("click",()=>{pinned=pinned===b.dataset.line?null:b.dataset.line; hlLine=pinned; applyHl();});
 });
 
+function placeSpool(){
+  const w=document.getElementById("titlewrap"), o=document.getElementById("linesof"), sp=document.getElementById("spool"); if(!w||!o||!sp) return;
+  const wr=w.getBoundingClientRect(), or=o.getBoundingClientRect(), sw=sp.getBoundingClientRect().width;
+  sp.style.left=(or.right-wr.left+sw*0.14)+"px";
+  sp.style.top=(or.top-wr.top-sw*0.32)+"px";
+}
+window.addEventListener("resize",placeSpool);
+if(document.fonts) document.fonts.ready.then(placeSpool);
+setTimeout(placeSpool,50);
 function fromHash(){ const h=decodeURIComponent((location.hash||"").slice(1)); if(N[h]){ if(selected!==h) openNode(h); return true; } return false; }
 window.addEventListener("hashchange",fromHash);
 if(!fromHash()) renderTree();
