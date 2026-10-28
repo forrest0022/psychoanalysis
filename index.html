@@ -183,21 +183,21 @@ body.picking .head{cursor:cell}
 const LINEAGE={root:"Roots",british:"Kleinian and British line",relational:"Interpersonal and relational line",self:"Self psychology line",side:"Others"};
 const GENS=["Origin","First dissent","Second generation","The two-person turn","Contemporary"];
 const P={
- freud:["Where id was,", "there ego shall be"],
+ freud:["Vienna","Europe"],
  jung:["Zurich","Europe"],
  lacan:["Paris","Europe"],
- klein:["Interpreting phantasy, so love and hate", "can meet in one whole object"],
+ klein:["Berlin, then London","Europe"],
  ferenczi:["Budapest","Europe"],
- "ego-psychology":["Strengthening the ego,", "not only freeing the id"],
+ "ego-psychology":["Vienna and London, then New York","East Coast"],
  bion:["London, then Los Angeles from 1968 to 1979","Europe · West Coast"],
- independents:["Insight is not enough;", "a new object frees the self"],
+ independents:["London and Edinburgh","Europe"],
  interpersonal:["New York and Washington–Baltimore","East Coast"],
  "self-psychology":["","Chicago"],
  "field-theory":["Buenos Aires and Montevideo, Pavia, San Francisco and Los Angeles","West Coast"],
  "american-or":["New York, New Haven and Topeka","East Coast"],
  attachment:["London, at the Tavistock Clinic","Europe"],
- relational:["What heals is engagement", "with an authentic other"],
- intersubjective:["Change happens in the shared, co-created", "emotional field of the dyad"]
+ relational:["New York, centered on the NYU Postdoctoral Program","East Coast"],
+ intersubjective:["Los Angeles and New Jersey","West Coast · East Coast"]
 };
 
 const N={
@@ -393,8 +393,9 @@ const ids=Object.keys(N);
 const kids=id=>ids.filter(k=>N[k].parents.includes(id));
 let selected=null, view=null, hlLine=null, picking=false, picks=[];
 const LINE={freud:"origins",klein:"origins",ferenczi:"origins","ego-psychology":"self","american-or":"self",attachment:"british",bion:"british",independents:"british","field-theory":"british",interpersonal:"relational",relational:"relational","self-psychology":"self",intersubjective:"self",jung:"side",lacan:"side"};
+const ORIGIN={freud:"Vienna",jung:"Zurich",lacan:"Paris",klein:"Budapest and Berlin, then London",ferenczi:"Budapest","ego-psychology":"Vienna, then New York",bion:"London",independents:"London and Edinburgh",interpersonal:"New York and Washington–Baltimore","self-psychology":"Chicago","american-or":"New York, New Haven and Topeka","field-theory":"Buenos Aires and Montevideo, then Pavia",attachment:"London",relational:"New York",intersubjective:"New Jersey, then Los Angeles"};
 const KEYLAB="Theory of change";
-const KEY={freud:["Making the","unconscious conscious"],jung:["Integrating the","unconscious into a whole"],lacan:["Language uncovers","unconscious desire"],klein:["Interpreting phantasy","in the transference"],ferenczi:["A responsive analyst","repairs trauma's damage"],"ego-psychology":["Analyzing defenses","strengthens the ego"],bion:["Containment makes","thinking possible"],independents:["A holding environment","frees the true self"],interpersonal:["Inquiry expands awareness","of patterns with others"],"self-psychology":["Empathy builds","the self"],"american-or":["Integrating split images","of self and other"],"field-theory":["Dreaming together","what was never dreamt"],attachment:["Security makes","reflection possible"],relational:["Negotiating enactments","inside the relationship"],intersubjective:["Making organizing","principles visible"]};
+const KEY={freud:["Where id was,","there ego shall be"],jung:["Integrating the","unconscious into a whole"],lacan:["Language uncovers","unconscious desire"],klein:["Interpreting phantasy, so love and hate","can meet in one whole object"],ferenczi:["A responsive analyst","repairs trauma's damage"],"ego-psychology":["Strengthening the ego,","not only freeing the id"],bion:["Containment makes","thinking possible"],independents:["Insight is not enough;","a new object frees the self"],interpersonal:["Inquiry expands awareness","of patterns with others"],"self-psychology":["Empathy builds","the self"],"american-or":["Integrating split images","of self and other"],"field-theory":["Dreaming together","what was never dreamt"],attachment:["Security makes","reflection possible"],relational:["What heals is engagement","with an authentic other"],intersubjective:["Change happens in the shared, co-created","emotional field of the dyad"]};
 const COAST=new Set(["self-psychology","relational","intersubjective"]);
 const STACK={"american-or":["American","object","relations"],ferenczi:["Budapest","school"],independents:["British","object","relations"],"field-theory":["Contemporary","Bionians"],"ego-psychology":["Ego","psychology"],"self-psychology":["Self","psychology"]};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -573,7 +574,7 @@ function renderCompare(){
   let h=`<div class="lab"></div>`+picks.map(k=>`<div class="colhead"><span class="colname">${esc(N[k].name)}</span><span class="colyr">${esc(N[k].yrs)}</span><button type="button" class="colrm" data-rm="${k}">Remove</button></div>`).join("");
   h+=row("Theory of change",k=>KEY[k]?`<b>${esc(KEY[k][0]+" "+KEY[k][1])}</b>`:"");
   h+=row("Line",k=>esc(NAV[LINE[k]]));
-  if(anyCoast) h+=row("Where",k=>COAST.has(k)?`${P[k][0]?esc(P[k][0])+"<br>":""}<b>${esc(P[k][1])}</b>`:`<span class="none">—</span>`);
+  h+=row("Origin",k=>ORIGIN[k]?esc(ORIGIN[k]):`<span class="none">—</span>`);
   h+=row("Descends from",(k,n)=>names(n.parents)+((n.infl||[]).length?`<br><span class="none">Influenced by</span> ${names(n.infl)}`:""));
   h+=row("In brief",(k,n)=>esc(n.sum));
   h+=row("What makes it distinct",(k,n)=>list(n.dist));
