@@ -10,7 +10,7 @@
 <title>Lines of Descent</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
 <style>
 /* Layout: staggered wide title top-left, small uppercase index top-right; below, the tree as outlined word-stacks joined by thin black lines. A stack opens in place across its row. */
 :root{
@@ -27,7 +27,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:
 
 header{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;align-items:start;margin-bottom:56px}
 h1{margin:0 0 calc(clamp(2.8rem,8.6vw,7.4rem) * -0.5);font-weight:900;font-stretch:125%;font-size:clamp(2.8rem,8.6vw,7.4rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;transform:scaleY(.72);transform-origin:top left}
-.kicker{margin:0 0 calc(10px + clamp(1.6rem,3.6vw,2.9rem) * .35);color:var(--link);font-style:italic;text-transform:uppercase;font-weight:700;font-stretch:125%;font-size:clamp(1.6rem,3.6vw,2.9rem);line-height:1;letter-spacing:-.01em;transform:scaleY(1.35);transform-origin:top left}
+.kicker{margin:0 0 12px;color:var(--link);font-family:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;font-style:italic;font-weight:400;text-transform:uppercase;font-size:clamp(1.3rem,2.9vw,2.35rem);line-height:1;letter-spacing:0}
 h1 span{display:block;width:fit-content}
 h1 span + span{padding-left:clamp(2.5rem,16vw,15rem)}
 .titlewrap{position:relative}
@@ -264,7 +264,7 @@ interpersonal:{gen:2,col:2,l:"relational",name:"Interpersonal",full:"Interperson
  dist:["Self and object representations as the building blocks of mind","Separation-individuation (Mahler)","Therapeutic action through a new object relationship (Loewald)","Borderline personality organization and splitting (Kernberg)","Pathological narcissism as defense, against Kohut's view of arrested development","Keeps drive theory while making relationships central"],
  th:["loewald","mahler","kernberg","jacobson"],tx:[["1960","On the Therapeutic Action of Psychoanalysis","Loewald"],["1964","The Self and the Object World","Jacobson"],["1975","The Psychological Birth of the Human Infant","Mahler, Pine and Bergman"],["1975","Borderline Conditions and Pathological Narcissism","Kernberg"]],
  co:["separation-individuation","splitting","therapeutic-action"]},
-attachment:{gen:3,col:1,l:"british",name:"Attachment",full:"Attachment theory and mentalization",sub:"Bowlby, Ainsworth, Fonagy",yrs:"1950s",parents:["independents"],
+attachment:{gen:3,col:1,l:"british",name:"Attachment theory",full:"Attachment theory and mentalization",sub:"Bowlby, Ainsworth, Fonagy",yrs:"1950s",parents:["independents"],
  sum:"Bowlby trained in the British Society and was supervised by Klein, but he insisted that real separations and real caregiving shape the child. His attachment theory stayed at the margins of psychoanalysis for decades. Through Ainsworth's and Main's research and Fonagy's work on mentalization, it became one of the strongest influences on contemporary relational practice.",
  dist:["Attachment as a primary need, not secondary to feeding or drive","Real separation and loss matter","Secure base and safe haven","Patterns of attachment: secure, avoidant, ambivalent, disorganized","Internal working models of self and other","Mentalization: reading behavior in terms of mental states (Fonagy)"],
  th:["bowlby","ainsworth","main","fonagy"],tx:[["1958","The Nature of the Child's Tie to His Mother","Bowlby"],["1969","Attachment (Attachment and Loss, vol. 1)","Bowlby"],["1978","Patterns of Attachment","Ainsworth and colleagues"],["1985","Security in Infancy, Childhood, and Adulthood","Main, Kaplan and Cassidy"],["2002","Affect Regulation, Mentalization, and the Development of the Self","Fonagy, Gergely, Jurist and Target"]],
@@ -430,7 +430,6 @@ function nodeDetail(id){
       ${infIn.length?`<div class="links"><span class="lab">Influenced by</span>${infIn.map(chip).join("")}</div>`:""}
       ${down.length?`<div class="links"><span class="lab">Leads to</span>${down.map(chip).join("")}</div>`:""}
       ${infOut.length?`<div class="links"><span class="lab">Influenced</span>${infOut.map(chip).join("")}</div>`:""}
-      ${!down.length&&!infOut.length?`<p style="margin:0">The end of this branch.</p>`:""}
     </div></div>`;
 }
 function thinkerDetail(t,from){
