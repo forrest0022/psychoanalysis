@@ -414,9 +414,9 @@ function nodeDetail(id){
     <div class="dgrid">
     <div class="dcol">
       <p class="lede">${esc(n.sum)}</p>
-      ${TCT[id]?`<h3>Transference</h3><p class="tct">${esc(TCT[id])}</p>`:""}
       <h3>Key concepts</h3>
       <dl class="concepts">${n.co.map(c=>`<div><dt>${esc(C[c][0])}</dt><dd>${esc(C[c][1])}</dd></div>`).join("")}</dl>
+      ${TCT[id]?`<h3>Transference</h3><p class="tct">${esc(TCT[id])}</p>`:""}
     </div>
     <div class="dcol">
       <h3>Key thinkers</h3>
