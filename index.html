@@ -495,7 +495,7 @@ function rounded(pts,r){
 }
 function outline(stack){
   const R=[...stack.querySelectorAll(".ln")].map(l=>({x0:l.offsetLeft,x1:l.offsetLeft+l.offsetWidth,y0:l.offsetTop,y1:l.offsetTop+l.offsetHeight}));
-  if(!R.length) return;
+  if(!R.length||R.some(r=>r.x1-r.x0<4||r.y1-r.y0<4)) return;
   let pts=[[R[0].x0,R[0].y0],[R[0].x1,R[0].y0]];
   R.forEach((r,i)=>{ pts.push([r.x1,r.y1]); if(i<R.length-1) pts.push([R[i+1].x1,r.y1]); });
   const last=R[R.length-1]; pts.push([last.x0,last.y1]);
@@ -625,7 +625,10 @@ setTimeout(placeSpool,50);
 function fromHash(){ const h=decodeURIComponent((location.hash||"").slice(1)); if(N[h]){ if(selected!==h) openNode(h); return true; } return false; }
 window.addEventListener("hashchange",fromHash);
 if(!fromHash()) renderTree();
-new ResizeObserver(()=>layout()).observe(treeEl);
+const ro=new ResizeObserver(()=>layout()); ro.observe(treeEl);
+new MutationObserver(()=>treeEl.querySelectorAll(".stack").forEach(st=>{ if(!st.dataset.ro){ st.dataset.ro=1; ro.observe(st); } })).observe(treeEl,{childList:true,subtree:true});
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) layout(); });
+window.addEventListener("load",layout); setTimeout(layout,400); setTimeout(layout,1500);
 if(document.fonts) document.fonts.ready.then(layout);
 </script>
 
