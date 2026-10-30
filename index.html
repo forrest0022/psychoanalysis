@@ -43,13 +43,13 @@ nav button{font:inherit;text-transform:inherit;letter-spacing:inherit;color:var(
 nav button:hover,nav button.on{font-weight:700;color:var(--link)}
 
 .scroller{overflow-x:auto;padding:0 150px 8px}
-.tree{position:relative;min-width:860px;max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:30px;padding:8px 6px 16px;container-type:inline-size}
+.tree{position:relative;min-width:774px;max-width:1044px;margin:0 auto;display:flex;flex-direction:column;gap:27px;padding:8px 6px 16px;container-type:inline-size}
 .edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;position:relative;z-index:1;align-items:start}
 .node{position:relative;justify-self:center;min-width:0}
 .node.freud{grid-column:3}
-.node[data-id="jung"]:not(.sel){justify-self:start;transform:translate(-40px,0)}
-.node[data-id="fanon"]:not(.sel){justify-self:end;transform:translate(40px,0)}
+.node[data-id="jung"]:not(.sel){justify-self:start;transform:translate(-36px,0)}
+.node[data-id="fanon"]:not(.sel){justify-self:end;transform:translate(36px,0)}
 
 .head{display:block;font:inherit;color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
 .stack{position:relative;display:flex;flex-direction:column;align-items:center;text-transform:uppercase;font-weight:500;font-stretch:112%;font-size:17px;line-height:1.04;letter-spacing:-.005em}
@@ -156,11 +156,11 @@ h1.ttl span{display:inline;padding:0}
 .spool{display:none!important}
 .wrap>header>nav{position:static!important;flex-direction:row!important;flex-wrap:wrap;gap:4px 22px;align-items:baseline!important;text-align:left!important;padding-top:0!important;margin-top:0}
 .wrap>header>nav button{text-align:left!important}
-.stack{font-size:14px;font-weight:500;font-stretch:112%;letter-spacing:.01em;line-height:1.1}
+.stack{font-size:12.6px;font-weight:500;font-stretch:112%;letter-spacing:.01em;line-height:1.1}
 .stack svg path{stroke-width:1.6}
-.ln{padding:3px 16px}
-.ln:first-child{padding-top:9px}
-.ln.sl{font-family:var(--mono,"Space Mono",ui-monospace,monospace);font-stretch:100%;font-size:11.5px;letter-spacing:0;color:var(--muted,#55554F);padding-top:4px;padding-bottom:9px}
+.ln{padding:2.7px 14px}
+.ln:first-of-type{padding-top:7px}
+.ln.sl{font-family:var(--mono,"Space Mono",ui-monospace,monospace);font-stretch:100%;font-size:10.4px;letter-spacing:0;color:var(--muted,#55554F);padding-top:3.6px;padding-bottom:8px}
 .head:hover .ln.sl,.node.sel .ln.sl,.node.hl .ln.sl,.node.pick .ln.sl{color:var(--paper)}
 .wrap>header{position:relative}
 .wrap>header>nav{top:0!important;right:0!important}
@@ -522,7 +522,7 @@ function renderTree(scrollTo){
       const el=document.createElement("div");
       el.className="node"+(n.side?" side":"")+(sel?" sel":"")+(picks.includes(k)?" pick":"")+(k==="freud"?" freud":"")+(hlLine&&LINE[k]===hlLine?" hl":"");
       el.dataset.id=k;
-      if(!sel) el.style.marginTop=(g===0&&n.side?(k==="jung"||k==="fanon"?72:0):Math.min(70,(yr(k)-rowMin)*1.6))+"px";
+      if(!sel) el.style.marginTop=(g===0&&n.side?(k==="jung"||k==="fanon"?65:0):Math.min(63,(yr(k)-rowMin)*1.45))+"px";
       if(k!=="freud" && !sel) el.style.gridColumn=n.span?`${n.col+1} / span ${n.span}`:String(n.col+1);
       el.innerHTML=(picks.includes(k)?`<span class="pk">${picks.indexOf(k)+1}</span>`:"")+`<button type="button" class="head" data-head="${k}" aria-expanded="${sel}" aria-label="${esc(n.full)}"><span class="stack"><svg aria-hidden="true"><path/></svg>${stackLines(k)}</span></button>
         ${sel?`<div class="detail"><button type="button" class="x" data-close aria-label="Close">×</button>${view.t==="thinker"?thinkerDetail(view.id,k):nodeDetail(k)}</div>`:""}`;
