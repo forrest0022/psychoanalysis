@@ -67,6 +67,17 @@ body{background:#EF82C8}
 .sbtn{display:inline-block;background:var(--ink);color:#fff!important;text-decoration:none;padding:.55em 1.2em;border-radius:999px}
 .sbtn:hover{background:#fff;color:var(--ink)!important}
 @media (max-width:760px){.ab{grid-template-columns:minmax(0,1fr)}}
+.sf{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px 16px;margin-top:.4em}
+.sf label{display:flex;flex-direction:column;gap:2px}
+.sf .full{grid-column:1/-1}
+.sf input,.sf textarea{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:2.4px solid var(--ink);border-radius:0;padding:4px 0;outline:none;resize:vertical}
+.sf input:focus,.sf textarea:focus{border-bottom-color:#fff}
+.sf input::placeholder{color:rgba(14,14,14,.45)}
+.sf .err{grid-column:1/-1;margin:0;color:var(--ink);font-style:italic;min-height:0}
+.sf .err:empty{display:none}
+.sf .sbtn{justify-self:start;border:0;cursor:pointer;font:inherit}
+.sf .sbtn:disabled{opacity:.6;cursor:default}
+@media (max-width:760px){.sf{grid-template-columns:minmax(0,1fr)}}
 </style>
 <h1 class="ttl">About</h1>
 <div class="ab big">
@@ -99,13 +110,37 @@ body{background:#EF82C8}
     </section>
     <section class="pane" id="p-suggest" hidden>
       <p>Know of an analysis that's missing, a date that's wrong, or a school that belongs here? Send it along, with a source if you have one.</p>
-      <p id="sform"></p>
+      <form id="sform" class="sf" novalidate hidden>
+        <label class="full">Suggestion<textarea name="suggestion" rows="4" required></textarea></label>
+        <label class="full">Source<input name="source" type="text" placeholder="A book, article or link"></label>
+        <label>Name<input name="name" type="text" autocomplete="name" required></label>
+        <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <p class="err" id="serr" role="alert"></p>
+        <button type="submit" class="sbtn">Send</button>
+      </form>
+      <p id="sdone" hidden>Thank you. Your suggestion was sent.</p>
+      <p id="ssoon" hidden>Suggestion form coming soon.</p>
     </section>
   </div>
 </div>
 <script>
-const FORM_URL="";
-document.getElementById("sform").innerHTML=FORM_URL?`<a class="sbtn" href="${FORM_URL}" target="_blank" rel="noopener">Make a suggestion</a>`:"Suggestion form coming soon.";
+// Google Form wiring: action URL ends in /formResponse; entries map field names to entry IDs.
+const GFORM={action:"https://docs.google.com/forms/d/e/1FAIpQLSfK-w9W2HsbarDheRIvJeS4N4qgeo89hMLfyprTnrKF_ZBRaQ/formResponse",entries:{suggestion:"entry.278468492",source:"entry.986745573",name:"entry.1275246466",email:"entry.1699298910"}};
+const sf=document.getElementById("sform"), serr=document.getElementById("serr");
+if(GFORM.action){ sf.hidden=false; } else { document.getElementById("ssoon").hidden=false; }
+sf.addEventListener("input",()=>{ serr.textContent=""; });
+sf.addEventListener("submit",async e=>{ e.preventDefault();
+  const fd=new FormData(sf), sug=(fd.get("suggestion")||"").trim(), em=(fd.get("email")||"").trim();
+  if(!sug){ serr.textContent="Write a suggestion first."; sf.suggestion.focus(); return; }
+  const nm=(fd.get("name")||"").trim();
+  if(!nm){ serr.textContent="Add your name."; sf.name.focus(); return; }
+  if(!em){ serr.textContent="Add your email."; sf.email.focus(); return; }
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ serr.textContent="That email doesn't look right."; sf.email.focus(); return; }
+  const body=new URLSearchParams(); for(const [k,id] of Object.entries(GFORM.entries)) if(id) body.append(id,(fd.get(k)||"").trim());
+  const btn=sf.querySelector("button"); btn.disabled=true; btn.textContent="Sending…";
+  try{ await fetch(GFORM.action,{method:"POST",mode:"no-cors",body}); sf.hidden=true; document.getElementById("sdone").hidden=false; }
+  catch(_){ serr.textContent="That didn't send. Check your connection and try again."; btn.disabled=false; btn.textContent="Send"; }
+});
 const links=[...document.querySelectorAll(".sub a")];
 function show(){ const h=(location.hash||"#about").slice(1), k=["about","sources","suggest"].includes(h)?h:"about";
   document.querySelectorAll(".pane").forEach(p=>p.hidden=p.id!=="p-"+k);
