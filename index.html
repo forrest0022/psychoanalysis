@@ -50,6 +50,7 @@ nav button:hover,nav button.on{font-weight:700;color:var(--link)}
 .node.freud{grid-column:3}
 .node[data-id="jung"]:not(.sel){justify-self:start;transform:translate(-36px,0)}
 .node[data-id="fanon"]:not(.sel){justify-self:end;transform:translate(36px,0)}
+.node[data-id="adler"]:not(.sel){justify-self:start;transform:translate(-14px,0)}
 
 .head{display:block;font:inherit;color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
 .stack{position:relative;display:flex;flex-direction:column;align-items:center;text-transform:uppercase;font-weight:500;font-stretch:112%;font-size:17px;line-height:1.04;letter-spacing:-.005em}
@@ -267,9 +268,9 @@ lacan:{gen:0,col:3,l:"side",side:true,name:"Lacanian",full:"Lacanian psychoanaly
  dist:["The unconscious is structured like a language","The mirror stage: the ego built on an alienating image","Imaginary, Symbolic and Real","Desire as the desire of the Other","Against ego psychology and adaptation","The variable-length session","Where it touches this tree: Benjamin argues with Lacan about recognition, and Laplanche, from his circle, shapes later relational writing on sexuality"],
  th:["lacan","laplanche"],tx:[["1949","The Mirror Stage as Formative of the Function of the I","Lacan"],["1953","The Function and Field of Speech and Language in Psychoanalysis","Lacan"],["1964","The Four Fundamental Concepts of Psychoanalysis (Seminar XI)","Lacan"],["1966","Écrits","Lacan"],["1987","New Foundations for Psychoanalysis","Laplanche"]],
  co:["mirror-stage","the-other","isr"]},
-adler:{gen:0,col:1,l:"side",side:true,name:"Adlerian",full:"Individual psychology",sub:"Broke with Freud, 1911",yrs:"1911–1937",parents:["freud"],
+adler:{gen:1,col:2,l:"side",side:true,name:"Adlerian",full:"Individual psychology",sub:"Broke with Freud, 1911",yrs:"1911–1937",parents:["freud"],
  sum:"Alfred Adler was one of the first members of Freud's Wednesday circle and the first to leave it, in 1911, over Freud's insistence on the primacy of sexuality. His individual psychology treats the person as an indivisible whole moving toward goals, driven less by libido than by feelings of inferiority and the striving to overcome them. Its social emphasis passed, often unacknowledged, into the neo-Freudians.",
- dist:["Inferiority feelings and compensation as the engine of development and neurosis","The striving for significance, or superiority, as the master motive","Social interest as the measure of mental health","Style of life: each person's unique, largely unconscious way of moving toward their goals","Family constellation and birth order","Treatment face to face, as encouragement between equals","Where it touches this tree: Horney, Fromm and Sullivan's social turn echoes him, and Fanon reads him on inferiority in Black Skin, White Masks"],
+ dist:["Inferiority feelings and compensation as the engine of development and neurosis","The striving for significance, or superiority, as the master motive","Social interest as the measure of mental health","Style of life: each person's unique, largely unconscious way of moving toward their goals","Family constellation and birth order","Treatment face to face, as encouragement between equals","Where it touches this tree: the interpersonal school's social turn echoes him (the Ansbachers called Horney, Fromm and Sullivan neo-Adlerians), and Fanon answers him on inferiority in Black Skin, White Masks"],
  th:["adler"],tx:[["1907","Study of Organ Inferiority and Its Psychical Compensation","Adler"],["1912","The Neurotic Constitution","Adler"],["1927","Understanding Human Nature","Adler"],["1933","Social Interest: A Challenge to Mankind","Adler"]],
  co:["inferiority","social-interest","style-of-life"]},
 fanon:{gen:0,col:4,l:"side",side:true,name:"Fanonian",full:"Fanon: the psychopolitics of colonialism",sub:"Race and colonialism",yrs:"1952–1961",parents:["freud"],
@@ -302,7 +303,7 @@ independents:{gen:2,col:1,l:"british",name:"British object relations",full:"Brit
  dist:["Libido is object-seeking (Fairbairn)", "Loyalty to bad objects; internal objects as substitutes for real contact", "Splitting of the ego: exciting and rejecting objects", "The holding environment and the good-enough mother (Winnicott)", "True and false self; transitional experience", "Primary love, the basic fault and the new beginning (Balint)"],
  th:["fairbairn","winnicott","balint"],tx:[["1952","Psychoanalytic Studies of the Personality","Fairbairn"],["1960","Ego Distortion in Terms of True and False Self","Winnicott"],["1968","The Basic Fault","Balint"],["1969","The Use of an Object","Winnicott"],["1971","Playing and Reality","Winnicott"]],
  co:["object-seeking","holding","true-false-self","transitional"]},
-interpersonal:{gen:2,col:2,l:"relational",name:"Interpersonal",full:"Interpersonal psychoanalysis",sub:"Sullivan, Fromm",yrs:"1930s",parents:["freud"],infl:["ferenczi"],
+interpersonal:{gen:2,col:2,l:"relational",name:"Interpersonal",full:"Interpersonal psychoanalysis",sub:"Sullivan, Fromm",yrs:"1930s",parents:["freud"],infl:["ferenczi","adler"],
  sum:"An American tradition built around what actually happens between people. It grew mainly from Sullivan's psychiatry, shaped by Adolf Meyer, William Alanson White and the social sciences, and from Fromm's social critique. Ferenczi's influence came in through Clara Thompson, whom Sullivan sent to Budapest for analysis.",
  dist:["The analyst as participant-observer","Personality as a pattern of interpersonal relations","Anxiety and selective inattention","Detailed inquiry into what happened","Culture and society shape character","Less emphasis on internal fantasy"],
  th:["sullivan","thompson","fromm","horney","fromm-reichmann","levenson","dbstern"],tx:[["1937","The Neurotic Personality of Our Time","Horney"],["1941","Escape from Freedom","Fromm"],["1950","Principles of Intensive Psychotherapy","Fromm-Reichmann"],["1953","The Interpersonal Theory of Psychiatry","Sullivan"],["1972","The Fallacy of Understanding","Levenson"],["1997","Unformulated Experience","D. B. Stern"]],
@@ -532,7 +533,7 @@ function renderTree(scrollTo){
       const el=document.createElement("div");
       el.className="node"+(n.side?" side":"")+(sel?" sel":"")+(picks.includes(k)?" pick":"")+(k==="freud"?" freud":"")+(hlLine&&LINE[k]===hlLine?" hl":"");
       el.dataset.id=k;
-      if(!sel) el.style.marginTop=(g===0&&n.side?(k==="jung"||k==="fanon"?65:0):Math.min(63,(yr(k)-rowMin)*1.45))+"px";
+      if(!sel) el.style.marginTop=(g===0&&n.side?(k==="fanon"?65:0):Math.min(63,(yr(k)-rowMin)*1.45))+"px";
       if(k!=="freud" && !sel) el.style.gridColumn=n.span?`${n.col+1} / span ${n.span}`:String(n.col+1);
       el.innerHTML=(picks.includes(k)?`<span class="pk">${picks.indexOf(k)+1}</span>`:"")+`<button type="button" class="head" data-head="${k}" aria-expanded="${sel}" aria-label="${esc(n.full)}"><span class="stack"><svg aria-hidden="true"><path/></svg>${stackLines(k)}</span></button>
         ${sel?`<div class="detail"><button type="button" class="x" data-close aria-label="Close">×</button>${view.t==="thinker"?thinkerDetail(view.id,k):nodeDetail(k)}</div>`:""}`;
