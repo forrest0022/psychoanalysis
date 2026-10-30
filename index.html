@@ -156,6 +156,12 @@ h1.ttl span{display:inline;padding:0}
 .spool{display:none!important}
 .wrap>header>nav{position:static!important;flex-direction:row!important;flex-wrap:wrap;gap:4px 22px;align-items:baseline!important;text-align:left!important;padding-top:0!important;margin-top:0}
 .wrap>header>nav button{text-align:left!important}
+.stack{font-size:14px;font-weight:500;font-stretch:112%;letter-spacing:.01em;line-height:1.1}
+.stack svg path{stroke-width:1.6}
+.ln{padding:3px 16px}
+.ln:first-child{padding-top:9px}
+.ln.sl{font-family:var(--mono,"Space Mono",ui-monospace,monospace);font-stretch:100%;font-size:11.5px;letter-spacing:0;color:var(--muted,#55554F);padding-top:4px;padding-bottom:9px}
+.head:hover .ln.sl,.node.sel .ln.sl,.node.hl .ln.sl,.node.pick .ln.sl{color:var(--paper)}
 .wrap>header{position:relative}
 .wrap>header>nav{top:0!important;right:0!important}
 </style>
@@ -211,7 +217,8 @@ h1.ttl span{display:inline;padding:0}
   <div class="fab" id="fab"></div>
 </div>
 
-<script>
+<script>window.PILL=true;
+
 const LINEAGE={root:"Roots",british:"Kleinian and British line",relational:"Interpersonal and relational line",self:"Self psychology line",side:"Others"};
 const GENS=["Origin","First dissent","Second generation","The two-person turn","Contemporary"];
 const P={
@@ -529,6 +536,8 @@ function outline(stack){
   R.forEach((r,i)=>{ pts.push([r.x1,r.y1]); if(i<R.length-1) pts.push([R[i+1].x1,r.y1]); });
   const last=R[R.length-1]; pts.push([last.x0,last.y1]);
   for(let i=R.length-1;i>0;i--){ pts.push([R[i].x0,R[i].y0]); pts.push([R[i-1].x0,R[i].y0]); }
+  if(window.PILL){ const x0=Math.min(...R.map(r=>r.x0)),x1=Math.max(...R.map(r=>r.x1)),y0=R[0].y0,y1=R[R.length-1].y1,rr=Math.min(16,(y1-y0)/2);
+    stack.querySelector("svg path").setAttribute("d",`M${x0+rr},${y0}H${x1-rr}A${rr},${rr} 0 0 1 ${x1},${y0+rr}V${y1-rr}A${rr},${rr} 0 0 1 ${x1-rr},${y1}H${x0+rr}A${rr},${rr} 0 0 1 ${x0},${y1-rr}V${y0+rr}A${rr},${rr} 0 0 1 ${x0+rr},${y0}Z`); return; }
   const clean=[];
   pts.forEach(p=>{ const q=clean[clean.length-1]; if(!q||Math.abs(q[0]-p[0])>.5||Math.abs(q[1]-p[1])>.5) clean.push(p); });
   if(clean.length>1){const f=clean[0],l=clean[clean.length-1]; if(Math.abs(f[0]-l[0])<.5&&Math.abs(f[1]-l[1])<.5) clean.pop();}
