@@ -14,7 +14,7 @@
 <style>
 /* Layout: staggered wide title top-left, small uppercase index top-right; below, the tree as outlined word-stacks joined by thin black lines. A stack opens in place across its row. */
 :root{
-  --paper:#FFFFFF; --ink:#0E0E0E; --link:#0038FF; --muted:#55554F; --rule:#0E0E0E;
+  --paper:#FFFFFF; --ink:#0E0E0E; --pink:#EF82C8; --link:#0038FF; --muted:#55554F; --rule:#0E0E0E;
   --wide:"Archivo", "Helvetica Neue", Arial, sans-serif;
   color-scheme:light;
 }
@@ -584,13 +584,13 @@ function drawEdges(){
   ids.forEach(c=>{
     const cp=pos(c); if(!cp) return;
     (N[c].infl||[]).forEach(p=>{ const pp=pos(p); if(!pp) return;
-      const on=selected===c||selected===p, st=on?"var(--link)":"var(--ink)", sw=on?2.4:1.6, span=N[c].gen-N[p].gen;
+      const on=selected===c||selected===p, st=on?"var(--link)":"var(--pink)", sw=on?2.4:1.6, span=N[c].gen-N[p].gen;
       let d;
       if(span>1){ const xg=(pp.x+cp.x)/2, g=36; d=`M${pp.x},${pp.bot} C${pp.x},${pp.bot+g} ${xg},${pp.bot} ${xg},${pp.bot+g} L${xg},${cp.top-g} C${xg},${cp.top} ${cp.x},${cp.top-g} ${cp.x},${cp.top}`; }
       else { const my=(pp.bot+cp.top)/2; d=`M${pp.x},${pp.bot} C${pp.x},${my} ${cp.x},${my} ${cp.x},${cp.top}`; }
       s+=`<path d="${d}" fill="none" stroke="${st}" stroke-width="${sw}" stroke-dasharray="3 5" stroke-linecap="round"/>`;});
     N[c].parents.forEach(p=>{ const pp=pos(p); if(!pp) return;
-      const dash=N[c].side?' stroke-dasharray="0.1 6" stroke-linecap="round"':'', on=selected===c||selected===p, st=on?"var(--link)":"var(--ink)", sw=on?2.4:(N[c].side?2.4:1.6);
+      const dash=N[c].side?' stroke-dasharray="0.1 6" stroke-linecap="round"':'', on=selected===c||selected===p, st=on?"var(--link)":"var(--pink)", sw=on?2.4:(N[c].side?2.4:1.6);
       const my=(pp.bot+cp.top)/2;
       if(N[c].side && Math.abs(cp.st-pp.st)<24){ const L=cp.x<pp.x, x0=L?pp.sl:pp.sr, x1=L?cp.sr:cp.sl;
         s+=`<path d="M${x0},${pp.sy} L${x1},${cp.sy}" fill="none" stroke="${st}" stroke-width="${sw}"${dash}/>`; return; }
