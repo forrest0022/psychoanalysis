@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#F2F2EE">
+<title>About · Transference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
+<style>
+:root{--paper:#F2F2EE;--ink:#0E0E0E;--muted:#55554F;--faint:#B9BBB3;--link:#0038FF;--train:#FF5A1F;
+  --wide:"Archivo","Helvetica Neue",Arial,sans-serif;--mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;color-scheme:light}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:16px;line-height:1.55;margin:0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:1320px;margin:0 auto;padding-block:40px 80px}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+::selection{background:var(--link);color:var(--paper)}
+h1.ttl{margin:0 0 clamp(1.2rem,3vw,2.2rem);font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;font-size:clamp(2rem,5.2vw,4.4rem);text-transform:uppercase;padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
+.big{font-weight:500;font-size:clamp(1.05rem,1.45vw,1.25rem);line-height:1.35;letter-spacing:-.005em}
+a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+<style>
+.site{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 28px;margin:0 0 clamp(28px,5vw,56px);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:100%;font-weight:600;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.2;letter-spacing:-.005em;color:#0E0E0E}
+.site a{color:inherit;text-decoration:none}
+.site .brand{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:baseline}
+.site .brand b{font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.site .brand span{font-weight:500}
+.site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
+.site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu a:hover{border-bottom-color:#0E0E0E}
+.site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
+@media (max-width:640px){.site{flex-direction:column;gap:10px}}
+</style>
+<div class="site" role="navigation" aria-label="Site">
+  <a class="brand" href="index.html"><b>Transference</b><span>psychoanalysis, who learned it from whom</span></a>
+  <div class="menu">
+    <a href="index.html">Schools</a>
+    <a href="analysts.html">Analysts</a>
+    <a href="names.html">Index</a>
+    <a href="about.html" aria-current="page">About</a>
+  </div>
+</div>
+<style>
+.ab{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(28px,5vw,72px)}
+.ab p{margin:0 0 1.1em}
+.ab h2{font:inherit;margin:0 0 .4em}
+.ab .src p{margin:0 0 .7em}
+.ab .src i{font-style:italic}
+.ab .key span{display:inline-block;width:26px;height:0;border-top:2.4px solid;vertical-align:middle;margin-right:10px}
+</style>
+<h1 class="ttl">About</h1>
+<div class="ab big">
+  <div>
+    <p>Transference maps psychoanalysis as a set of inheritances: the schools that grew out of one another, and the analysts who lay down on one another's couches.</p>
+    <p><a href="index.html">Schools</a> traces the major traditions, what each changed, and what each says heals. <a href="analysts.html">Analysts</a> follows the people, placed by birth year, linked by documented analyses. The <a href="names.html">Index</a> lists everyone on the map.</p>
+    <h2>How to read the lines</h2>
+    <p class="key"><span style="border-color:var(--ink)"></span>Lineage: a person's analysts, and their analysts, back to the start<br>
+    <span style="border-color:var(--link)"></span>Analysands: the people someone analyzed<br>
+    <span style="border-color:var(--train)"></span>Trained or supervised, including Freud's first circle, who learned from him without a formal analysis</p>
+    <p>A line means an analysis is documented in print. Many were brief, informal or broken off, and many people had several analysts in turn; where they did, all are shown. Dates and order follow the sources below.</p>
+    <h2>Who is missing</h2>
+    <p>The map reflects how the field kept its records, as much as who was there. Women's analyses were often noted only in passing, and Black and non-European analysts were frequently kept out of institutes or left out of their histories. Where an analyst is unknown, the line simply stops. Corrections and additions are welcome.</p>
+    <p>Made by Jade Forrest Marks, Los Angeles.</p>
+  </div>
+  <div class="src">
+    <h2>Sources</h2>
+    <p>Falzeder, Ernst. 1998. "Family tree matters." <i>Journal of Analytical Psychology</i> 43 (1): 127–154.</p>
+    <p>de Mijolla, Alain, ed. 2005. <i>International Dictionary of Psychoanalysis</i>. 3 vols. Detroit: Macmillan Reference USA.</p>
+    <p>Deutsche Biographie, "Wittenberg, Wilhelm."</p>
+    <p>British Psychoanalytical Society, "Ronald Fairbairn."</p>
+    <p>Aichhorn, Thomas. "Eine Notiz zur Biographie von E. H. Erikson." psyalpha.</p>
+    <p>On Tosquelles and Sándor Eiminder: "Francesc Tosquelles y Max Hodann," psiquiatria.com; and "Ferenczi's theory on power and its pollination to and within Latin America."</p>
+    <p>Wikipedia entries for John Bowlby and Virgínia Leone Bicudo, checked against the dictionary where possible.</p>
+  </div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#F2F2EE">
+<title>Analysts · Transference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
+<style>
+/* Layout: same header as Lines of Descent; below, a web of analysts placed by birth year (top = oldest), with a reading card for the selected person. */
+:root{
+  --paper:#F2F2EE; --ink:#0E0E0E; --muted:#55554F; --faint:#B9BBB3; --link:#0038FF; --train:#FF5A1F;
+  --wide:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:16px;line-height:1.55;margin:0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0}
+.wrap{max-width:1320px;margin:0 auto;padding-block:40px 64px;position:relative}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+::selection{background:var(--link);color:var(--paper)}
+.kicker{margin:0 0 12px;color:var(--link);font-family:var(--mono);font-style:italic;text-transform:uppercase;font-size:clamp(1.3rem,2.9vw,2.35rem);line-height:1}
+h1{margin:0 0 calc(clamp(2.8rem,8.6vw,7.4rem) * -0.5);font-weight:900;font-stretch:125%;font-size:clamp(2.8rem,8.6vw,7.4rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;transform:scaleY(.72);transform-origin:top left}
+h1 span{display:block;width:fit-content}
+h1 span + span{padding-left:clamp(2.5rem,16vw,15rem)}
+nav{position:absolute;top:28px;right:0;display:flex;flex-direction:column;align-items:flex-end;text-transform:uppercase;font-size:13px;font-stretch:112%;letter-spacing:.04em;line-height:1.5}
+nav a{color:var(--ink);text-decoration:none}
+nav a:hover{color:var(--link);font-weight:700}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;margin-top:56px;align-items:start}
+.web{position:relative;min-width:0;border:2.4px solid var(--ink);border-radius:22px;overflow:hidden;background:var(--paper)}
+.web svg{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
+.web svg:active{cursor:grabbing}
+.yr{font:400 11px var(--mono);fill:var(--muted)}
+.grid{stroke:var(--ink);stroke-opacity:.08}
+.edge{fill:none;stroke:var(--ink);stroke-opacity:.35;stroke-width:1.3}
+.edge.up{stroke:var(--ink);stroke-opacity:1;stroke-width:2.2}
+.edge.down{stroke:var(--link);stroke-opacity:1;stroke-width:2.2}
+.edge.dim{stroke-opacity:.08}
+.edge.work{stroke-dasharray:5 5}
+.edge.train{stroke-dasharray:none}
+.edge.up.train,.edge.down.train,.edge.wk.train{stroke:var(--train);stroke-opacity:1;stroke-width:2.4}
+.node.tr rect{stroke:var(--train);stroke-width:2.4} .node.tr text{fill:var(--train)}
+.chip.o{border-color:var(--train);color:var(--train)}
+.legend i.o{border-color:var(--train)}
+.edge.wk{stroke:var(--ink);stroke-opacity:1;stroke-width:2.2}
+.node.wk rect{stroke-dasharray:4 3;stroke-width:2.2}
+.legend i.d{border-top-style:dashed}
+.node{cursor:pointer}
+.node rect{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
+.node text{font:500 12.5px var(--wide);font-stretch:112%;text-transform:uppercase;fill:var(--ink);letter-spacing:.01em}
+.node:hover rect{fill:var(--ink)} .node:hover text{fill:var(--paper)}
+.node.sel rect{fill:var(--link);stroke:var(--link)} .node.sel text{fill:var(--paper)}
+.node.up rect{stroke-width:2.4}
+.node.down rect{stroke:var(--link);stroke-width:2.4} .node.down text{fill:var(--link)}
+.node.dim{opacity:.22}
+.zoom{position:absolute;right:12px;bottom:12px;display:flex;gap:6px}
+.zoom button{width:34px;height:34px;border-radius:50%;border:1.6px solid var(--ink);background:var(--paper);font:500 17px/1 var(--wide);cursor:pointer;color:var(--ink)}
+.zoom button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.legend{position:absolute;left:14px;bottom:12px;display:flex;gap:14px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--muted);background:var(--paper);padding:4px 8px;border-radius:8px}
+.legend i{display:inline-block;width:22px;height:0;border-top:2.4px solid var(--ink);vertical-align:middle;margin-right:6px}
+.legend i.b{border-color:var(--link)}
+#info{position:relative}
+.cx{position:absolute;top:-4px;right:-4px;width:34px;height:34px;border-radius:50%;border:1.6px solid var(--ink);background:var(--paper);color:var(--ink);font:500 18px/1 var(--wide);cursor:pointer;display:grid;place-items:center;padding:0}
+.cx:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.card h2{padding-right:40px}
+.hint{font-size:15.5px;color:var(--muted)}
+.card{position:sticky;top:max(16px, env(safe-area-inset-top, 0px));border:2.4px solid var(--ink);border-radius:22px;padding:24px 24px 26px;background:var(--paper);min-width:0}
+.card .lab{font-size:12.5px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:22px 0 10px;padding-top:16px;border-top:1.6px solid var(--ink)}
+.card h2{margin:0 0 4px;font-weight:500;font-stretch:112%;text-transform:uppercase;font-size:1.55rem;line-height:1.05;letter-spacing:-.01em}
+.card .dates{font:400 14px var(--mono);color:var(--muted);margin:0 0 14px}
+.card p{margin:0;font-size:16px;line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 13.5px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.02em;background:none;border:1.6px solid var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--ink)}
+.chip.b{border-color:var(--link);color:var(--link)}
+.chip:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.none{color:var(--muted);font-size:15px}
+.find{display:flex;gap:8px;margin-bottom:14px}
+.find input{flex:1;min-width:0;font:400 15px var(--mono);padding:9px 14px;border:1.6px solid var(--ink);border-radius:999px;background:var(--paper);color:var(--ink)}
+.find input::placeholder{color:var(--muted)}
+.card .note{font:400 13px var(--mono);color:var(--muted);margin-top:24px;padding-top:16px;border-top:1.6px solid var(--ink);line-height:1.5}
+@media (max-width: 960px){
+  .stage{grid-template-columns:minmax(0,1fr)}
+  .card{position:static}
+  nav{position:static;align-items:flex-start;margin-top:14px}
+  .legend{top:10px;bottom:auto;left:10px}
+}
+.sig{transform:none;margin:0 0 clamp(1.2rem,3vw,2.2rem);text-align:left;font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;color:var(--ink);text-shadow:none;font-size:clamp(2rem,5.2vw,4.4rem);padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
+.sig span{display:inline!important;margin:0;padding:0!important}
+.sig span+span::before{content:" "}
+header{position:relative}
+header nav{display:flex!important;justify-content:flex-end;margin:0 0 .6rem;position:static!important;transform:none!important}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+<style>
+.site{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 28px;margin:0 0 clamp(28px,5vw,56px);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:100%;font-weight:600;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.2;letter-spacing:-.005em;color:#0E0E0E}
+.site a{color:inherit;text-decoration:none}
+.site .brand{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:baseline}
+.site .brand b{font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.site .brand span{font-weight:500}
+.site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
+.site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu a:hover{border-bottom-color:#0E0E0E}
+.site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
+@media (max-width:640px){.site{flex-direction:column;gap:10px}}
+</style>
+<div class="site" role="navigation" aria-label="Site">
+  <a class="brand" href="index.html"><b>Transference</b><span>psychoanalysis, who learned it from whom</span></a>
+  <div class="menu">
+    <a href="index.html">Schools</a>
+    <a href="analysts.html" aria-current="page">Analysts</a>
+    <a href="names.html">Index</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+  <header>
+    <h1 class="sig"><span>Transference</span><span>Lines</span></h1>
+  </header>
+  <div class="stage">
+    <div class="web" id="web">
+      <svg id="svg" role="img" aria-label="Network of psychoanalysts linked by training analyses, arranged by birth year"></svg>
+      <div class="legend"><span><i></i>Lineage</span><span><i class="b"></i>Analysands</span><span><i class="o"></i>Trained/supervised</span></div>
+      <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zfit" aria-label="Reset view">⤢</button></div>
+    </div>
+    <aside class="card" id="card" aria-live="polite">
+      <div class="find"><input id="q" list="names" placeholder="Find an analyst" autocomplete="off" aria-label="Find an analyst"><datalist id="names"></datalist></div>
+      <div id="info"></div>
+      <p class="note">Solid lines show documented analyses, from analyst to analysand; orange lines show training and supervision, including Freud's first circle, who learned from him without a formal analysis. Click a name: black traces their lineage upward through their analysts and teachers; blue shows the people they analyzed. People are placed by birth year, oldest at the top. Many analyses were brief, informal or partial, and some were with several analysts in turn.</p>
+    </aside>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+const P=[
+["freud","Sigmund Freud","1856–1939","Vienna, then London","Founder of psychoanalysis. Analyzed many of the first generation, often briefly, sometimes on walks."],
+["ferenczi","Sándor Ferenczi","1873–1933","Budapest","Freud's closest collaborator; analyst of Klein, Jones, Balint and Clara Thompson."],
+["abraham","Karl Abraham","1877–1925","Berlin","Founder of the Berlin Institute and the analyst of a generation of Berlin trainees."],
+["sachs","Hanns Sachs","1881–1947","Berlin, then Boston","The Berlin Institute's first full-time training analyst."],
+["jones","Ernest Jones","1879–1958","London","Founder of British psychoanalysis; brought Klein to London."],
+["eitingon","Max Eitingon","1881–1943","Berlin, then Jerusalem","Funded the Berlin Polyclinic; his analysis with Freud took place on evening walks in 1907."],
+["anna","Anna Freud","1895–1982","Vienna, then London","Founder of ego psychology and child analysis; analyzed by her father."],
+["klein","Melanie Klein","1882–1960","Berlin, then London","Analyzed by Ferenczi, then Abraham; trained a generation of Kleinians."],
+["riviere","Joan Riviere","1883–1962","London","Translator and Kleinian; analyst of Winnicott, Bowlby and Isaacs."],
+["jstrachey","James Strachey","1887–1967","London","Translator of the Standard Edition; Winnicott's first analyst."],
+["astrachey","Alix Strachey","1892–1973","London","Translator; analyzed by Freud and then Abraham."],
+["deutsch","Helene Deutsch","1884–1982","Vienna, then Boston","Pioneer of the psychology of women."],
+["horney","Karen Horney","1885–1952","Berlin, then New York","Challenged Freud on femininity; later founded her own institute."],
+["glover","Edward Glover","1888–1972","London","Leading critic of the Kleinians in the Controversial Discussions."],
+["rado","Sándor Radó","1890–1972","Berlin, then New York","Training analyst in Berlin; later founded the Columbia psychoanalytic clinic."],
+["reik","Theodor Reik","1888–1969","Berlin, then New York","Lay analyst, author of Listening with the Third Ear."],
+["bonaparte","Marie Bonaparte","1882–1962","Paris","Princess and analyst; helped Freud escape Vienna."],
+["hd","H.D. (Hilda Doolittle)","1886–1961","London","Poet; wrote Tribute to Freud about her analysis."],
+["burlingham","Dorothy Burlingham","1891–1979","Vienna, then London","Child analyst and Anna Freud's lifelong companion; analyzed by Reik, then Freud."],
+["rickman","John Rickman","1891–1951","London","Analyzed by Freud, Ferenczi and Klein in turn; Bion's first analyst."],
+["balint","Michael Balint","1896–1970","Budapest, then London","Ferenczi's heir; theorist of the basic fault."],
+["thompson","Clara Thompson","1893–1958","New York","Went to Budapest to be analyzed by Ferenczi, then analyzed Sullivan."],
+["sullivan","Harry Stack Sullivan","1892–1949","Washington–Baltimore, New York","Founder of interpersonal psychiatry."],
+["freichmann","Frieda Fromm-Reichmann","1889–1957","Heidelberg, then Chestnut Lodge","Analyzed by Wittenberg, then Sachs, with a stretch with Ferenczi."],
+["fromm","Erich Fromm","1900–1980","Frankfurt, then New York","Social psychologist of the Frankfurt School and the interpersonal school."],
+["winnicott","D. W. Winnicott","1896–1971","London","Pediatrician and analyst; ten years with Strachey, then Riviere."],
+["bowlby","John Bowlby","1907–1990","London","Founder of attachment theory."],
+["isaacs","Susan Isaacs","1885–1948","London","Analyzed by Riviere; Kleinian theorist of phantasy."],
+["bion","Wilfred Bion","1897–1979","London, then Los Angeles","Analyzed by Rickman, then Klein."],
+["segal","Hanna Segal","1918–2011","London","Kleinian theorist of symbolism."],
+["rosenfeld","Herbert Rosenfeld","1910–1986","London","Kleinian pioneer in the analysis of psychosis."],
+["heimann","Paula Heimann","1899–1982","London","Her 1950 paper made countertransference a tool."],
+["joseph","Betty Joseph","1917–2013","London","Contemporary Kleinian of the here-and-now transference."],
+["bick","Esther Bick","1902–1983","London","Founder of infant observation."],
+["clare","Clare Winnicott","1906–1984","London","Social worker and analyst; analyzed by Klein."],
+["fairbairn","W. R. D. Fairbairn","1889–1964","Edinburgh","Theorist of object-seeking libido."],
+["guntrip","Harry Guntrip","1901–1975","Leeds","Analyzed by Fairbairn, then Winnicott, and wrote about both."],
+["sharpe","Ella Sharpe","1875–1947","London","Analyzed by Sachs in Berlin; analyst of Little and Khan."],
+["little","Margaret Little","1901–1994","London","Wrote on her analysis with Winnicott."],
+["khan","Masud Khan","1924–1989","London","Analyzed by Sharpe, Rickman and Winnicott in turn."],
+["tosquelles","François Tosquelles","1912–1994","Barcelona, then Saint-Alban","Catalan psychiatrist and founder of institutional psychotherapy at Saint-Alban, where Fanon and Oury trained under him. Analyzed in Barcelona by Sándor Eiminder, a Hungarian refugee from Aichhorn's circle."],
+["fanon","Frantz Fanon","1925–1961","Saint-Alban, Blida, Tunis","Psychiatrist and anticolonial theorist; trained under Tosquelles at Saint-Alban from 1952. Not formally analyzed."],
+["oury","Jean Oury","1924–2014","La Borde","Founder of La Borde clinic; trained with Tosquelles at Saint-Alban and was Lacan's pupil."],
+["guattari","Félix Guattari","1930–1992","La Borde, Paris","Analyzed by Lacan; trained at La Borde under Oury; later co-author of Anti-Oedipus with Gilles Deleuze."],
+["phillips","Adam Phillips","b. 1954","London","Essayist and analyst; trained in child psychotherapy and was analyzed by Masud Khan."],
+["grotstein","James Grotstein","1925–2015","Los Angeles","Analyzed by Bion in Los Angeles."],
+["erikson","Erik Erikson","1902–1994","Vienna, then the United States","Analyzed by Anna Freud."],
+["mahler","Margaret Mahler","1897–1985","Vienna, then New York","Analyzed by Deutsch, then Aichhorn, then Hoffer."],
+["hartmann","Heinz Hartmann","1894–1970","Vienna, then New York","Analyzed by Radó, then Freud."],
+["loewenstein","Rudolph Loewenstein","1898–1976","Paris, then New York","Lacan's analyst; later an ego psychologist."],
+["lacan","Jacques Lacan","1901–1981","Paris","Analyzed by Loewenstein in the 1930s."],
+["laplanche","Jean Laplanche","1924–2012","Paris","Analyzed by Lacan, then broke with him."],
+["pontalis","J.-B. Pontalis","1924–2013","Paris","Analyzed by Lacan; co-author of The Language of Psychoanalysis."],
+["leclaire","Serge Leclaire","1924–1994","Paris","Analyzed by Lacan; a leading Lacanian."],
+["garma","Ángel Garma","1904–1993","Berlin, then Buenos Aires","Analyzed by Reik; a founder of the Argentine Psychoanalytic Association."],
+["federn","Paul Federn","1871–1950","Vienna, then New York","Early member of Freud's circle; Aichhorn's analyst."],
+["connell","E. H. Connell","dates unknown","Edinburgh","Australian-trained analyst; Fairbairn's analyst when Fairbairn was a medical student. Who analyzed him is undocumented."],
+["fenichel","Otto Fenichel","1897–1946","Vienna, Berlin, then Los Angeles","Analyzed by Federn, then Radó; Marxist analyst whose circular letters chronicled the movement in exile."],
+["koch","Adelheid Koch","1896–1980","Berlin, then São Paulo","Analyzed by Fenichel; Brazil's first IPA training analyst, who trained its first generation."],
+["jacobson","Edith Jacobson","1897–1978","Berlin, then New York","Analyzed by Fenichel; theorist of the self and object world."],
+["kohut","Heinz Kohut","1913–1981","Vienna, then Chicago","Analyzed by Aichhorn, then Ruth Eissler in Chicago; founder of self psychology."],
+["hitschmann","Eduard Hitschmann","1871–1957","Vienna, then Boston","Early member of Freud's Wednesday circle and the Freud family doctor; Sterba's analyst."],
+["sterba","Richard Sterba","1898–1989","Vienna, then Detroit","Analyzed by Hitschmann; author of the first psychoanalytic dictionary."],
+["langer","Marie Langer","1910–1987","Vienna, Buenos Aires, then Mexico City","Analyzed by Sterba; Marxist analyst and a founder of the Argentine Psychoanalytic Association."],
+["bicudo","Virgínia Leone Bicudo","1910–2003","São Paulo","Analyzed by Koch; sociologist of race and the first Black psychoanalyst in Brazil."],
+["kosawa","Heisaku Kosawa","1897–1968","Vienna, then Tokyo","Analyzed by Sterba and supervised by Federn in Vienna; founder of psychoanalysis in Japan, known for the Ajase complex."],
+["eissler","Ruth Eissler","1906–1989","Vienna, Chicago, then New York","Analyzed by Reik, then Sterba in Vienna; Kohut's training analyst in Chicago."],
+["eiminder","Sándor Eiminder","dates unknown","Vienna, then Barcelona","Hungarian; worked in Aichhorn's group in Vienna, then fled to Barcelona, where he analyzed Tosquelles."],
+["wittenberg","Wilhelm Wittenberg","1874–1928","Munich","First analyst of both Fromm-Reichmann and Fromm."],
+["aichhorn","August Aichhorn","1878–1949","Vienna","Analyst of delinquent youth; Mahler's second analyst."],
+["hoffer","Willi Hoffer","1897–1967","Vienna, then London","Mahler's final analyst; close to Anna Freud."],
+["payne","Sylvia Payne","1880–1976","London","Analyzed by Sachs; one of Klein's later analysts."],
+];
+const E=[
+["freud","ferenczi"],["freud","anna"],["freud","eitingon"],["freud","jstrachey"],["freud","astrachey"],["freud","riviere"],["freud","deutsch"],["freud","bonaparte"],["freud","hd"],["freud","burlingham"],["freud","rickman"],["freud","hartmann"],
+["ferenczi","jones"],["ferenczi","klein"],["ferenczi","balint"],["ferenczi","thompson"],["ferenczi","rickman"],
+["abraham","klein"],["abraham","horney"],["abraham","deutsch"],["abraham","glover"],["abraham","rado"],["abraham","reik"],["abraham","astrachey"],
+["sachs","horney"],["sachs","fromm"],["abraham","sharpe"],["reik","heimann"],["sachs","balint"],["sachs","freichmann"],["sachs","loewenstein"],["sachs","sharpe"],
+["jones","riviere"],
+["riviere","winnicott"],["riviere","bowlby"],["riviere","isaacs"],["jstrachey","winnicott"],
+["klein","bion"],["klein","segal"],["klein","rosenfeld"],["klein","heimann"],["klein","clare"],["klein","bick"],["klein","rickman"],
+["rickman","bion"],["rickman","khan"],["balint","bick"],["balint","joseph"],["heimann","joseph"],
+["sharpe","little"],["sharpe","khan"],["winnicott","guntrip"],["winnicott","little"],["winnicott","khan"],["khan","phillips"],["fairbairn","guntrip"],["bion","grotstein"],
+["anna","erikson"],["deutsch","mahler"],["rado","hartmann"],["thompson","sullivan"],["freichmann","fromm"],
+["loewenstein","lacan"],["lacan","laplanche"],["lacan","pontalis"],["lacan","leclaire"],["lacan","guattari"],["reik","garma"],
+["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["hoffer","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"]];
+const byId=Object.fromEntries(P.map(([id,name,dates,city,blurb])=>[id,{id,name,dates,city,blurb,born:(dates.match(/\d{4}/)?+dates.match(/\d{4}/)[0]:({connell:1880}[id]||1900))}]));
+const nodes=Object.values(byId);
+const WK=[["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
+const links=E.map(([s,t])=>({source:s,target:t,w:false})).concat(WK.map(([s,t])=>({source:s,target:t,w:true})));
+const TR=new Set(WK.map(e=>e[0]+">"+e[1]));
+const trainUp=id=>WK.filter(e=>e[1]===id&&TR.has(e[0]+">"+e[1])).map(e=>e[0]);
+const work=id=>WK.filter(e=>e.includes(id)).map(e=>e[0]===id?e[1]:e[0]);
+const up=id=>E.filter(e=>e[1]===id).map(e=>e[0]);
+const down=id=>E.filter(e=>e[0]===id).map(e=>e[1]);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const SHORT={jstrachey:"J. Strachey",astrachey:"A. Strachey",clare:"C. Winnicott",winnicott:"Winnicott",anna:"Anna Freud",freud:"Freud",hd:"H.D.",freichmann:"Fromm-Reichmann",melitta:"Schmideberg",moneykyrle:"Money-Kyrle",eissler:"R. Eissler"};
+const short=n=>SHORT[n.id]||n.name.split(" ").slice(-1)[0];
+
+const W=1000, H=1180, TOPY=60, BOTY=H-80;
+const yrs=[...new Set(nodes.map(n=>n.born))].sort((a,b)=>a-b);
+const yrY=new Map(); { const sorted=nodes.map(n=>n.born).sort((a,b)=>a-b); yrs.forEach(y=>{ const idx=sorted.map((v,i)=>v===y?i:-1).filter(i=>i>=0); const r=idx.reduce((a,b)=>a+b,0)/idx.length; yrY.set(y, TOPY+ (0.25*((y-yrs[0])/(yrs.at(-1)-yrs[0])) + 0.75*(r/(sorted.length-1)))*(BOTY-TOPY)); }); }
+const yOf=y=>{ if(yrY.has(y)) return yrY.get(y); let a=yrs[0],b=yrs.at(-1); for(const v of yrs){ if(v<=y) a=v; if(v>=y){ b=v; break; } } if(a===b) return yrY.get(a); return yrY.get(a)+(y-a)/(b-a)*(yrY.get(b)-yrY.get(a)); };
+const svg=d3.select("#svg").attr("viewBox",`0 0 ${W} ${H}`);
+const g=svg.append("g");
+const grid=g.append("g");
+for(let y=1860;y<=1950;y+=10) if(y>=yrs[0]&&y<=yrs.at(-1)){ grid.append("line").attr("class","grid").attr("x1",-2000).attr("x2",W+2000).attr("y1",yOf(y)).attr("y2",yOf(y)); grid.append("text").attr("class","yr").attr("x",18).attr("y",yOf(y)-6).text(y+"s"); }
+svg.append("defs").html(`<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>`);
+const isTr=l=>TR.has((l.source.id||l.source)+">"+(l.target.id||l.target));
+const edge=g.append("g").selectAll("path").data(links).join("path").attr("class",l=>"edge"+(isTr(l)?" train":l.w?" work":""));
+const node=g.append("g").selectAll("g").data(nodes).join("g").attr("class","node").attr("tabindex",0).attr("role","button").attr("aria-label",d=>d.name);
+node.append("rect").attr("rx",12).attr("ry",12);
+node.append("text").attr("text-anchor","middle").attr("dominant-baseline","central").text(d=>short(d));
+
+const cv=document.createElement("canvas").getContext("2d");
+function textW(str){ try{ cv.font='500 12.5px Archivo, "Helvetica Neue", Arial, sans-serif'; const m=cv.measureText(str.toUpperCase()).width; if(m>0) return m*1.12+str.length*0.15; }catch(e){} return str.length*9.4; }
+function measure(){ node.each(function(d){ d.w=Math.max(Math.round(textW(short(d)))+22,40); d.h=24; d3.select(this).select("rect").attr("x",-d.w/2).attr("y",-d.h/2).attr("width",d.w).attr("height",d.h); }); }
+
+const sim=d3.forceSimulation(nodes)
+  .force("link",d3.forceLink(links).id(d=>d.id).distance(90).strength(.12))
+  .force("charge",d3.forceManyBody().strength(-320).distanceMax(400))
+  .force("y",d3.forceY(d=>yOf(d.born)).strength(1.2))
+  .force("x",d3.forceX(W/2).strength(.025))
+  .force("collide",rectCollide())
+  .stop();
+
+function rectCollide(){
+  let ns; function force(){ for(let k=0;k<3;k++) for(let i=0;i<ns.length;i++){ const a=ns[i]; for(let j=i+1;j<ns.length;j++){ const b=ns[j];
+    const dx=b.x-a.x, dy=b.y-a.y, ox=(a.w+b.w)/2+14-Math.abs(dx), oy=(a.h+b.h)/2+6-Math.abs(dy);
+    if(ox>0&&oy>0){ if(ox<oy*2.2){ const s=(dx<0?-1:1)*ox/2; a.x-=s; b.x+=s; } else { const s=(dy<0?-1:1)*oy/2; a.y-=s*.3; b.y+=s*.3; } } } } }
+  force.initialize=n=>ns=n; return force;
+}
+
+function edgePath(l){
+  const s=l.source, t=l.target, x1=s.x, y1=s.y+s.h/2, x2=t.x, y2=t.y-t.h/2-3;
+  const my=(y1+y2)/2;
+  return `M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`;
+}
+function draw(){ node.attr("transform",d=>`translate(${d.x},${d.y})`); edge.attr("d",edgePath); }
+
+let sel=null;
+function select(id,fromSearch){
+  sel=id; const U=new Set(up(id)), D=new Set(down(id)), TU=new Set(trainUp(id)), TD=new Set(WK.filter(e=>e[0]===id&&TR.has(e[0]+">"+e[1])).map(e=>e[1])), K=new Set(work(id).filter(k=>!TU.has(k)&&!TD.has(k)));
+  const A=new Set(), q=[id]; while(q.length){ const c=q.shift(); for(const p of [...up(c),...trainUp(c)]) if(!A.has(p)){ A.add(p); q.push(p); } }
+  const line=new Set([id,...A]);
+  const isUp=l=>(!l.w||TR.has(l.source.id+">"+l.target.id))&&line.has(l.target.id)&&A.has(l.source.id);
+  const isDown=l=>(!l.w||isTr(l))&&l.source.id===id;
+  const isWk=l=>l.w&&!isUp(l)&&!isDown(l)&&(l.target.id===id||l.source.id===id);
+  node.classed("sel",d=>d.id===id).classed("up",d=>A.has(d.id)).classed("down",d=>D.has(d.id)).classed("wk",d=>K.has(d.id)).classed("tr",d=>TU.has(d.id)||TD.has(d.id)).classed("dim",d=>d.id!==id&&!A.has(d.id)&&!D.has(d.id)&&!K.has(d.id)&&!TD.has(d.id));
+  edge.classed("up",isUp).classed("down",isDown).classed("wk",isWk).classed("dim",l=>!isUp(l)&&!isDown(l)&&!isWk(l)).attr("marker-end",l=>(isUp(l)||isDown(l))?"url(#ah)":null);
+  edge.filter(l=>isUp(l)||isDown(l)||isWk(l)).raise();
+  const n=byId[id];
+  const chips=(arr,b)=>arr.length?`<div class="chips">${arr.map(k=>`<button type="button" class="chip${b?" b":""}" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:`<p class="none">None documented here</p>`;
+  document.getElementById("info").innerHTML=`<button type="button" class="cx" data-clear aria-label="Clear selection">×</button><h2>${esc(n.name)}</h2><p class="dates">${esc(n.dates)} · ${esc(n.city)}</p><p>${esc(n.blurb)}</p>
+    <p class="lab">Was analyzed by</p>${chips([...U],false)}
+    ${TU.size?`<p class="lab">Trained/supervised by</p><div class="chips">${[...TU].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
+    ${A.size>U.size?`<p class="lab">Full lineage</p>${chips([...A].filter(k=>!U.has(k)).sort((a,b)=>byId[a].born-byId[b].born),false)}`:""}
+    <p class="lab">Analyzed</p>${chips([...D],true)}
+    ${TD.size?`<p class="lab">Trained/supervised</p><div class="chips">${[...TD].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
+    ${[...K].filter(k=>!A.has(k)).length?`<p class="lab">Collaborated with</p>${chips([...K].filter(k=>!A.has(k)),false)}`:""}`;
+  try{ history.replaceState(null,"","#"+id);}catch(e){}
+  if(fromSearch) focusOn(n);
+}
+function clearSel(){ sel=null; node.classed("sel up down dim wk tr",false); edge.classed("up down dim wk",false).attr("marker-end",null);
+  document.getElementById("info").innerHTML=`<p class="hint">Click anyone on the web to see who analyzed them and their full lineage.</p>`;
+  try{ history.replaceState(null,"",location.pathname+location.search);}catch(e){} }
+svg.on("click",()=>{ if(sel) clearSel(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&sel) clearSel(); });
+node.on("click",(e,d)=>{ e.stopPropagation(); select(d.id); }).on("keydown",(e,d)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); select(d.id); }});
+document.getElementById("info").addEventListener("click",e=>{ if(e.target.closest("[data-clear]")){ clearSel(); return; } const b=e.target.closest("[data-go]"); if(b) select(b.dataset.go,true); });
+
+const zoom=d3.zoom().scaleExtent([.5,3]).on("zoom",e=>g.attr("transform",e.transform));
+svg.call(zoom).on("dblclick.zoom",null);
+document.getElementById("zin").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1.3);
+document.getElementById("zout").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1/1.3);
+document.getElementById("zfit").onclick=()=>fit(true);
+function fit(anim){ const xs=nodes.map(d=>d.x), x0=Math.min(...nodes.map(d=>d.x-d.w/2))-80, x1=Math.max(...nodes.map(d=>d.x+d.w/2))+20;
+  const k=Math.min(1,W/(x1-x0)); const t=d3.zoomIdentity.translate(W/2-k*(x0+x1)/2,(1-k)*H/2).scale(k);
+  (anim?svg.transition().duration(300):svg).call(zoom.transform,t); }
+function focusOn(n){ const t=d3.zoomTransform(svg.node()); if(t.k<=1.05) return; svg.transition().duration(350).call(zoom.translateTo,n.x,n.y); }
+
+const dl=document.getElementById("names"); dl.innerHTML=nodes.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${esc(n.name)}">`).join("");
+const q=document.getElementById("q");
+q.addEventListener("change",()=>{ const v=q.value.trim().toLowerCase(); const n=nodes.find(n=>n.name.toLowerCase()===v)||nodes.find(n=>n.name.toLowerCase().includes(v)); if(n){ select(n.id,true); q.value=""; } });
+
+function start(){
+  measure();
+  nodes.forEach((d,i)=>{ d.x=W/2+((i*97)%600-300); d.y=yOf(d.born); });
+  for(let i=0;i<600;i++) sim.tick();
+  const clampX=()=>{};
+  clampX();
+  const solo=rectCollide(); solo.initialize(nodes);
+  for(let i=0;i<300;i++){ solo(); clampX(); nodes.forEach(d=>{ d.y+= (yOf(d.born)-d.y)*0.05; }); }
+  
+  const minX=Math.min(...nodes.map(d=>d.x-d.w/2)); grid.selectAll("text").attr("x",minX-64);
+  draw(); fit(false);
+  const h=decodeURIComponent((location.hash||"").slice(1));
+  select(byId[h]?h:"freud");
+}
+start();
+</script>
+
+</body>
+</html>

@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#F2F2EE">
-<title>Lines of Descent</title>
+<title>Schools · Transference</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
@@ -151,13 +151,42 @@ body.picking .head{cursor:cell}
 .cmp .yr{font-weight:600;font-variant-numeric:tabular-nums;margin-right:6px}
 .cmp .none{color:var(--muted)}
 @media (max-width: 760px){nav{position:static;align-items:flex-start;text-align:left;padding-top:0;margin-top:14px} nav button{text-align:left}}
+h1.ttl{transform:none;margin:0;font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;font-size:clamp(2rem,5.2vw,4.4rem);text-transform:uppercase;padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
+h1.ttl span{display:inline;padding:0}
+.spool{display:none!important}
+.wrap>header>nav{position:static!important;flex-direction:row!important;flex-wrap:wrap;gap:4px 22px;align-items:baseline!important;text-align:left!important;padding-top:0!important;margin-top:0}
+.wrap>header>nav button{text-align:left!important}
+.wrap>header{position:relative}
+.wrap>header>nav{top:0!important;right:0!important}
 </style>
 <style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
 </head>
 <body>
 <div class="wrap">
+<style>
+.site{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 28px;margin:0 0 clamp(28px,5vw,56px);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:100%;font-weight:600;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.2;letter-spacing:-.005em;color:#0E0E0E}
+.site a{color:inherit;text-decoration:none}
+.site .brand{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:baseline}
+.site .brand b{font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.site .brand span{font-weight:500}
+.site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
+.site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu a:hover{border-bottom-color:#0E0E0E}
+.site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
+@media (max-width:640px){.site{flex-direction:column;gap:10px}}
+</style>
+<div class="site" role="navigation" aria-label="Site">
+  <a class="brand" href="index.html"><b>Transference</b><span>psychoanalysis, who learned it from whom</span></a>
+  <div class="menu">
+    <a href="index.html" aria-current="page">Schools</a>
+    <a href="analysts.html">Analysts</a>
+    <a href="names.html">Index</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
   <header>
-    <div class="titlewrap" id="titlewrap"><p class="kicker">Psychoanalytic</p><h1><span id="linesof">Lines of</span><span id="descent">Descent</span></h1>
+    <div class="titlewrap" id="titlewrap"><h1 class="ttl"><span id="linesof">Schools of thought</span><span id="descent"></span></h1>
     <svg class="spool" id="spool" viewBox="0 0 220 305" aria-hidden="true">
       <path class="thread" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" d="M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300">
         <animate attributeName="d" dur="4.8s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" values="M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300;M70 70 C122 56 172 80 172 124 S184 190 164 238 S180 282 166 300;M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300"/>
@@ -204,27 +233,27 @@ const P={
 };
 
 const N={
-freud:{gen:0,col:1,l:"root",name:"Freud",full:"Classical psychoanalysis",sub:"Drive and conflict",yrs:"1890s–1939",parents:[],
+freud:{gen:0,col:1,l:"root",name:"Freudian",full:"Classical psychoanalysis",sub:"Drive and conflict",yrs:"1890s–1939",parents:[],
  sum:"The mind as a battleground between instinctual wishes and the demands of civilization. Neurosis is a compromise between the id pressing for yes and the ego and superego countering with no. The analyst positions herself outside the field, a neutral observer and blank screen, and interpreting the transference makes the unconscious conscious. Insight, Freud believed, would set the patient free.",
  dist:["Drive theory: libido, later the life and death drives", "Unconscious conflict between wish and defense", "Topographic, then structural model: id, ego, superego", "Transference as the past displaced onto the analyst", "Neutrality, abstinence and interpretation", "A one-person psychology: the unit of study is the patient's mind"],
  th:["freud"],tx:[["1900","The Interpretation of Dreams","Freud"],["1912","The Dynamics of Transference","Freud"],["1917","Mourning and Melancholia","Freud"],["1923","The Ego and the Id","Freud"]],
  co:["drive","transference","neutrality"]},
-jung:{gen:0,col:0,l:"side",side:true,name:"Jung",full:"Analytical psychology",sub:"Broke with Freud, 1913",yrs:"1913–1961",parents:["freud"],
+jung:{gen:0,col:0,l:"side",side:true,name:"Jungian",full:"Analytical psychology",sub:"Broke with Freud, 1913",yrs:"1913–1961",parents:["freud"],
  sum:"Jung was Freud's chosen heir until their break in 1912–13 over the nature of libido and the unconscious. He founded analytical psychology, a separate tradition with its own institutes, which runs alongside the relational turn rather than feeding into it.",
  dist:["Libido as general psychic energy, not only sexual","A collective unconscious of archetypes beneath the personal unconscious","Individuation as the aim of development and treatment","Symptoms and dreams as forward-looking and meaning-making","An early two-person intuition: treatment as mutual influence in which both people change","Where it touches this tree: Fordham's London developmental school brought Klein and Winnicott into Jungian work"],
  th:["jung","fordham"],tx:[["1912","Transformations and Symbols of the Libido","Jung"],["1921","Psychological Types","Jung"],["1929","Problems of Modern Psychotherapy","Jung"],["1946","The Psychology of the Transference","Jung"],["1985","Explorations into the Self","Fordham"]],
  co:["collective-unconscious","individuation","mutual-influence"]},
-lacan:{gen:0,col:4,l:"side",side:true,name:"Lacan",full:"Lacanian psychoanalysis",sub:"Return to Freud",yrs:"1953–1981",parents:["freud"],
+lacan:{gen:0,col:4,l:"side",side:true,name:"Lacanian",full:"Lacanian psychoanalysis",sub:"Return to Freud",yrs:"1953–1981",parents:["freud"],
  sum:"Lacan's return to Freud attacked American ego psychology, as the relational school later would, but from the opposite direction. Where the two-person turn values empathy, attunement and the real relationship, Lacan treats the ego as a site of misrecognition and puts language and desire at the center.",
  dist:["The unconscious is structured like a language","The mirror stage: the ego built on an alienating image","Imaginary, Symbolic and Real","Desire as the desire of the Other","Against ego psychology and adaptation","The variable-length session","Where it touches this tree: Benjamin argues with Lacan about recognition, and Laplanche, from his circle, shapes later relational writing on sexuality"],
  th:["lacan","laplanche"],tx:[["1949","The Mirror Stage as Formative of the Function of the I","Lacan"],["1953","The Function and Field of Speech and Language in Psychoanalysis","Lacan"],["1964","The Four Fundamental Concepts of Psychoanalysis (Seminar XI)","Lacan"],["1966","Écrits","Lacan"],["1987","New Foundations for Psychoanalysis","Laplanche"]],
  co:["mirror-stage","the-other","isr"]},
-klein:{gen:1,col:0,l:"root",name:"Klein",full:"Kleinian theory",sub:"Internal objects",yrs:"1920s–1960",parents:["freud"],
+klein:{gen:1,col:0,l:"root",name:"Kleinian",full:"Kleinian theory",sub:"Internal objects",yrs:"1920s–1960",parents:["freud"],
  sum:"For Klein the mind is never settled: “a continually shifting, kaleidoscopic stream of primitive, phantasmagoric images, fantasies, and terrors,” always fending off persecutory and depressive anxiety. Splitting, envy and projective identification organize experience, and the patient lives the analyst as good breast or bad breast. Contemporary Kleinians, following Betty Joseph, shifted toward the here-and-now of the transference.",
  dist:["Unconscious phantasy active from birth", "Paranoid-schizoid and depressive positions, continually lost and regained", "Splitting, projective identification and the manic defense", "Envy as the attack on the good object", "Reparation: love strong enough to survive one's hate", "Here-and-now interpretation of the transference (Betty Joseph)"],
  th:["klein"],tx:[["1932","The Psycho-Analysis of Children","Klein"],["1946","Notes on Some Schizoid Mechanisms","Klein"],["1957","Envy and Gratitude","Klein"]],
  co:["phantasy","positions","projective-identification"]},
-ferenczi:{gen:1,col:1,l:"root",name:"Budapest school",full:"The Budapest school",sub:"Ferenczi, Balint, Hermann",yrs:"1910s–1930s",parents:["freud"],
+ferenczi:{gen:1,col:1,l:"root",name:"Ferenczian",full:"The Budapest school",sub:"Ferenczi, Balint, Hermann",yrs:"1910s–1930s",parents:["freud"],
  sum:"Ferenczi, Freud's closest colleague and most important dissenter, took real trauma seriously and experimented with the analyst's own participation. Around him grew a Budapest school whose students carried his ideas to London and New York. His influence on later schools came through people and, decades later, through rediscovery, so the lines from this block are drawn dashed.",
  dist:["Actual trauma and the adult's failure, not only fantasy","The analyst's contribution to the patient's suffering","Elasticity of technique","Mutual analysis as a late experiment","Identification with the aggressor","A school of its own: Michael and Alice Balint, Imre Hermann","Carried abroad by students: Balint to London, Clara Thompson to New York","Reclaimed by relational analysts after the Clinical Diary appeared in 1985"],
  th:["ferenczi","balint","hermann","thompson"],tx:[["1928","The Elasticity of Psycho-Analytic Technique","Ferenczi"],["1932","The Clinical Diary (published 1985)","Ferenczi"],["1933","Confusion of Tongues Between Adults and the Child","Ferenczi"],["1936","Clinging and Going-in-Search","Hermann"],["1993","The Legacy of Sándor Ferenczi","Aron and Harris, eds."]],
@@ -234,12 +263,12 @@ ferenczi:{gen:1,col:1,l:"root",name:"Budapest school",full:"The Budapest school"
  dist:["Analysis of defenses and “exploration of the surface” (Kris)", "The analyst equidistant from id, ego and superego (Anna Freud)", "Adaptation, conflict-free ego functions and the average expectable environment (Hartmann)", "The libidinal object and the mother as auxiliary ego (Spitz)", "Separation-individuation (Mahler)", "Self and object images (Jacobson)", "The working alliance: analysis as partnership rather than battle"],
  th:["anna-freud","hartmann","jacobson"],tx:[["1936","The Ego and the Mechanisms of Defense","Anna Freud"],["1939","Ego Psychology and the Problem of Adaptation","Hartmann"],["1964","The Self and the Object World","Jacobson"]],
  co:["defense","conflict-free","neutrality"]},
-bion:{gen:2,col:0,l:"british",name:"Bion",full:"Bion and post-Kleinian thought",sub:"A theory of thinking",yrs:"1940s–1979",parents:["klein"],
+bion:{gen:2,col:0,l:"british",name:"Bionian",full:"Bion and post-Kleinian thought",sub:"A theory of thinking",yrs:"1940s–1979",parents:["klein"],
  sum:"Bion interpersonalized projective identification, changing it “from a fantasy in the mind of one person to a complex relational event in the minds of two people.” The analyst, like the mother in reverie, contains and transforms what the patient cannot yet think, and listens with “neither memory nor desire.”",
  dist:["Container and contained", "Projective identification as an event between two minds", "Alpha function turns raw experience into thought", "Maternal reverie", "Attacks on linking", "Listening without memory or desire"],
  th:["bion"],tx:[["1961","Experiences in Groups","Bion"],["1962","Learning from Experience","Bion"],["1970","Attention and Interpretation","Bion"]],
  co:["container","alpha-function","reverie","projective-identification"]},
-independents:{gen:2,col:1,l:"british",name:"British object relations",full:"British object relations: the Independents",sub:"Winnicott, Fairbairn, Balint",yrs:"1940s–1970s",parents:["klein"],infl:["ferenczi"],
+independents:{gen:2,col:1,l:"british",name:"Independent",full:"British object relations: the Independents",sub:"Winnicott, Fairbairn, Balint",yrs:"1940s–1970s",parents:["klein"],infl:["ferenczi"],
  sum:"Fairbairn held that “libido is not pleasure-seeking, but object-seeking”: children stay loyal to bad objects because pain is the only connection on offer. For him insight is not enough; the analyst must become a new kind of object. Winnicott made the analytic situation a holding environment where the true self can emerge, where “content and interpretations were nearly irrelevant” and what mattered was the experience of self in relation to other.",
  dist:["Libido is object-seeking (Fairbairn)", "Loyalty to bad objects; internal objects as substitutes for real contact", "Splitting of the ego: exciting and rejecting objects", "The holding environment and the good-enough mother (Winnicott)", "True and false self; transitional experience", "Primary love, the basic fault and the new beginning (Balint)"],
  th:["fairbairn","winnicott","balint"],tx:[["1952","Psychoanalytic Studies of the Personality","Fairbairn"],["1960","Ego Distortion in Terms of True and False Self","Winnicott"],["1968","The Basic Fault","Balint"],["1969","The Use of an Object","Winnicott"],["1971","Playing and Reality","Winnicott"]],
@@ -254,7 +283,7 @@ interpersonal:{gen:2,col:2,l:"relational",name:"Interpersonal",full:"Interperson
  dist:["Tragic Man rather than Guilty Man", "Empathic immersion and vicarious introspection", "Selfobjects: others experienced as part of the self", "Mirroring, idealizing and twinship transferences", "Optimal frustration and transmuting internalization", "Aggression as reactive, not fundamental"],
  th:["kohut","wolf","lichtenberg","bacal"],tx:[["1971","The Analysis of the Self","Kohut"],["1977","The Restoration of the Self","Kohut"],["1978","The Disorders of the Self and Their Treatment","Kohut and Wolf"],["1984","How Does Analysis Cure?","Kohut"],["1989","Psychoanalysis and Motivation","Lichtenberg"]],
  co:["selfobject","mirroring","transmuting","empathy"]},
-"field-theory":{gen:3,col:0,l:"british",name:"Contemporary Bionians",full:"Contemporary Bionian thought",sub:"Field theory, Ogden, Grotstein",yrs:"1960s",parents:["bion","independents"],
+"field-theory":{gen:3,col:0,l:"british",name:"Post-Bionian",full:"Contemporary Bionian thought",sub:"Field theory, Ogden, Grotstein",yrs:"1960s",parents:["bion","independents"],
  sum:"Analysts who carried Bion's theory of thinking into the analytic relationship itself. In the Río de la Plata the Barangers described the session as a bipersonal field. In Italy, Ferro joined their field to Bion. In California, Ogden and Grotstein read Bion alongside Klein and Winnicott.",
  dist:["The field, not either person, as the object of analysis","Shared unconscious fantasy and bastions (the Barangers)","Characters in the patient's story as functions of the field (Ferro)","The analytic third and the subjugating third (Ogden)","The analyst's reverie as clinical data","Dreaming the session rather than decoding it"],
  th:["barangers","ferro","civitarese","ogden","grotstein"],tx:[["1961","The Analytic Situation as a Dynamic Field","W. and M. Baranger"],["1994","The Analytic Third: Working with Intersubjective Clinical Facts","Ogden"],["1997","Reverie and Interpretation","Ogden"],["1999","The Bi-Personal Field","Ferro"],["2004","This Art of Psychoanalysis: Dreaming Undreamt Dreams and Interrupted Cries","Ogden"],["2007","A Beam of Intense Darkness","Grotstein"],["2010","The Intimate Room","Civitarese"]],
@@ -264,18 +293,18 @@ interpersonal:{gen:2,col:2,l:"relational",name:"Interpersonal",full:"Interperson
  dist:["Self and object representations as the building blocks of mind","Separation-individuation (Mahler)","Therapeutic action through a new object relationship (Loewald)","Borderline personality organization and splitting (Kernberg)","Pathological narcissism as defense, against Kohut's view of arrested development","Keeps drive theory while making relationships central"],
  th:["loewald","mahler","kernberg","jacobson"],tx:[["1960","On the Therapeutic Action of Psychoanalysis","Loewald"],["1964","The Self and the Object World","Jacobson"],["1975","The Psychological Birth of the Human Infant","Mahler, Pine and Bergman"],["1975","Borderline Conditions and Pathological Narcissism","Kernberg"]],
  co:["separation-individuation","splitting","therapeutic-action"]},
-attachment:{gen:3,col:1,l:"british",name:"Attachment theory",full:"Attachment theory and mentalization",sub:"Bowlby, Ainsworth, Fonagy",yrs:"1950s",parents:["independents"],
+attachment:{gen:3,col:1,l:"british",name:"Attachment",full:"Attachment theory and mentalization",sub:"Bowlby, Ainsworth, Fonagy",yrs:"1950s",parents:["independents"],
  sum:"Bowlby trained in the British Society and was supervised by Klein, but he insisted that real separations and real caregiving shape the child. His attachment theory stayed at the margins of psychoanalysis for decades. Through Ainsworth's and Main's research and Fonagy's work on mentalization, it became one of the strongest influences on contemporary relational practice.",
  dist:["Attachment as a primary need, not secondary to feeding or drive","Real separation and loss matter","Secure base and safe haven","Patterns of attachment: secure, avoidant, ambivalent, disorganized","Internal working models of self and other","Mentalization: reading behavior in terms of mental states (Fonagy)"],
  th:["bowlby","ainsworth","main","fonagy"],tx:[["1958","The Nature of the Child's Tie to His Mother","Bowlby"],["1969","Attachment (Attachment and Loss, vol. 1)","Bowlby"],["1978","Patterns of Attachment","Ainsworth and colleagues"],["1985","Security in Infancy, Childhood, and Adulthood","Main, Kaplan and Cassidy"],["2002","Affect Regulation, Mentalization, and the Development of the Self","Fonagy, Gergely, Jurist and Target"]],
  co:["secure-base","working-models","mentalization"]},
-relational:{gen:3,col:2,l:"relational",name:"Relational school",full:"The relational school",sub:"Mitchell, Greenberg",yrs:"1980s",parents:["interpersonal","independents"],infl:["ferenczi"],
+relational:{gen:3,col:2,l:"relational",name:"Relational",full:"The relational school",sub:"Mitchell, Greenberg",yrs:"1980s",parents:["interpersonal","independents"],infl:["ferenczi"],
  sum:"Patient and analyst form “a co-evolving, reciprocally mutual, interactive dyad,” like “a ping-pong game being played with two balls simultaneously.” What heals is engagement with an authentic other. Enactments are unavoidable and become the route to understanding. Davies asks whose bad objects are in the room: the work is to evoke the bad object relationship without concretely becoming it, while the analyst's own shame-laden self states come into play too.",
  dist:["The relational matrix replaces drive", "Enactment: the patient delivers herself into the relationship", "Two subjects in mutual influence, with asymmetry", "The analyst's subjectivity and countertransference as part of the work", "Multiple self-states and dissociation (Bromberg, Davies)", "Bad objects on both sides of the room (Davies)", "Mutual recognition and the third (Benjamin)"],
  th:["mitchell","greenberg","benjamin","aron","bromberg","davies","hoffman","ghent","harris","dimen","altman"],
  tx:[["1983","Object Relations in Psychoanalytic Theory","Greenberg and Mitchell"],["1988","Relational Concepts in Psychoanalysis","Mitchell"],["1988","The Bonds of Love","Benjamin"],["1990","Masochism, Submission, Surrender","Ghent"],["1991","Psychoanalytic Dialogues founded","Mitchell"],["1994","Treating the Adult Survivor of Childhood Sexual Abuse","Davies and Frawley"],["1995","The Analyst in the Inner City","Altman"],["1996","A Meeting of Minds","Aron"],["1998","Standing in the Spaces","Bromberg"],["1998","Ritual and Spontaneity in the Psychoanalytic Process","Hoffman"],["2005","Gender as Soft Assembly","Harris"],["2018","Beyond Doer and Done To","Benjamin"]],
  co:["relational-matrix","enactment","self-states","mutuality","mutual-recognition","doer-done-to","moral-third"]},
-intersubjective:{gen:3,col:4,l:"self",name:"Intersubjectivity",full:"Intersubjectivity: intersubjective systems theory",sub:"Stolorow, Atwood",yrs:"1970s",parents:["self-psychology"],
+intersubjective:{gen:3,col:4,l:"self",name:"Intersubjective",full:"Intersubjectivity: intersubjective systems theory",sub:"Stolorow, Atwood",yrs:"1970s",parents:["self-psychology"],
  sum:"Growing out of self psychology, Stolorow and his collaborators replaced the individual, isolated self with “the fully contextual interaction of subjectivities with reciprocal, mutual influence.” Psychological transformation happens through the shared, co-created emotional field of the patient-analyst dyad, and transference becomes the patient's organizing activity rather than a distortion.",
  dist:["The myth of the isolated mind", "The co-created emotional field of the dyad", "Prereflective organizing principles", "Transference as organizing activity, not distortion", "Developmental trauma as unbearable affect without attunement", "Phenomenological contextualism"],
  th:["stolorow","atwood","brandchaft","orange"],tx:[["1979","Faces in a Cloud","Stolorow and Atwood"],["1984","Structures of Subjectivity","Atwood and Stolorow"],["1987","Psychoanalytic Treatment: An Intersubjective Approach","Stolorow, Brandchaft and Atwood"],["1992","Contexts of Being","Stolorow and Atwood"],["1995","Emotional Understanding","Orange"],["2007","Trauma and Human Existence","Stolorow"]],
@@ -402,7 +431,7 @@ const NEWC={"freud": ["Symptoms have meaning, rather than being only neurologica
 const KEYLAB="Theory of change";
 const KEY={freud:["Where id was,","there ego shall be"],jung:["Integrating the","unconscious into a whole"],lacan:["Language uncovers","unconscious desire"],klein:["Interpreting phantasy, so love and hate","can meet in one whole object"],ferenczi:["A responsive analyst","repairs trauma's damage"],"ego-psychology":["Strengthening the ego,","not only freeing the id"],bion:["Containment makes","thinking possible"],independents:["Insight is not enough;","a new object frees the self"],interpersonal:["Inquiry expands awareness","of patterns with others"],"self-psychology":["Empathy builds","the self"],"american-or":["Integrating split images","of self and other"],"field-theory":["Dreaming together","what was never dreamt"],attachment:["Security makes","reflection possible"],relational:["What heals is engagement","with an authentic other"],intersubjective:["Change happens in the shared, co-created","emotional field of the dyad"]};
 const COAST=new Set(["self-psychology","relational","intersubjective"]);
-const STACK={"american-or":["American","object","relations"],ferenczi:["Budapest","school"],independents:["British","object","relations"],"field-theory":["Contemporary","Bionians"],"ego-psychology":["Ego","psychology"],"self-psychology":["Self","psychology"]};
+const STACK={"american-or":["American","object","relations"],"ego-psychology":["Ego","psychology"],"self-psychology":["Self","psychology"]};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const treeEl=document.getElementById("tree"), edgesEl=document.getElementById("edges");
 const chip=k=>`<button type="button" class="chip" data-go="${k}">${esc(N[k].name)}</button>`;
