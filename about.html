@@ -112,10 +112,10 @@ body{background:#EF82C8}
     <section class="pane" id="p-suggest" hidden>
       <p>Know of an analysis that's missing, a date that's wrong, or a school that belongs here? Send it along, with a source if you have one.</p>
       <form id="sform" class="sf" novalidate hidden>
-        <label class="full">Suggestion<textarea name="suggestion" rows="1" required></textarea></label>
-        <label class="full">Source<input name="source" type="text" placeholder="A book, article or link"></label>
         <label>Name<input name="name" type="text" autocomplete="name" required></label>
         <label>Email<input name="email" type="email" autocomplete="email" required></label>
+        <label class="full">Suggestion<textarea name="suggestion" rows="1" required></textarea></label>
+        <label class="full">Source<input name="source" type="text" placeholder="A book, article or link"></label>
         <p class="err" id="serr" role="alert"></p>
         <button type="submit" class="sbtn">Send</button>
       </form>
@@ -134,11 +134,11 @@ ta.addEventListener("input",grow);
 sf.addEventListener("input",()=>{ serr.textContent=""; });
 sf.addEventListener("submit",async e=>{ e.preventDefault();
   const fd=new FormData(sf), sug=(fd.get("suggestion")||"").trim(), em=(fd.get("email")||"").trim();
-  if(!sug){ serr.textContent="Write a suggestion first."; sf.suggestion.focus(); return; }
   const nm=(fd.get("name")||"").trim();
   if(!nm){ serr.textContent="Add your name."; sf.name.focus(); return; }
   if(!em){ serr.textContent="Add your email."; sf.email.focus(); return; }
   if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ serr.textContent="That email doesn't look right."; sf.email.focus(); return; }
+  if(!sug){ serr.textContent="Write a suggestion first."; sf.suggestion.focus(); return; }
   const body=new URLSearchParams(); for(const [k,id] of Object.entries(GFORM.entries)) if(id) body.append(id,(fd.get(k)||"").trim());
   const btn=sf.querySelector("button"); btn.disabled=true; btn.textContent="Sending…";
   try{ await fetch(GFORM.action,{method:"POST",mode:"no-cors",body}); sf.hidden=true; document.getElementById("sdone").hidden=false; }
