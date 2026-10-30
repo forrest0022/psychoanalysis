@@ -162,6 +162,16 @@ h1.ttl span{display:inline;padding:0}
 .ln:first-of-type{padding-top:7px}
 .ln.sl{font-family:var(--mono,"Space Mono",ui-monospace,monospace);font-stretch:100%;font-size:10.4px;letter-spacing:0;color:var(--muted,#55554F);padding-top:3.6px;padding-bottom:8px}
 .head:hover .ln.sl,.node.sel .ln.sl,.node.hl .ln.sl,.node.pick .ln.sl{color:var(--paper)}
+.fab button.disk{position:fixed;right:calc(28px + env(safe-area-inset-right, 0px));top:50%;transform:translateY(-50%);width:136px;height:136px;padding:0;border:0;background:none;border-radius:50%;perspective:700px;cursor:pointer}
+.fab button.disk:hover{background:none}
+.disk .coin{position:absolute;inset:0;transform-style:preserve-3d;animation:coinspin 6s linear infinite}
+.disk:hover .coin,.disk:focus-visible .coin{animation-play-state:paused}
+.disk .face{position:absolute;inset:0;border-radius:50%;background:var(--pink);color:#fff;display:grid;place-items:center;font:700 15px var(--wide);font-stretch:112%;letter-spacing:.08em;text-transform:uppercase;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.disk .back{transform:rotateY(180deg)}
+.disk:hover .face{background:var(--link)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion: reduce){.disk .coin{animation:none}}
+@media (max-width:640px){.fab button.disk{width:96px;height:96px;right:14px}.disk .face{font-size:12px}}
 .wrap>header{position:relative}
 .wrap>header>nav{top:0!important;right:0!important}
 </style>
@@ -617,7 +627,7 @@ const fab=document.getElementById("fab"), cmpEl=document.getElementById("cmp");
 const NAV={origins:"Origins",british:"Kleinian and British",relational:"Interpersonal and relational",self:"Ego and self psychology",side:"Others"};
 function renderFab(){
   document.body.classList.toggle("picking",picking);
-  if(!picking){ fab.innerHTML=`<button type="button" class="glow" data-fab="start">Compare</button>`; return; }
+  if(!picking){ fab.innerHTML=`<button type="button" class="disk" data-fab="start" aria-label="Compare schools"><span class="coin"><span class="face">Compare</span><span class="face back" aria-hidden="true">Compare</span></span></button>`; return; }
   const n=picks.length;
   fab.innerHTML=(n<2?`<span class="hint">Pick ${n?"one more":"two or more"}</span>`:`<button type="button" class="primary" data-fab="show">Compare ${n}</button>`)
     +(n?`<button type="button" data-fab="clear">Clear</button>`:"")+`<button type="button" data-fab="cancel">Cancel</button>`;
