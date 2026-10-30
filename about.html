@@ -49,38 +49,70 @@ a{color:inherit}
   </div>
 </div>
 <style>
-.ab{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(28px,5vw,72px)}
-.ab p{margin:0 0 1.1em}
-.ab h2{font:inherit;margin:0 0 .4em}
-.ab .src p{margin:0 0 .7em}
-.ab .src i{font-style:italic}
-.ab .key span{display:inline-block;width:26px;height:0;border-top:2.4px solid;vertical-align:middle;margin-right:10px}
+body{background:#EF82C8}
+::selection{background:var(--ink);color:#EF82C8}
+.ab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
+.sub{list-style:none;margin:0;padding:0}
+.sub a{text-decoration:none;color:var(--ink)}
+.sub a:hover{text-decoration:underline;text-underline-offset:.15em}
+.sub a[aria-current="true"]{color:#fff}
+.pane[hidden]{display:none}
+.pane p{margin:0 0 1.1em}
+.pane h2{font:inherit;margin:1.4em 0 .4em}
+.pane h2:first-child{margin-top:0}
+.pane i{font-style:italic}
+.pane a{color:var(--ink);text-underline-offset:.15em}
+.key span{display:inline-block;width:26px;height:0;border-top:2.4px solid;vertical-align:middle;margin-right:10px}
+.src p{margin:0 0 .8em}
+.sbtn{display:inline-block;background:var(--ink);color:#fff!important;text-decoration:none;padding:.55em 1.2em;border-radius:999px}
+.sbtn:hover{background:#fff;color:var(--ink)!important}
+@media (max-width:760px){.ab{grid-template-columns:minmax(0,1fr)}}
 </style>
 <h1 class="ttl">About</h1>
 <div class="ab big">
+  <ul class="sub" aria-label="About sections">
+    <li><a href="#about" data-p="about">About</a></li>
+    <li><a href="#sources" data-p="sources">Sources</a></li>
+    <li><a href="#suggest" data-p="suggest">Make a suggestion</a></li>
+  </ul>
   <div>
-    <p><i>*placeholder*</i></p>
-    <p>Transference maps psychoanalysis as a set of inheritances: the schools that grew out of one another, and the analysts who lay down on one another's couches.</p>
-    <p><a href="index.html">Schools</a> traces the major traditions, what each changed, and what each says heals. <a href="analysts.html">Analysts</a> follows the people, placed by birth year, linked by documented analyses. The <a href="names.html">Index</a> lists everyone on the map.</p>
-    <h2>How to read the lines</h2>
-    <p class="key"><span style="border-color:var(--ink)"></span>Analyzed by: a person's analysts, and their analysts, back up the line<br>
-    <span style="border-color:var(--link)"></span>Analyzed: the people someone analyzed<br>
-    <span style="border-color:var(--train)"></span>Trained or supervised, including Freud's first circle, who learned from him without a formal analysis</p>
-    <p>A line means an analysis is documented in print. Many were brief, informal or broken off, and many people had several analysts in turn; where they did, all are shown. Dates and order follow the sources below.</p>
-    <h2>Who is missing</h2>
-    <p>The map reflects how the field kept its records, as much as who was there. Women's analyses were often noted only in passing, and Black and non-European analysts were frequently kept out of institutes or left out of their histories. Where an analyst is unknown, the line simply stops. Corrections and additions are welcome.</p>
-    <p>Made by Jade Forrest Marks, Los Angeles.</p>
-  </div>
-  <div class="src">
-    <h2>Sources</h2>
-    <p>Falzeder, Ernst. 1998. "Family tree matters." <i>Journal of Analytical Psychology</i> 43 (1): 127–154.</p>
-    <p>de Mijolla, Alain, ed. 2005. <i>International Dictionary of Psychoanalysis</i>. 3 vols. Detroit: Macmillan Reference USA.</p>
-    <p>Deutsche Biographie, "Wittenberg, Wilhelm."</p>
-    <p>British Psychoanalytical Society, "Ronald Fairbairn."</p>
-    <p>Aichhorn, Thomas. "Eine Notiz zur Biographie von E. H. Erikson." psyalpha.</p>
-    <p>On Tosquelles and Sándor Eiminder: "Francesc Tosquelles y Max Hodann," psiquiatria.com; and "Ferenczi's theory on power and its pollination to and within Latin America."</p>
+    <section class="pane" id="p-about">
+      <p><i>*placeholder*</i></p>
+      <p>Transference maps psychoanalysis as a set of inheritances: the schools that grew out of one another, and the analysts who lay down on one another's couches.</p>
+      <p><a href="index.html">Schools</a> traces the major traditions, what each changed, and what each says heals. <a href="analysts.html">Analysts</a> follows the people, placed by birth year, linked by documented analyses. The <a href="names.html">Index</a> lists everyone on the map.</p>
+      <h2>How to read the lines</h2>
+      <p class="key"><span style="border-color:var(--ink)"></span>Analyzed by: a person's analysts, and their analysts, back up the line<br>
+      <span style="border-color:var(--link)"></span>Analyzed: the people someone analyzed<br>
+      <span style="border-color:var(--train)"></span>Trained or supervised, including Freud's first circle, who learned from him without a formal analysis</p>
+      <p>A line means an analysis is documented in print. Many were brief, informal or broken off, and many people had several analysts in turn; where they did, all are shown.</p>
+      <h2>Who is missing</h2>
+      <p>The map reflects how the field kept its records, as much as who was there. Women's analyses were often noted only in passing, and Black and non-European analysts were frequently kept out of institutes or left out of their histories. Where an analyst is unknown, the line simply stops.</p>
+      <p>Made by Jade Forrest Marks, Los Angeles.</p>
+    </section>
+    <section class="pane src" id="p-sources" hidden>
+      <p>Falzeder, Ernst. 1998. "Family tree matters." <i>Journal of Analytical Psychology</i> 43 (1): 127–154.</p>
+      <p>de Mijolla, Alain, ed. 2005. <i>International Dictionary of Psychoanalysis</i>. 3 vols. Detroit: Macmillan Reference USA.</p>
+      <p>Deutsche Biographie, "Wittenberg, Wilhelm."</p>
+      <p>British Psychoanalytical Society, "Ronald Fairbairn."</p>
+      <p>Aichhorn, Thomas. "Eine Notiz zur Biographie von E. H. Erikson." psyalpha.</p>
+      <p>On Tosquelles and Sándor Eiminder: "Francesc Tosquelles y Max Hodann," psiquiatria.com; and "Ferenczi's theory on power and its pollination to and within Latin America."</p>
+    </section>
+    <section class="pane" id="p-suggest" hidden>
+      <p>Know of an analysis that's missing, a date that's wrong, or a school that belongs here? Send it along, with a source if you have one.</p>
+      <p id="sform"></p>
+    </section>
   </div>
 </div>
+<script>
+const FORM_URL="";
+document.getElementById("sform").innerHTML=FORM_URL?`<a class="sbtn" href="${FORM_URL}" target="_blank" rel="noopener">Make a suggestion</a>`:"Suggestion form coming soon.";
+const links=[...document.querySelectorAll(".sub a")];
+function show(){ const h=(location.hash||"#about").slice(1), k=["about","sources","suggest"].includes(h)?h:"about";
+  document.querySelectorAll(".pane").forEach(p=>p.hidden=p.id!=="p-"+k);
+  links.forEach(a=>a.setAttribute("aria-current",a.dataset.p===k?"true":"false")); }
+links.forEach(a=>a.addEventListener("click",e=>{ e.preventDefault(); history.replaceState(null,"","#"+a.dataset.p); show(); }));
+window.addEventListener("hashchange",show); show();
+</script>
 </div>
 </body>
 </html>
