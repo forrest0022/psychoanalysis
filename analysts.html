@@ -130,13 +130,13 @@ header nav{display:flex!important;justify-content:flex-end;margin:0 0 .6rem;posi
   <div class="stage">
     <div class="web" id="web">
       <svg id="svg" role="img" aria-label="Network of psychoanalysts linked by training analyses, arranged by birth year"></svg>
-      <div class="legend"><span><i></i>Lineage</span><span><i class="b"></i>Analysands</span><span><i class="o"></i>Trained/supervised</span></div>
+      <div class="legend"><span><i></i>Analyzed by</span><span><i class="b"></i>Analyzed</span><span><i class="o"></i>Trained/supervised</span></div>
       <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zfit" aria-label="Reset view">⤢</button></div>
     </div>
     <aside class="card" id="card" aria-live="polite">
       <div class="find"><input id="q" list="names" placeholder="Find an analyst" autocomplete="off" aria-label="Find an analyst"><datalist id="names"></datalist></div>
       <div id="info"></div>
-      <p class="note">Solid lines show documented analyses, from analyst to analysand; orange lines show training and supervision, including Freud's first circle, who learned from him without a formal analysis. Click a name: black traces their lineage upward through their analysts and teachers; blue shows the people they analyzed. People are placed by birth year, oldest at the top. Many analyses were brief, informal or partial, and some were with several analysts in turn.</p>
+      <p class="note">Solid lines show documented analyses, from analyst to analysand; orange lines show training and supervision, including Freud's first circle, who learned from him without a formal analysis. Click a name: black shows who analyzed them, traced back up the line; blue shows whom they analyzed. People are placed by birth year, oldest at the top. Many analyses were brief, informal or partial, and some were with several analysts in turn.</p>
     </aside>
   </div>
 </div>
@@ -325,7 +325,10 @@ document.getElementById("zin").onclick=()=>svg.transition().duration(250).call(z
 document.getElementById("zout").onclick=()=>svg.transition().duration(250).call(zoom.scaleBy,1/1.3);
 document.getElementById("zfit").onclick=()=>fit(true);
 function fit(anim){ const xs=nodes.map(d=>d.x), x0=Math.min(...nodes.map(d=>d.x-d.w/2))-80, x1=Math.max(...nodes.map(d=>d.x+d.w/2))+20;
-  const k=Math.min(1,W/(x1-x0)); const t=d3.zoomIdentity.translate(W/2-k*(x0+x1)/2,(1-k)*H/2).scale(k);
+  const el=svg.node(), r=el.getBoundingClientRect(), u=Math.min(r.width/W, r.height/H)||1, oy=(r.height-H*u)/2;
+  const lg=document.querySelector(".legend"), lb=lg?lg.getBoundingClientRect().bottom-r.top:0;
+  const top=Math.max(20,(lb-oy)/u+18), y0=Math.min(...nodes.map(d=>d.y-d.h/2)), y1=Math.max(...nodes.map(d=>d.y+d.h/2));
+  const k=Math.min(1,W/(x1-x0),(H-top-16)/(y1-y0)); const t=d3.zoomIdentity.translate(W/2-k*(x0+x1)/2,top-k*y0).scale(k);
   (anim?svg.transition().duration(300):svg).call(zoom.transform,t); }
 function focusOn(n){ const t=d3.zoomTransform(svg.node()); if(t.k<=1.05) return; svg.transition().duration(350).call(zoom.translateTo,n.x,n.y); }
 
