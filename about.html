@@ -71,6 +71,7 @@ body{background:#EF82C8}
 .sf label{display:flex;flex-direction:column;gap:2px}
 .sf .full{grid-column:1/-1}
 .sf input,.sf textarea{font:inherit;color:var(--ink);background:transparent;border:0;border-bottom:2.4px solid var(--ink);border-radius:0;padding:4px 0;outline:none;resize:vertical}
+.sf textarea{resize:none;overflow:hidden;min-height:0;field-sizing:content}
 .sf input:focus,.sf textarea:focus{border-bottom-color:#fff}
 .sf input::placeholder{color:rgba(14,14,14,.45)}
 .sf .err{grid-column:1/-1;margin:0;color:var(--ink);font-style:italic;min-height:0}
@@ -111,7 +112,7 @@ body{background:#EF82C8}
     <section class="pane" id="p-suggest" hidden>
       <p>Know of an analysis that's missing, a date that's wrong, or a school that belongs here? Send it along, with a source if you have one.</p>
       <form id="sform" class="sf" novalidate hidden>
-        <label class="full">Suggestion<textarea name="suggestion" rows="4" required></textarea></label>
+        <label class="full">Suggestion<textarea name="suggestion" rows="1" required></textarea></label>
         <label class="full">Source<input name="source" type="text" placeholder="A book, article or link"></label>
         <label>Name<input name="name" type="text" autocomplete="name" required></label>
         <label>Email<input name="email" type="email" autocomplete="email" required></label>
@@ -128,6 +129,8 @@ body{background:#EF82C8}
 const GFORM={action:"https://docs.google.com/forms/d/e/1FAIpQLSfK-w9W2HsbarDheRIvJeS4N4qgeo89hMLfyprTnrKF_ZBRaQ/formResponse",entries:{suggestion:"entry.278468492",source:"entry.986745573",name:"entry.1275246466",email:"entry.1699298910"}};
 const sf=document.getElementById("sform"), serr=document.getElementById("serr");
 if(GFORM.action){ sf.hidden=false; } else { document.getElementById("ssoon").hidden=false; }
+const ta=sf.suggestion, grow=()=>{ ta.style.height="auto"; ta.style.height=ta.scrollHeight+"px"; };
+ta.addEventListener("input",grow);
 sf.addEventListener("input",()=>{ serr.textContent=""; });
 sf.addEventListener("submit",async e=>{ e.preventDefault();
   const fd=new FormData(sf), sug=(fd.get("suggestion")||"").trim(), em=(fd.get("email")||"").trim();
