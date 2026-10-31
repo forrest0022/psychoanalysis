@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+<title>Schools · Psychoanalysis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
+<style>
+/* Layout: staggered wide title top-left, small uppercase index top-right; below, the tree as outlined word-stacks joined by thin black lines. A stack opens in place across its row. */
+:root{
+  --paper:#FFFFFF; --ink:#0E0E0E; --pink:#EF82C8; --link:#0038FF; --muted:#55554F; --rule:#0E0E0E;
+  --wide:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0}
+.wrap{max-width:1320px;margin:0 auto;padding-block:40px 96px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+::selection{background:var(--link);color:var(--paper)}
+
+header{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start;margin-bottom:24px}
+h1{margin:0 0 calc(clamp(2.8rem,8.6vw,7.4rem) * -0.5);font-weight:900;font-stretch:125%;font-size:clamp(2.8rem,8.6vw,7.4rem);line-height:.9;letter-spacing:-.03em;text-transform:uppercase;transform:scaleY(.72);transform-origin:top left}
+.kicker{margin:0 0 12px;color:var(--link);font-family:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;font-style:italic;font-weight:400;text-transform:uppercase;font-size:clamp(1.3rem,2.9vw,2.35rem);line-height:1;letter-spacing:0}
+h1 span{display:block;width:fit-content}
+h1 span + span{padding-left:clamp(2.5rem,16vw,15rem)}
+.titlewrap{position:relative}
+.spool{position:absolute;width:clamp(54px,13.5vw,185px);height:auto;pointer-events:none;overflow:visible}
+@media (prefers-reduced-motion: no-preference){
+.spool .turn{animation:turn 6.4s linear infinite;transform-box:fill-box;transform-origin:50% 50%}
+@keyframes turn{0%{transform:scaleX(1)}25%{transform:scaleX(.08)}50%{transform:scaleX(-1)}75%{transform:scaleX(.08)}100%{transform:scaleX(1)}}
+.spool .thread{stroke-dasharray:480;stroke-dashoffset:480;animation:unspool 14s ease-in-out infinite}
+@keyframes unspool{0%{stroke-dashoffset:480}45%{stroke-dashoffset:0}72%{stroke-dashoffset:0}100%{stroke-dashoffset:480}}
+}
+nav{position:absolute;top:calc(28px + env(safe-area-inset-top, 0px));right:max(16px, env(safe-area-inset-right, 0px));z-index:5;display:flex;flex-direction:column;align-items:flex-end;text-align:right;text-transform:uppercase;font-size:13px;font-stretch:112%;letter-spacing:.04em;line-height:1.3;padding-top:10px}
+nav button{font:inherit;text-transform:inherit;letter-spacing:inherit;color:var(--ink);background:none;border:0;padding:0;text-align:right;cursor:pointer;font-weight:400}
+nav button:hover,nav button.on{font-weight:700;color:var(--link)}
+
+.scroller{overflow-x:auto;padding:0 150px 8px}
+.tree{position:relative;min-width:774px;max-width:1044px;margin:0 auto;display:flex;flex-direction:column;gap:27px;padding:8px 6px 16px;container-type:inline-size}
+.edges{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px;position:relative;z-index:1;align-items:start}
+.node{position:relative;justify-self:center;min-width:0}
+.node.freud{grid-column:3}
+.node[data-id="jung"]:not(.sel){justify-self:start;transform:translate(-36px,0)}
+.node[data-id="fanon"]:not(.sel){justify-self:end;transform:translate(36px,0)}
+.node[data-id="intersubjective"]:not(.sel){justify-self:end;transform:translateX(24px)}
+.node[data-id="adler"]:not(.sel){justify-self:start;transform:translate(-14px,0)}
+
+.head{display:block;font:inherit;color:var(--ink);background:none;border:0;padding:0;cursor:pointer}
+.stack{position:relative;display:flex;flex-direction:column;align-items:center;text-transform:uppercase;font-weight:500;font-stretch:112%;font-size:17px;line-height:1.04;letter-spacing:-.005em}
+.stack svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0}
+.stack svg path{fill:var(--paper);stroke:var(--ink);stroke-width:2.4;transition:fill .12s}
+.ln{position:relative;z-index:1;display:block;padding:5px 12px;white-space:nowrap;transition:color .12s}
+.ln.sl{font-weight:400;text-transform:none}
+.ln.kl{font-size:10.5px;font-weight:600;letter-spacing:.07em;padding-top:9px;padding-bottom:1px}
+.ln.kv{font-size:13px;line-height:1.28;font-weight:400;font-stretch:100%;text-transform:none;letter-spacing:0;white-space:normal;max-width:164px;text-align:center;text-wrap:balance;padding:3px 12px 9px}
+.node.side .stack svg path{stroke-dasharray:6 5}
+.node.hl .stack svg path{fill:var(--ink)}
+.head:hover .stack svg path{fill:var(--link);stroke:var(--link)}
+.node.sel .stack svg path{fill:var(--link);stroke:var(--link)}
+.head:hover .ln,.node.sel .ln,.node.hl .ln{color:var(--paper)}
+@media (prefers-reduced-motion: no-preference){.node.sel .detail{animation:open .25s ease-out}@keyframes open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}}
+
+/* opened block */
+.node.sel{grid-column:1 / -1;justify-self:stretch;display:flex;flex-direction:column;align-items:center}
+.detail{position:relative;width:100%;max-width:740px;margin-top:22px;border:2.4px solid var(--ink);border-radius:22px;background:var(--paper);padding:30px 34px 36px;color:var(--ink);font-size:17px;line-height:1.65;text-align:left}
+.x{position:absolute;top:18px;right:18px;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font:500 20px/1 var(--wide);cursor:pointer}
+.x:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.detail h2{font-weight:500;font-stretch:112%;text-transform:uppercase;font-size:1.65rem;line-height:1.05;letter-spacing:-.01em;margin:0 56px 14px 0}
+.change{margin:0 0 22px;padding:18px 22px;border-radius:16px;background:var(--link);color:var(--paper)}
+.change .lab{display:block;font-size:12px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.07em;margin:0 0 6px;opacity:.85}
+.change p{margin:0;font-size:clamp(1.35rem,2.6vw,1.9rem);font-weight:500;font-stretch:112%;line-height:1.15;letter-spacing:-.01em;text-wrap:balance}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 48px}
+@container (max-width: 820px){.dgrid{grid-template-columns:minmax(0,1fr)}.dcol + .dcol{margin-top:8px}}
+.dcol{min-width:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
+.tag{font-size:12.5px;font-stretch:112%;text-transform:uppercase;letter-spacing:.05em;border:1.6px solid var(--ink);border-radius:999px;padding:3px 11px;white-space:nowrap}
+.tag.fill{background:var(--link);border-color:var(--link);color:var(--paper)}
+.place{font-size:15.5px;margin:0 0 16px}
+.lede{margin:0;font-size:18px;line-height:1.62;max-width:62ch}
+.detail h3{font-size:13px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.06em;margin:32px 0 12px;padding-top:20px;border-top:1.6px solid var(--ink)}
+.dcol > h3:first-child{margin-top:0;padding-top:0;border-top:0}
+.detail ul.ideas{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:16.5px}
+.list{display:flex;flex-direction:column;border:1.6px solid var(--ink);border-radius:14px;overflow:hidden}
+.trow{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;font:500 16px var(--wide);text-align:left;color:var(--ink);background:none;border:0;border-bottom:1.2px solid var(--ink);padding:12px 16px;cursor:pointer}
+.trow:last-child{border-bottom:0}
+.trow:hover{background:var(--link);color:var(--paper)}
+.trow .d{font-size:13px;white-space:nowrap;opacity:.75}
+.texts{display:grid;grid-template-columns:auto minmax(0,1fr);gap:11px 16px;font-size:16px;line-height:1.5;margin:0}
+.texts dt{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;padding-top:1px}
+.texts dd{margin:0}
+.texts .by{color:var(--muted);font-size:15px}
+.tct{margin:0;font-size:16.5px;line-height:1.65;max-width:62ch}
+.concepts{margin:0;display:flex;flex-direction:column;gap:18px}
+.concepts div{padding-left:14px;border-left:2.4px solid var(--ink)}
+.concepts dt{font-weight:600;font-size:16.5px;margin:0 0 4px}
+.concepts dd{margin:0;font-size:16px;line-height:1.65}
+.links{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.links .lab{flex-basis:100%;font-size:12.5px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.chip{font:500 14px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.02em;color:var(--ink);background:none;border:1.6px solid var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
+.chip:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.back{font:500 14px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);background:none;border:0;padding:0;margin:0 0 16px;cursor:pointer}
+.back{color:var(--link)}
+.back:hover{text-decoration:underline}
+.dates{font-size:14px;margin:0 0 14px;color:var(--muted)}
+/* compare */
+@property --spin{syntax:"<angle>";inherits:false;initial-value:0deg}
+.fab .glow{position:relative;isolation:isolate;background:var(--ink);color:var(--paper)}
+.fab .glow:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.fab .glow::after{content:"";position:absolute;inset:-2.4px;border-radius:999px;padding:2.4px;background:conic-gradient(from var(--spin), transparent 0 52%, var(--link) 96%, transparent 96%);-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 2.4s linear infinite;pointer-events:none}
+@keyframes spin{to{--spin:360deg}}
+@media (prefers-reduced-motion: reduce){.fab .glow::after{animation:none;background:var(--link)}}
+.fab{position:fixed;right:calc(20px + env(safe-area-inset-right, 0px));bottom:calc(20px + env(safe-area-inset-bottom, 0px));z-index:20;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;align-items:center;max-width:calc(100vw - 40px)}
+.fab button,.fab .hint{font:600 14px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.05em;border:2.4px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:999px;padding:12px 20px;white-space:nowrap}
+.fab button{cursor:pointer}
+.fab button:hover{background:var(--ink);color:var(--paper)}
+.fab .primary{background:var(--link);border-color:var(--link);color:var(--paper)}
+.fab .primary:hover{background:var(--ink);border-color:var(--ink)}
+.fab .hint{font-weight:500;border-style:dashed}
+.node.pick .stack svg path{fill:var(--link);stroke:var(--link)}
+.node.pick .ln{color:var(--paper)}
+.pk{position:absolute;top:-12px;right:-12px;z-index:3;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);font:600 13px var(--wide);display:grid;place-items:center;pointer-events:none}
+body.picking .head{cursor:cell}
+.cmpwrap{max-width:740px;border:2.4px solid var(--ink);border-radius:22px;background:var(--paper);margin:0 auto 56px;padding:26px 0 8px;position:relative}
+.cmptop{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 28px 18px}
+.cmptop h2{margin:0;font-weight:500;font-stretch:112%;text-transform:uppercase;font-size:1.65rem;letter-spacing:-.01em}
+.cmptop .acts{display:flex;gap:8px;align-items:center}
+.cmptop .acts button{font:600 13px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.05em;border:2px solid var(--ink);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer}
+.cmptop .acts button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.cmptop .acts .cx{width:38px;height:38px;padding:0;border-radius:50%;font-size:20px;letter-spacing:0;display:grid;place-items:center}
+.cmpscroll{overflow-x:auto}
+.cmp{display:grid;min-width:min-content}
+.cmp > div{padding:14px 18px;border-top:1.6px solid var(--ink);font-size:15.5px;line-height:1.55;min-width:0}
+.cmp > div + div:not(.lab){border-left:1.2px solid var(--ink)}
+.cmp .lab{position:sticky;left:0;z-index:1;background:var(--paper);font-size:12.5px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.06em;padding-left:28px}
+.cmp .colhead{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.cmp .colname{background:var(--link);color:var(--paper);border-radius:14px;padding:8px 14px;font-weight:500;font-stretch:112%;text-transform:uppercase;font-size:17px;line-height:1.1}
+.cmp .colyr{font-size:14px;color:var(--muted)}
+.cmp .colrow{display:flex;align-items:center;gap:8px;width:100%}
+.cmp .colrm{flex:none;margin-left:auto;width:28px;height:28px;border-radius:50%;border:1.6px solid var(--ink);background:var(--paper);color:var(--ink);font:500 16px/1 var(--wide);cursor:pointer;display:grid;place-items:center;padding:0}
+.cmp .colrm:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.cmp ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px}
+.cmp dl{margin:0;display:flex;flex-direction:column;gap:10px}
+.cmp dt{font-weight:600}
+.cmp dd{margin:0}
+.cmp .yr{font-weight:600;font-variant-numeric:tabular-nums;margin-right:6px}
+.cmp .none{color:var(--muted)}
+@media (max-width: 760px){nav{position:static;align-items:flex-start;text-align:left;padding-top:0;margin-top:14px} nav button{text-align:left}}
+h1.ttl{transform:none;margin:0;font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;font-size:clamp(2rem,5.2vw,4.4rem);text-transform:uppercase;padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
+h1.ttl span{display:inline;padding:0}
+.spool{display:none!important}
+.wrap>header>nav{position:static!important;flex-direction:row!important;flex-wrap:wrap;gap:4px 22px;align-items:baseline!important;text-align:left!important;padding-top:0!important;margin-top:0}
+.wrap>header>nav button{text-align:left!important}
+.stack{font-size:12.6px;font-weight:500;font-stretch:112%;letter-spacing:.01em;line-height:1.1}
+.stack svg path{stroke-width:1.6}
+.ln{padding:2.7px 14px}
+.ln:first-of-type{padding-top:7px}
+.ln.sl{font-family:var(--mono,"Space Mono",ui-monospace,monospace);font-stretch:100%;font-size:10.4px;letter-spacing:0;color:var(--muted,#55554F);padding-top:3.6px;padding-bottom:8px}
+.head:hover .ln.sl,.node.sel .ln.sl,.node.hl .ln.sl,.node.pick .ln.sl{color:var(--paper)}
+.fab button.disk{position:fixed;right:calc(28px + env(safe-area-inset-right, 0px));top:50%;transform:translateY(-50%);width:136px;height:136px;padding:0;border:0;background:none;border-radius:50%;perspective:700px;cursor:pointer}
+.fab button.disk:hover{background:none}
+.disk .coin{position:absolute;inset:0;transform-style:preserve-3d;animation:coinspin 6s linear infinite}
+.disk:hover .coin,.disk:focus-visible .coin{animation-play-state:paused}
+.disk .face{position:absolute;inset:0;border-radius:50%;background:var(--pink);color:#fff;display:grid;place-items:center;font:700 15px var(--wide);font-stretch:112%;letter-spacing:.08em;text-transform:uppercase;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.disk .back{transform:rotateY(180deg)}
+.disk:hover .face{background:var(--link)}
+@keyframes coinspin{to{transform:rotateY(360deg)}}
+@media (prefers-reduced-motion: reduce){.disk .coin{animation:none}}
+@media (max-width:640px){.fab button.disk{width:96px;height:96px;right:14px}.disk .face{font-size:12px}}
+.trow.also{color:var(--muted)}
+.trow.also em{font-style:normal;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 6px;margin-left:6px;vertical-align:2px}
+.node[data-id="contemporary-freudian"]:not(.sel){justify-self:end;transform:translateX(calc(50% - 40px))}
+.wrap>header{position:relative}
+.wrap>header>nav{top:0!important;right:0!important}
+</style>
+<style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
+</head>
+<body>
+<div class="wrap">
+<style>
+.site{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 28px;margin:0 0 clamp(28px,5vw,56px);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:100%;font-weight:600;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.2;letter-spacing:-.005em;color:#0E0E0E}
+.site a{color:inherit;text-decoration:none}
+.site .brand{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:baseline}
+.site .brand b{font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.site .brand span{font-weight:500}
+.site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
+.site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu a:hover{border-bottom-color:#0E0E0E}
+.site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
+@media (max-width:640px){.site{flex-direction:column;gap:10px}}
+</style>
+<div class="site" role="navigation" aria-label="Site">
+  <a class="brand" href="index.html"><b>Psychoanalysis</b><span>who analyzed who?</span></a>
+  <div class="menu">
+    <a href="schools.html" aria-current="page">Schools</a>
+    <a href="analysts.html">Analysts</a>
+    <a href="names.html">Index</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+  <header>
+    <div class="titlewrap" id="titlewrap"><h1 class="ttl"><span id="linesof">Schools of thought</span><span id="descent"></span></h1>
+    <svg class="spool" id="spool" viewBox="0 0 220 305" aria-hidden="true">
+      <path class="thread" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" d="M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300">
+        <animate attributeName="d" dur="4.8s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1;.45 0 .55 1" values="M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300;M70 70 C122 56 172 80 172 124 S184 190 164 238 S180 282 166 300;M70 70 C120 50 165 70 178 118 S158 192 172 236 S160 282 170 300"/>
+      </path>
+      <g transform="rotate(-45 70 70)"><g class="turn">
+        <rect x="30" y="24" width="80" height="16" rx="5" fill="var(--ink)"/>
+        <rect x="30" y="100" width="80" height="16" rx="5" fill="var(--ink)"/>
+        <rect x="48" y="40" width="44" height="60" fill="var(--link)"/>
+        <path d="M48 50h44M48 60h44M48 70h44M48 80h44M48 90h44" stroke="var(--paper)" stroke-width="1.4" opacity=".55"/>
+      </g></g>
+    </svg></div>
+    <nav aria-label="Lineages">
+      <button type="button" data-line="origins">Origins</button>
+      <button type="button" data-line="british">Kleinian and British</button>
+      <button type="button" data-line="relational">Interpersonal and relational</button>
+      <button type="button" data-line="self">Ego and self psychology</button>
+      <button type="button" data-line="side">Others</button>
+    </nav>
+  </header>
+  <section class="cmpwrap" id="cmp" aria-label="Comparison" hidden></section>
+  <div class="scroller"><div class="tree" id="tree"><svg class="edges" id="edges" aria-hidden="true"></svg></div></div>
+  <div class="fab" id="fab"></div>
+</div>
+
+<script>window.PILL=true;
+
+const LINEAGE={root:"Roots",british:"Kleinian and British line",relational:"Interpersonal and relational line",self:"Self psychology line",side:"Others"};
+const GENS=["Origin","First dissent","Second generation","The two-person turn","Contemporary"];
+const P={
+ freud:["Vienna","Europe"],
+ adler:["Vienna, then New York","Europe · East Coast"],
+ fanon:["Martinique and Lyon, Saint-Alban, then Blida, Algeria","Caribbean · Europe · North Africa"],
+ jung:["Zurich","Europe"],
+ lacan:["Paris","Europe"],
+ klein:["Berlin, then London","Europe"],
+ ferenczi:["Budapest","Europe"],
+ "ego-psychology":["Vienna and London, then New York","East Coast"],
+ bion:["London, then Los Angeles from 1968 to 1979","Europe · West Coast"],
+ independents:["London and Edinburgh","Europe"],
+ interpersonal:["New York and Washington–Baltimore","East Coast"],
+ "self-psychology":["","Chicago"],
+ "field-theory":["Buenos Aires and Montevideo, Pavia, San Francisco and Los Angeles","West Coast"],
+ "american-or":["New York, New Haven and Topeka","East Coast"],
+ "contemporary-freudian":["New York, New Haven and Washington","East Coast"],
+ attachment:["London, at the Tavistock Clinic","Europe"],
+ relational:["New York, centered on the NYU Postdoctoral Program","East Coast"],
+ intersubjective:["Los Angeles and New Jersey","West Coast · East Coast"]
+};
+
+const N={
+freud:{gen:0,col:2,l:"root",name:"Freudian",full:"Classical psychoanalysis",sub:"Drive and conflict",yrs:"1890s–1939",parents:[],
+ sum:"The mind as a battleground between instinctual wishes and the demands of civilization. Neurosis is a compromise between the id pressing for yes and the ego and superego countering with no. The analyst positions herself outside the field, a neutral observer and blank screen, and interpreting the transference makes the unconscious conscious. Insight, Freud believed, would set the patient free.",
+ dist:["Drive theory: libido, later the life and death drives", "Unconscious conflict between wish and defense", "Topographic, then structural model: id, ego, superego", "Transference as the past displaced onto the analyst", "Neutrality, abstinence and interpretation", "A one-person psychology: the unit of study is the patient's mind"],
+ th:["freud"],tx:[["1900","The Interpretation of Dreams","Freud"],["1912","The Dynamics of Transference","Freud"],["1917","Mourning and Melancholia","Freud"],["1923","The Ego and the Id","Freud"]],
+ co:["drive","transference","neutrality"]},
+jung:{gen:0,col:0,l:"side",side:true,name:"Jungian",full:"Analytical psychology",sub:"Broke with Freud, 1913",yrs:"1913–1961",parents:["freud"],
+ sum:"Jung was Freud's chosen heir until their break in 1912–13 over the nature of libido and the unconscious. He founded analytical psychology, a separate tradition with its own institutes, which runs alongside the relational turn rather than feeding into it.",
+ dist:["Libido as general psychic energy, not only sexual","A collective unconscious of archetypes beneath the personal unconscious","Individuation as the aim of development and treatment","Symptoms and dreams as forward-looking and meaning-making","An early two-person intuition: treatment as mutual influence in which both people change","Where it touches this tree: Fordham's London developmental school brought Klein and Winnicott into Jungian work"],
+ th:["jung","fordham"],tx:[["1912","Transformations and Symbols of the Libido","Jung"],["1921","Psychological Types","Jung"],["1929","Problems of Modern Psychotherapy","Jung"],["1946","The Psychology of the Transference","Jung"],["1985","Explorations into the Self","Fordham"]],
+ co:["collective-unconscious","individuation","mutual-influence"]},
+lacan:{gen:0,col:3,l:"side",side:true,name:"Lacanian",full:"Lacanian psychoanalysis",sub:"Return to Freud",yrs:"1953–1981",parents:["freud"],
+ sum:"Lacan's return to Freud attacked American ego psychology, as the relational school later would, but from the opposite direction. Where the two-person turn values empathy, attunement and the real relationship, Lacan treats the ego as a site of misrecognition and puts language and desire at the center.",
+ dist:["The unconscious is structured like a language","The mirror stage: the ego built on an alienating image","Imaginary, Symbolic and Real","Desire as the desire of the Other","Against ego psychology and adaptation","The variable-length session","Where it touches this tree: Benjamin argues with Lacan about recognition, and Laplanche, from his circle, shapes later relational writing on sexuality"],
+ th:["lacan","laplanche"],tx:[["1949","The Mirror Stage as Formative of the Function of the I","Lacan"],["1953","The Function and Field of Speech and Language in Psychoanalysis","Lacan"],["1964","The Four Fundamental Concepts of Psychoanalysis (Seminar XI)","Lacan"],["1966","Écrits","Lacan"],["1987","New Foundations for Psychoanalysis","Laplanche"]],
+ co:["mirror-stage","the-other","isr"]},
+adler:{gen:1,col:2,l:"side",side:true,name:"Adlerian",full:"Individual psychology",sub:"Broke with Freud, 1911",yrs:"1911–1937",parents:["freud"],
+ sum:"Alfred Adler was one of the first members of Freud's Wednesday circle and the first to leave it, in 1911, over Freud's insistence on the primacy of sexuality. His individual psychology treats the person as an indivisible whole moving toward goals, driven less by libido than by feelings of inferiority and the striving to overcome them. Its social emphasis passed, often unacknowledged, into the neo-Freudians.",
+ dist:["Inferiority feelings and compensation as the engine of development and neurosis","The striving for significance, or superiority, as the master motive","Social interest as the measure of mental health","Style of life: each person's unique, largely unconscious way of moving toward their goals","Family constellation and birth order","Treatment face to face, as encouragement between equals","Where it touches this tree: the interpersonal school's social turn echoes him (the Ansbachers called Horney, Fromm and Sullivan neo-Adlerians), and Fanon answers him on inferiority in Black Skin, White Masks"],
+ th:["adler"],tx:[["1907","Study of Organ Inferiority and Its Psychical Compensation","Adler"],["1912","The Neurotic Constitution","Adler"],["1927","Understanding Human Nature","Adler"],["1933","Social Interest: A Challenge to Mankind","Adler"]],
+ co:["inferiority","social-interest","style-of-life"]},
+fanon:{gen:0,col:4,l:"side",side:true,name:"Fanonian",full:"Fanon: the psychopolitics of colonialism",sub:"Race and colonialism",yrs:"1952–1961",parents:["freud"],
+ sum:"Frantz Fanon, a psychiatrist from Martinique trained in Lyon, worked under François Tosquelles at Saint-Alban and then ran a ward at the Blida-Joinville hospital in Algeria before joining the Algerian revolution. Black Skin, White Masks (1952) turned psychoanalysis on colonial racism: the Black subject is made to experience himself through the white gaze, and his alienation is produced by society rather than only by his own history.",
+ dist:["Sociogeny: alongside phylogeny and ontogeny, the social origin of psychic suffering","Epidermalization: inferiority written onto the skin by a racist gaze","A challenge to the universality of the Oedipus complex","Clinical work as institutional and political: social therapy on the ward","Colonial violence and its psychiatric casualties, documented in The Wretched of the Earth","Where it touches this tree: trained under Tosquelles in institutional psychotherapy, and argues with Lacan's mirror stage and Adler's inferiority"],
+ th:["fanon"],tx:[["1952","Black Skin, White Masks","Fanon"],["1954","Social Therapy in a Ward of Muslim Men","Fanon and Azoulay"],["1959","A Dying Colonialism","Fanon"],["1961","The Wretched of the Earth","Fanon"]],
+ co:["sociogeny","epidermalization"]},
+klein:{gen:1,col:0,l:"root",name:"Kleinian",full:"Kleinian theory",sub:"Internal objects",yrs:"1920s–1960",parents:["freud"],
+ sum:"For Klein the mind is never settled: “a continually shifting, kaleidoscopic stream of primitive, phantasmagoric images, fantasies, and terrors,” always fending off persecutory and depressive anxiety. Splitting, envy and projective identification organize experience, and the patient lives the analyst as good breast or bad breast. Contemporary Kleinians, following Betty Joseph, shifted toward the here-and-now of the transference.",
+ dist:["Unconscious phantasy active from birth", "Paranoid-schizoid and depressive positions, continually lost and regained", "Splitting, projective identification and the manic defense", "Envy as the attack on the good object", "Reparation: love strong enough to survive one's hate", "Here-and-now interpretation of the transference (Betty Joseph)"],
+ th:["klein"],tx:[["1932","The Psycho-Analysis of Children","Klein"],["1946","Notes on Some Schizoid Mechanisms","Klein"],["1957","Envy and Gratitude","Klein"]],
+ co:["phantasy","positions","projective-identification"]},
+ferenczi:{gen:1,col:1,l:"root",name:"Budapest school",full:"The Budapest school",sub:"Ferenczi, Balint, Hermann",yrs:"1910s–1930s",parents:["freud"],
+ sum:"Ferenczi, Freud's closest colleague and most important dissenter, took real trauma seriously and experimented with the analyst's own participation. Around him grew a Budapest school whose students carried his ideas to London and New York. His influence on later schools came through people and, decades later, through rediscovery, so the lines from this block are drawn dashed.",
+ dist:["Actual trauma and the adult's failure, not only fantasy","The analyst's contribution to the patient's suffering","Elasticity of technique","Mutual analysis as a late experiment","Identification with the aggressor","A school of its own: Michael and Alice Balint, Imre Hermann","Carried abroad by students: Balint to London, Clara Thompson to New York","Reclaimed by relational analysts after the Clinical Diary appeared in 1985"],
+ th:["ferenczi","hermann"],br:["balint","thompson"],tx:[["1928","The Elasticity of Psycho-Analytic Technique","Ferenczi"],["1932","The Clinical Diary (published 1985)","Ferenczi"],["1933","Confusion of Tongues Between Adults and the Child","Ferenczi"],["1936","Clinging and Going-in-Search","Hermann"],["1993","The Legacy of Sándor Ferenczi","Aron and Harris, eds."]],
+ co:["identification-aggressor","mutual-analysis"]},
+"ego-psychology":{gen:1,col:3,span:2,l:"root",name:"Ego psychology",full:"Ego psychology",sub:"Anna Freud, Hartmann",yrs:"1930s–1970s",parents:["freud"],
+ sum:"Anna Freud turned analysis away from “a rescue mission” for trapped id impulses and toward the ego's unconscious defenses, with the analyst standing “equidistant from the id, the ego, and the super-ego.” Hartmann added adaptation and the conflict-free ego. Spitz, Mahler and Jacobson showed that psychic structure is built in early relationships, so the analyst becomes a working ally and the task becomes “improving, not removing.”",
+ dist:["Analysis of defenses and “exploration of the surface” (Kris)", "The analyst equidistant from id, ego and superego (Anna Freud)", "Adaptation, conflict-free ego functions and the average expectable environment (Hartmann)", "The libidinal object and the mother as auxiliary ego (Spitz)", "Separation-individuation (Mahler)", "Self and object images (Jacobson)", "The working alliance: analysis as partnership rather than battle"],
+ th:["anna-freud","hartmann","jacobson","mahler"],tx:[["1936","The Ego and the Mechanisms of Defense","Anna Freud"],["1939","Ego Psychology and the Problem of Adaptation","Hartmann"],["1964","The Self and the Object World","Jacobson"]],
+ co:["defense","conflict-free","neutrality"]},
+bion:{gen:2,col:0,l:"british",name:"Bionian",full:"Bion and post-Kleinian thought",sub:"A theory of thinking",yrs:"1940s–1979",parents:["klein"],
+ sum:"Bion interpersonalized projective identification, changing it “from a fantasy in the mind of one person to a complex relational event in the minds of two people.” The analyst, like the mother in reverie, contains and transforms what the patient cannot yet think, and listens with “neither memory nor desire.”",
+ dist:["Container and contained", "Projective identification as an event between two minds", "Alpha function turns raw experience into thought", "Maternal reverie", "Attacks on linking", "Listening without memory or desire"],
+ th:["bion"],tx:[["1961","Experiences in Groups","Bion"],["1962","Learning from Experience","Bion"],["1970","Attention and Interpretation","Bion"]],
+ co:["container","alpha-function","reverie","projective-identification"]},
+independents:{gen:2,col:1,l:"british",name:"British object relations",full:"British object relations: the Independents",sub:"Winnicott, Fairbairn, Balint",yrs:"1940s–1970s",parents:["klein"],infl:["ferenczi"],
+ sum:"Fairbairn held that “libido is not pleasure-seeking, but object-seeking”: children stay loyal to bad objects because pain is the only connection on offer. For him insight is not enough; the analyst must become a new kind of object. Winnicott made the analytic situation a holding environment where the true self can emerge, where “content and interpretations were nearly irrelevant” and what mattered was the experience of self in relation to other.",
+ dist:["Libido is object-seeking (Fairbairn)", "Loyalty to bad objects; internal objects as substitutes for real contact", "Splitting of the ego: exciting and rejecting objects", "The holding environment and the good-enough mother (Winnicott)", "True and false self; transitional experience", "Primary love, the basic fault and the new beginning (Balint)"],
+ th:["fairbairn","winnicott","balint"],tx:[["1952","Psychoanalytic Studies of the Personality","Fairbairn"],["1960","Ego Distortion in Terms of True and False Self","Winnicott"],["1968","The Basic Fault","Balint"],["1969","The Use of an Object","Winnicott"],["1971","Playing and Reality","Winnicott"]],
+ co:["object-seeking","holding","true-false-self","transitional"]},
+interpersonal:{gen:2,col:2,l:"relational",name:"Interpersonal",full:"Interpersonal psychoanalysis",sub:"Sullivan, Fromm",yrs:"1930s",parents:["freud"],infl:["ferenczi","adler"],
+ sum:"An American tradition built around what actually happens between people. It grew mainly from Sullivan's psychiatry, shaped by Adolf Meyer, William Alanson White and the social sciences, and from Fromm's social critique. Ferenczi's influence came in through Clara Thompson, whom Sullivan sent to Budapest for analysis.",
+ dist:["The analyst as participant-observer","Personality as a pattern of interpersonal relations","Anxiety and selective inattention","Detailed inquiry into what happened","Culture and society shape character","Less emphasis on internal fantasy"],
+ th:["sullivan","thompson","fromm","horney","fromm-reichmann","searles","levenson","dbstern"],tx:[["1937","The Neurotic Personality of Our Time","Horney"],["1941","Escape from Freedom","Fromm"],["1950","Principles of Intensive Psychotherapy","Fromm-Reichmann"],["1953","The Interpersonal Theory of Psychiatry","Sullivan"],["1972","The Fallacy of Understanding","Levenson"],["1997","Unformulated Experience","D. B. Stern"]],
+ co:["participant-observation","selective-inattention","detailed-inquiry","unformulated"]},
+"self-psychology":{gen:2,col:4,l:"self",name:"Self psychology",full:"Self psychology",sub:"Kohut",yrs:"1970s",parents:["ego-psychology"],
+ sum:"Kohut's patient is “Tragic Man,” suffering not from guilty wishes but from emptiness, fragmentation and a life without meaning. Empathic immersion, or vicarious introspection, becomes the defining method. Mirroring, idealizing and twinship transferences are allowed to unfold rather than interpreted away, and the analyst, like an adequate parent, fails slowly, so that transmuting internalization builds the self.",
+ dist:["Tragic Man rather than Guilty Man", "Empathic immersion and vicarious introspection", "Selfobjects: others experienced as part of the self", "Mirroring, idealizing and twinship transferences", "Optimal frustration and transmuting internalization", "Aggression as reactive, not fundamental"],
+ th:["kohut","wolf","lichtenberg","bacal"],tx:[["1971","The Analysis of the Self","Kohut"],["1977","The Restoration of the Self","Kohut"],["1978","The Disorders of the Self and Their Treatment","Kohut and Wolf"],["1984","How Does Analysis Cure?","Kohut"],["1989","Psychoanalysis and Motivation","Lichtenberg"]],
+ co:["selfobject","mirroring","transmuting","empathy"]},
+"field-theory":{gen:3,col:0,l:"british",name:"Post-Bionian",full:"Contemporary Bionian thought",sub:"Field theory, Ogden, Grotstein",yrs:"1960s",parents:["bion","independents"],
+ sum:"Analysts who carried Bion's theory of thinking into the analytic relationship itself. In the Río de la Plata the Barangers described the session as a bipersonal field. In Italy, Ferro joined their field to Bion. In California, Ogden and Grotstein read Bion alongside Klein and Winnicott.",
+ dist:["The field, not either person, as the object of analysis","Shared unconscious fantasy and bastions (the Barangers)","Characters in the patient's story as functions of the field (Ferro)","The analytic third and the subjugating third (Ogden)","The analyst's reverie as clinical data","Dreaming the session rather than decoding it"],
+ th:["barangers","ferro","civitarese","ogden","grotstein"],tx:[["1961","The Analytic Situation as a Dynamic Field","W. and M. Baranger"],["1994","The Analytic Third: Working with Intersubjective Clinical Facts","Ogden"],["1997","Reverie and Interpretation","Ogden"],["1999","The Bi-Personal Field","Ferro"],["2004","This Art of Psychoanalysis: Dreaming Undreamt Dreams and Interrupted Cries","Ogden"],["2007","A Beam of Intense Darkness","Grotstein"],["2010","The Intimate Room","Civitarese"]],
+ co:["bipersonal-field","bastion","analytic-third","subjugating-third","reverie"]},
+"american-or":{gen:2,col:3,l:"self",name:"American object relations",full:"American object relations",sub:"Kernberg, Mahler, Loewald",yrs:"1960s",parents:["ego-psychology"],
+ sum:"Inside ego psychology, a generation of American analysts began building relationships into the theory itself. Loewald recast therapeutic action as a new relationship with the analyst. Mahler traced how a self separates from its first other. Kernberg joined ego psychology to Klein to treat borderline and narcissistic patients, and his debate with Kohut over narcissism remains a standard teaching case.",
+ dist:["Self and object representations as the building blocks of mind","Separation-individuation (Mahler)","Therapeutic action through a new object relationship (Loewald)","Borderline personality organization and splitting (Kernberg)","Pathological narcissism as defense, against Kohut's view of arrested development","Keeps drive theory while making relationships central"],
+ th:["kernberg"],br:["mahler","jacobson","loewald"],tx:[["1960","On the Therapeutic Action of Psychoanalysis","Loewald"],["1964","The Self and the Object World","Jacobson"],["1975","The Psychological Birth of the Human Infant","Mahler, Pine and Bergman"],["1975","Borderline Conditions and Pathological Narcissism","Kernberg"]],
+ co:["separation-individuation","splitting","therapeutic-action"]},
+"contemporary-freudian":{gen:3,col:3,l:"self",name:"Contemporary Freudian",full:"Contemporary Freudian psychoanalysis",sub:"Arlow, Brenner, Loewald, Gray",yrs:"1960s",parents:["ego-psychology"],
+ sum:"American Freudians who kept conflict at the center while revising ego psychology from within. Arlow and Brenner dropped Freud's energy model and recast mental life as compromise formation shaped by unconscious fantasy. Paul Gray taught close attention to defense as it appears moment to moment in the session. Loewald and Schafer stretched Freud's language toward relationship and meaning, and Loewald in particular became a bridge to the relational school.",
+ dist:["Conflict and compromise formation as the core of mental life (Brenner)","Unconscious fantasy as a constant organizer of experience (Arlow)","Close process attention to defense in the session (Gray)","Therapeutic action through the analyst as a new object (Loewald)","Action and narrative in place of mechanistic metapsychology (Schafer)","Where it touches this tree: grows out of ego psychology, and Loewald is read closely by relational analysts"],
+ th:["arlow","brenner","loewald","schafer","gray"],br:[],tx:[["1960","On the Therapeutic Action of Psychoanalysis","Loewald"],["1964","Psychoanalytic Concepts and the Structural Theory","Arlow and Brenner"],["1976","A New Language for Psychoanalysis","Schafer"],["1982","The Mind in Conflict","Brenner"],["1994","The Ego and Analysis of Defense","Gray"]],
+ co:["compromise-formation","unconscious-fantasy","close-process"]},
+attachment:{gen:3,col:1,l:"british",name:"Attachment",full:"Attachment theory and mentalization",sub:"Bowlby, Ainsworth, Fonagy",yrs:"1950s",parents:["independents"],
+ sum:"Bowlby trained in the British Society and was supervised by Klein, but he insisted that real separations and real caregiving shape the child. His attachment theory stayed at the margins of psychoanalysis for decades. Through Ainsworth's and Main's research and Fonagy's work on mentalization, it became one of the strongest influences on contemporary relational practice.",
+ dist:["Attachment as a primary need, not secondary to feeding or drive","Real separation and loss matter","Secure base and safe haven","Patterns of attachment: secure, avoidant, ambivalent, disorganized","Internal working models of self and other","Mentalization: reading behavior in terms of mental states (Fonagy)"],
+ th:["bowlby","ainsworth","main","fonagy"],tx:[["1958","The Nature of the Child's Tie to His Mother","Bowlby"],["1969","Attachment (Attachment and Loss, vol. 1)","Bowlby"],["1978","Patterns of Attachment","Ainsworth and colleagues"],["1985","Security in Infancy, Childhood, and Adulthood","Main, Kaplan and Cassidy"],["2002","Affect Regulation, Mentalization, and the Development of the Self","Fonagy, Gergely, Jurist and Target"]],
+ co:["secure-base","working-models","mentalization"]},
+relational:{gen:3,col:2,l:"relational",name:"Relational",full:"The relational school",sub:"Mitchell, Greenberg",yrs:"1980s",parents:["interpersonal","independents"],infl:["ferenczi"],
+ sum:"Patient and analyst form “a co-evolving, reciprocally mutual, interactive dyad,” like “a ping-pong game being played with two balls simultaneously.” What heals is engagement with an authentic other. Enactments are unavoidable and become the route to understanding. Davies asks whose bad objects are in the room: the work is to evoke the bad object relationship without concretely becoming it, while the analyst's own shame-laden self states come into play too.",
+ dist:["The relational matrix replaces drive", "Enactment: the patient delivers herself into the relationship", "Two subjects in mutual influence, with asymmetry", "The analyst's subjectivity and countertransference as part of the work", "Multiple self-states and dissociation (Bromberg, Davies)", "Bad objects on both sides of the room (Davies)", "Mutual recognition and the third (Benjamin)"],
+ th:["mitchell","greenberg","benjamin","aron","bromberg","davies","hoffman","ghent","harris","dimen","altman"],br:["searles","loewald"],
+ tx:[["1983","Object Relations in Psychoanalytic Theory","Greenberg and Mitchell"],["1988","Relational Concepts in Psychoanalysis","Mitchell"],["1988","The Bonds of Love","Benjamin"],["1990","Masochism, Submission, Surrender","Ghent"],["1991","Psychoanalytic Dialogues founded","Mitchell"],["1994","Treating the Adult Survivor of Childhood Sexual Abuse","Davies and Frawley"],["1995","The Analyst in the Inner City","Altman"],["1996","A Meeting of Minds","Aron"],["1998","Standing in the Spaces","Bromberg"],["1998","Ritual and Spontaneity in the Psychoanalytic Process","Hoffman"],["2005","Gender as Soft Assembly","Harris"],["2018","Beyond Doer and Done To","Benjamin"]],
+ co:["relational-matrix","enactment","self-states","mutuality","mutual-recognition","doer-done-to","moral-third"]},
+intersubjective:{gen:3,col:4,l:"self",name:"Intersubjective",full:"Intersubjectivity: intersubjective systems theory",sub:"Stolorow, Atwood",yrs:"1970s",parents:["self-psychology"],
+ sum:"Growing out of self psychology, Stolorow and his collaborators replaced the individual, isolated self with “the fully contextual interaction of subjectivities with reciprocal, mutual influence.” Psychological transformation happens through the shared, co-created emotional field of the patient-analyst dyad, and transference becomes the patient's organizing activity rather than a distortion.",
+ dist:["The myth of the isolated mind", "The co-created emotional field of the dyad", "Prereflective organizing principles", "Transference as organizing activity, not distortion", "Developmental trauma as unbearable affect without attunement", "Phenomenological contextualism"],
+ th:["stolorow","atwood","brandchaft","orange"],br:["benjamin","searles"],tx:[["1979","Faces in a Cloud","Stolorow and Atwood"],["1984","Structures of Subjectivity","Atwood and Stolorow"],["1987","Psychoanalytic Treatment: An Intersubjective Approach","Stolorow, Brandchaft and Atwood"],["1992","Contexts of Being","Stolorow and Atwood"],["1995","Emotional Understanding","Orange"],["2007","Trauma and Human Existence","Stolorow"]],
+ co:["isolated-mind","organizing-principles","intersubjective-field"]},
+};
+
+const T={
+arlow:["Jacob Arlow","1912–2004","New York analyst who made unconscious fantasy central and, with Brenner, streamlined the structural theory.",["Unconscious fantasy","Structural theory without energy models"],[["1964","Psychoanalytic Concepts and the Structural Theory (with Brenner)"],["1969","Unconscious Fantasy and Disturbances of Conscious Experience"]]],
+brenner:["Charles Brenner","1913–2008","New York analyst whose theory of compromise formation made conflict the organizing idea of modern Freudian thought.",["Compromise formation","The mind in conflict"],[["1955","An Elementary Textbook of Psychoanalysis"],["1982","The Mind in Conflict"]]],
+schafer:["Roy Schafer","1922–2018","Analyst who recast Freud's metapsychology in the language of action and narrative.",["Action language","Narration in the analytic dialogue"],[["1976","A New Language for Psychoanalysis"],["1983","The Analytic Attitude"]]],
+gray:["Paul Gray","1918–2002","Washington analyst who taught close process attention to defenses as they appear in the patient's associations.",["Close process attention","Analysis of defense"],[["1994","The Ego and Analysis of Defense"]]],
+adler:["Alfred Adler","1870–1937","Viennese physician in Freud's first circle who left in 1911 and founded individual psychology.",["Inferiority and compensation","Social interest","Style of life"],[["1912","The Neurotic Constitution"],["1927","Understanding Human Nature"]]],
+fanon:["Frantz Fanon","1925–1961","Psychiatrist from Martinique who trained under Tosquelles at Saint-Alban, worked in Algeria and joined its liberation struggle; the founding psychoanalytic critic of colonial racism.",["Sociogeny","Epidermalization","Social therapy"],[["1952","Black Skin, White Masks"],["1961","The Wretched of the Earth"]]],
+freud:["Sigmund Freud","1856–1939","Founder of psychoanalysis. He built the model every school on this map revises: drives, conflict, and an analyst who observes from outside.",["Drive theory","The structural model: id, ego, superego","Transference and resistance"],[["1900","The Interpretation of Dreams"],["1923","The Ego and the Id"]]],
+jung:["Carl Gustav Jung","1875–1961","Swiss psychiatrist, Freud's early collaborator and first president of the International Psychoanalytic Association, who broke with him and founded analytical psychology.",["Collective unconscious and archetypes","Individuation","Psychological types"],[["1921","Psychological Types"],["1946","The Psychology of the Transference"]]],
+fordham:["Michael Fordham","1905–1995","London Jungian who founded the developmental school, joining analytical psychology to Klein and Winnicott.",["The primary self and deintegration","Jungian child analysis"],[["1985","Explorations into the Self"]]],
+lacan:["Jacques Lacan","1901–1981","Paris psychoanalyst whose seminars made psychoanalysis central to French theory. The IPA removed him from its list of training analysts in 1963.",["The mirror stage","The unconscious structured like a language","Imaginary, Symbolic and Real"],[["1966","Écrits"],["1973","The Four Fundamental Concepts of Psychoanalysis"]]],
+laplanche:["Jean Laplanche","1924–2012","Analyzed by Lacan, he broke with him and returned to Freud's seduction theory, generalizing it.",["The enigmatic message","Translation and the sexual unconscious"],[["1967","The Language of Psychoanalysis (with Pontalis)"],["1987","New Foundations for Psychoanalysis"]]],
+bowlby:["John Bowlby","1907–1990","British psychiatrist and analyst who founded attachment theory at the Tavistock Clinic, often at odds with the British Society.",["Attachment as a primary need","Separation and loss","Internal working models"],[["1951","Maternal Care and Mental Health"],["1969–80","Attachment and Loss (three volumes)"]]],
+ainsworth:["Mary Ainsworth","1913–1999","Developmental psychologist who worked with Bowlby and created the Strange Situation procedure.",["Secure base","Patterns of attachment","The Strange Situation"],[["1978","Patterns of Attachment"]]],
+main:["Mary Main","","Developmental psychologist who identified disorganized attachment and co-developed the Adult Attachment Interview.",["Disorganized attachment","The Adult Attachment Interview"],[["1985","Security in Infancy, Childhood, and Adulthood (with Kaplan and Cassidy)"]]],
+fonagy:["Peter Fonagy","","London analyst and researcher who joined attachment research to psychoanalysis through mentalization.",["Mentalization","Epistemic trust","Mentalization-based treatment"],[["2002","Affect Regulation, Mentalization, and the Development of the Self (with Gergely, Jurist and Target)"]]],
+loewald:["Hans Loewald","1906–1993","Yale analyst who studied philosophy with Heidegger, often read as the bridge between classical and relational thought.",["The analyst as a new object","Internalization","Time and the unconscious"],[["1960","On the Therapeutic Action of Psychoanalysis"],["1980","Papers on Psychoanalysis"]]],
+mahler:["Margaret Mahler","1897–1985","Hungarian-born child analyst in New York who observed mothers and toddlers to map separation-individuation.",["Symbiosis and separation","Rapprochement"],[["1975","The Psychological Birth of the Human Infant (with Pine and Bergman)"]]],
+kernberg:["Otto Kernberg","","Combined ego psychology with Klein to treat borderline and narcissistic patients, and became Kohut's chief opponent on narcissism.",["Borderline personality organization","Pathological narcissism","Transference-focused psychotherapy"],[["1975","Borderline Conditions and Pathological Narcissism"],["1976","Object Relations Theory and Clinical Psychoanalysis"]]],
+klein:["Melanie Klein","1882–1960","Analyzed by Ferenczi and then Abraham, she pioneered child analysis in London. Her split with Anna Freud shaped the British Society for decades.",["Unconscious phantasy","The two positions","Projective identification"],[["1932","The Psycho-Analysis of Children"],["1957","Envy and Gratitude"]]],
+ferenczi:["Sándor Ferenczi","1873–1933","Hungarian analyst and Freud's close collaborator. He analyzed Klein, Balint and Clara Thompson, which links him to three branches of this tree.",["The reality of trauma","The analyst's participation","Elasticity of technique"],[["1932","The Clinical Diary"],["1933","Confusion of Tongues"]]],
+"anna-freud":["Anna Freud","1895–1982","Child analyst and Freud's daughter. Her account of the defenses became a foundation of ego psychology.",["Mechanisms of defense","Developmental lines"],[["1936","The Ego and the Mechanisms of Defense"]]],
+hartmann:["Heinz Hartmann","1894–1970","Viennese émigré to New York and the central theorist of American ego psychology.",["Adaptation","The conflict-free ego sphere"],[["1939","Ego Psychology and the Problem of Adaptation"]]],
+jacobson:["Edith Jacobson","1897–1978","Ego psychologist whose work on self and object representations prepared ground that Kohut and Kernberg later built on.",["Self and object representations","Depression and identity"],[["1964","The Self and the Object World"]]],
+bion:["Wilfred Bion","1897–1979","Analyzed by Klein after work with groups in the British Army. He transformed Kleinian theory into a theory of thinking.",["Container and contained","Alpha function","Reverie","Without memory or desire"],[["1962","Learning from Experience"],["1970","Attention and Interpretation"]]],
+fairbairn:["W. R. D. Fairbairn","1889–1964","Edinburgh analyst who worked largely outside the London institutions and rebuilt psychoanalysis on object-seeking.",["Libido is object-seeking","Endopsychic structure","Attachment to bad objects"],[["1952","Psychoanalytic Studies of the Personality"]]],
+winnicott:["D. W. Winnicott","1896–1971","Pediatrician and analyst. His language of holding, play and the use of an object runs through almost every two-person theory.",["Holding environment","Transitional space","True and false self","The use of an object"],[["1965","The Maturational Processes and the Facilitating Environment"],["1971","Playing and Reality"]]],
+balint:["Michael Balint","1896–1970","Ferenczi's student who carried the Budapest tradition to London.",["The basic fault","New beginnings","Balint groups for physicians"],[["1968","The Basic Fault"]]],
+sullivan:["Harry Stack Sullivan","1892–1949","American psychiatrist who treated schizophrenia through relationship and founded interpersonal psychiatry.",["Participant observation","The self-system and security operations","Selective inattention"],[["1953","The Interpersonal Theory of Psychiatry"]]],
+hermann:["Imre Hermann","1889–1984","Budapest analyst in Ferenczi's circle whose theory of a clinging instinct anticipated attachment theory.",["The clinging instinct","Going-in-search"],[["1936","Clinging and Going-in-Search"]]],
+thompson:["Clara Thompson","1893–1958","Analyzed by Ferenczi in Budapest, she co-founded the White Institute and wrote on the psychology of women.",["Cultural shaping of women's psychology","Bringing Ferenczi to New York"],[["1950","Psychoanalysis: Evolution and Development"]]],
+horney:["Karen Horney","1885–1952","Berlin-trained analyst who challenged Freud's psychology of women and argued that culture, not instinct, shapes neurosis. She left the New York Psychoanalytic Society in 1941 and founded her own institute.",["Culture and neurosis","Feminine psychology against penis envy","Basic anxiety and the idealized self"],[["1937","The Neurotic Personality of Our Time"],["1950","Neurosis and Human Growth"]]],
+fromm:["Erich Fromm","1900–1980","Frankfurt School sociologist and analyst whose social psychology gave the interpersonal school its critique of society.",["Social character","Freedom and authoritarianism"],[["1941","Escape from Freedom"],["1955","The Sane Society"]]],
+"fromm-reichmann":["Frieda Fromm-Reichmann","1889–1957","Worked at Chestnut Lodge with very ill patients and wrote a widely used guide to intensive psychotherapy.",["Treating psychosis through relationship","Loneliness"],[["1950","Principles of Intensive Psychotherapy"]]],
+levenson:["Edgar Levenson","","Interpersonalist who argued that change comes from what happens between people, not from understanding alone.",["The analyst caught in the patient's patterns","Transformation over insight"],[["1972","The Fallacy of Understanding"],["1983","The Ambiguity of Change"]]],
+dbstern:["Donnel B. Stern","","Bridges interpersonal and relational thought, drawing on hermeneutics.",["Unformulated experience","Dissociation as not-spelling-out","Witnessing"],[["1997","Unformulated Experience"],["2010","Partners in Thought"]]],
+kohut:["Heinz Kohut","1913–1981","Vienna-born analyst who rose through Chicago ego psychology before founding self psychology.",["Selfobjects","Empathy as method","Narcissism as a separate line of development"],[["1971","The Analysis of the Self"],["1977","The Restoration of the Self"],["1984","How Does Analysis Cure?"]]],
+wolf:["Ernest Wolf","","Close collaborator of Kohut who helped systematize self psychology's clinical theory.",["Classification of self disorders","Selfobject ruptures"],[["1978","The Disorders of the Self and Their Treatment (with Kohut)"],["1988","Treating the Self"]]],
+lichtenberg:["Joseph Lichtenberg","","Integrated self psychology with infant research through a theory of motivational systems.",["Motivational systems"],[["1989","Psychoanalysis and Motivation"]]],
+bacal:["Howard Bacal","","Self psychologist who reframed optimal frustration as optimal responsiveness.",["Optimal responsiveness","Specificity theory"],[["1985","Optimal Responsiveness and the Therapeutic Process"]]],
+barangers:["Willy and Madeleine Baranger","1922–1994 and 1920–2017","Worked in Buenos Aires and Montevideo and introduced the analytic field.",["The bipersonal field","Bastions","Shared unconscious fantasy"],[["1961","The Analytic Situation as a Dynamic Field"]]],
+ferro:["Antonino Ferro","","Italian analyst in Pavia who joined Baranger's field to Bion's theory of thinking.",["Characters as functions of the field","Narrative transformation","Reverie in the field"],[["1999","The Bi-Personal Field"]]],
+civitarese:["Giuseppe Civitarese","","Develops Bionian field theory in dialogue with philosophy and literature.",["Dreaming the session","Aesthetics of the field"],[["2010","The Intimate Room"]]],
+grotstein:["James Grotstein","1925–2015","Los Angeles analyst who was analyzed by Bion and became one of his leading interpreters in the United States.",["Bion's O and the unconscious","The dreamer who dreams the dream"],[["2000","Who Is the Dreamer Who Dreams the Dream?"],["2007","A Beam of Intense Darkness"]]],
+ogden:["Thomas Ogden","","San Francisco analyst whose close readings of Klein, Winnicott and Bion produced the analytic third.",["The analytic third","Reverie","Dreaming the session","Psychoanalytic writing"],[["1994","Subjects of Analysis"],["1997","Reverie and Interpretation"],["2009","Rediscovering Psychoanalysis"]]],
+mitchell:["Stephen A. Mitchell","1946–2000","Leading architect of the relational turn and founding editor of Psychoanalytic Dialogues.",["Drive versus relational models","The relational matrix","Influence and autonomy"],[["1983","Object Relations in Psychoanalytic Theory (with Greenberg)"],["1988","Relational Concepts in Psychoanalysis"],["1997","Influence and Autonomy in Psychoanalysis"]]],
+greenberg:["Jay Greenberg","","Co-author of the book that named the relational divide, later more integrative of drive theory.",["Drive/structure versus relational/structure models"],[["1983","Object Relations in Psychoanalytic Theory (with Mitchell)"],["1991","Oedipus and Beyond"]]],
+aron:["Lewis Aron","1952–2019","Theorist of mutuality and co-editor of the Relational Perspectives book series.",["Mutuality with asymmetry","The patient's experience of the analyst's subjectivity"],[["1996","A Meeting of Minds"]]],
+bromberg:["Philip Bromberg","","Trained as an interpersonalist, he built a relational theory of dissociation and self-states.",["Multiple self-states","Standing in the spaces","Enactment and safe surprises"],[["1998","Standing in the Spaces"],["2006","Awakening the Dreamer"]]],
+davies:["Jody Messler Davies","","Writes on trauma, dissociation and erotic transference within relational theory.",["Dissociated self-states in trauma","Erotic transference and countertransference"],[["1994","Treating the Adult Survivor of Childhood Sexual Abuse (with Frawley)"]]],
+hoffman:["Irwin Z. Hoffman","","Developed a social-constructivist view of the analytic process.",["Social constructivism","Ritual and spontaneity","The analyst's personal participation"],[["1998","Ritual and Spontaneity in the Psychoanalytic Process"]]],
+ghent:["Emmanuel Ghent","1925–2003","Helped found the relational orientation at the NYU Postdoctoral Program in 1988.",["Surrender versus submission","Need and its perversions"],[["1990","Masochism, Submission, Surrender"]]],
+harris:["Adrienne Harris","","Relational theorist of gender, development and the analyst's body.",["Gender as soft assembly","Nonlinear development"],[["2005","Gender as Soft Assembly"]]],
+dimen:["Muriel Dimen","1942–2016","Anthropologist and analyst who brought feminist and social theory into relational writing.",["Sexuality and power","The analyst's ethics"],[["2003","Sexuality, Intimacy, Power"]]],
+altman:["Neil Altman","","Wrote on race, class and public-sector treatment from a relational perspective.",["Psychoanalysis in public clinics","Race and class in the room"],[["1995","The Analyst in the Inner City"]]],
+stolorow:["Robert D. Stolorow","","Co-founder of intersubjective systems theory, later known for his philosophical work on trauma.",["The intersubjective field","Organizing principles","Trauma and finitude"],[["1987","Psychoanalytic Treatment: An Intersubjective Approach"],["2007","Trauma and Human Existence"]]],
+atwood:["George E. Atwood","","Co-founder of intersubjective systems theory, known for psychobiographies of theorists and work with psychosis.",["Subjectivity of theory","Madness in context"],[["1979","Faces in a Cloud (with Stolorow)"],["2012","The Abyss of Madness"]]],
+brandchaft:["Bernard Brandchaft","","Co-author of the 1987 statement of the intersubjective approach.",["Pathological accommodation"],[["1987","Psychoanalytic Treatment: An Intersubjective Approach"]]],
+orange:["Donna Orange","","Philosopher and analyst who extended intersubjective theory into hermeneutics and ethics.",["Emotional understanding","Clinical ethics and humility"],[["1995","Emotional Understanding"],["2010","Thinking for Clinicians"]]],
+searles:["Harold Searles","1918–2015","Chestnut Lodge analyst who wrote unusually frankly about the analyst's own feelings, including love and hate, in long treatments of schizophrenia.",["Therapeutic symbiosis","The patient as therapist to the analyst","Countertransference as information about the field"],[["1965","Collected Papers on Schizophrenia and Related Subjects"],["1979","Countertransference and Related Subjects"]]],
+benjamin:["Jessica Benjamin","","Relational theorist of recognition, gender and domination, drawing on Hegel, Winnicott and the Frankfurt School.",["Mutual recognition","Doer and done-to","The third"],[["1988","The Bonds of Love"],["2018","Beyond Doer and Done To"]]],
+};
+
+const C={
+"compromise-formation":["Compromise formation","Brenner's idea that every thought, symptom and trait is a compromise among wish, fear, defense and conscience."],
+"unconscious-fantasy":["Unconscious fantasy","Arlow's view that persistent unconscious fantasies continually shape perception and experience."],
+"close-process":["Close process attention","Gray's technique of tracking, moment to moment, where the patient's associations shift away from conflict, and analyzing that defense."],
+inferiority:["Inferiority feeling","Adler's account of the felt smallness every child begins with. It drives compensation and, when exaggerated, becomes neurosis."],
+"social-interest":["Social interest","Gemeinschaftsgefühl: Adler's sense of belonging to and contributing to the human community, his measure of health."],
+"style-of-life":["Style of life","Adler's term for the unique, mostly unconscious pattern by which a person moves toward their goals."],
+sociogeny:["Sociogeny","Fanon's term, set beside phylogeny and ontogeny, for the social origin of psychic life: alienation produced by a racist society, not only by individual history."],
+epidermalization:["Epidermalization","Fanon's word for how a racist gaze writes inferiority onto the skin, so the Black subject comes to see himself through the white other's look."],
+"collective-unconscious":["Collective unconscious","Jung's layer of the psyche shared across humanity and structured by archetypes, beneath the personal unconscious formed by individual experience."],
+individuation:["Individuation","The lifelong process of becoming a whole, differentiated self by integrating unconscious contents, including the shadow."],
+"mutual-influence":["Analysis as mutual influence","Jung's 1929 view that analyst and patient meet like two chemical substances, so both are changed. It anticipates two-person thinking, though with a very different method."],
+"mirror-stage":["Mirror stage","Lacan's account of the infant identifying with its own unified image. The ego is formed from this image, so it rests on misrecognition."],
+"the-other":["The Other","The order of language, law and the unconscious that precedes the subject. For Lacan, desire is always the desire of the Other."],
+isr:["Imaginary, Symbolic, Real","Lacan's three registers: images and identifications, language and law, and what resists symbolization."],
+"secure-base":["Secure base","Ainsworth's term for a caregiver the child can explore from and return to. In treatment, the analyst can come to serve this function."],
+"working-models":["Internal working models","Bowlby's term for expectations about self and others built from early attachment, which shape later relationships."],
+mentalization:["Mentalization","The capacity to understand one's own and others' behavior in terms of mental states such as feelings, wishes and beliefs. Fonagy ties its development to secure attachment."],
+"separation-individuation":["Separation-individuation","Mahler's account of how the infant moves from fusion with the mother through hatching, practicing and rapprochement toward a separate self."],
+splitting:["Splitting","Kernberg's use of Klein's idea: keeping all-good and all-bad images of self and others apart, central to borderline personality organization."],
+"therapeutic-action":["Therapeutic action as a new object relationship","Loewald's argument that the analyst is not only a screen for transference but also a new object, through whom the patient can resume development."],
+drive:["Drive","Inborn pressure (libido, later aggression and the death drive) seeking discharge. In Freud's model, other people matter mainly as the objects through which drives are satisfied."],
+transference:["Transference","The patient's displacement of feelings and expectations from early figures onto the analyst. For Freud, the main field where the past can be interpreted."],
+neutrality:["Neutrality","The analyst's equidistance from id, ego and superego, and restraint from gratifying wishes. Most schools on this map criticize or revise it."],
+phantasy:["Unconscious phantasy","Klein's term for the mental expression of drives from birth, organizing the infant's experience of good and bad objects."],
+positions:["Paranoid-schizoid and depressive positions","Two ways of organizing experience. In the first, objects are split into good and bad. In the second, love and hate can be held toward one whole person, which makes concern possible."],
+"projective-identification":["Projective identification","A phantasy of putting split-off parts of the self into another person. After Bion it is also understood as a form of communication that affects the other."],
+"identification-aggressor":["Identification with the aggressor","Ferenczi's account of how an overwhelmed child takes in the abuser's perspective, including the abuser's guilt, in order to survive."],
+"mutual-analysis":["Mutual analysis","Ferenczi's late experiment in letting patients analyze him in turn. It failed as technique but anticipated the relational interest in the analyst's subjectivity."],
+defense:["Defense analysis","Interpreting how the ego wards off anxiety before interpreting what it wards off."],
+"conflict-free":["Conflict-free ego sphere","Hartmann's idea that capacities such as perception and memory develop outside conflict and serve adaptation."],
+container:["Container and contained","Bion's model of one mind receiving another's unbearable experience and returning it in a form that can be thought."],
+"alpha-function":["Alpha function","The process that turns raw sense impressions and emotions (beta elements) into elements usable for dreaming and thinking."],
+reverie:["Reverie","For Bion, the mother's receptive state that makes containment possible. Ogden extends it to the analyst's drifting thoughts, images and sensations as data about the session."],
+holding:["Holding environment","Winnicott's term for the reliable care that lets an infant go on being. In analysis, the setting and the analyst's attunement."],
+transitional:["Transitional space","The area between inner and outer reality where play, culture and creativity happen, and where analysis takes place."],
+"true-false-self":["True and false self","The false self complies with the environment to protect a true self that has not been met. Heavy compliance leaves a sense of unreality."],
+"object-seeking":["Object-seeking libido","Fairbairn's revision of Freud: libido seeks relationship, not pleasure. Pleasure is a signpost to the object."],
+"participant-observation":["Participant observation","Sullivan's principle that the clinician always takes part in the field being observed and cannot stand outside it."],
+"selective-inattention":["Selective inattention","Not noticing what would bring on anxiety. It keeps experience out of awareness without classic repression."],
+"detailed-inquiry":["Detailed inquiry","Asking exactly what happened, who said what and how it felt, rather than interpreting from a distance."],
+unformulated:["Unformulated experience","Donnel Stern's idea that much unconscious experience was never put into words, rather than known and then repressed."],
+selfobject:["Selfobject","Another person experienced as part of the self, providing functions such as soothing or affirmation that the self needs to hold together. Kohut held that these needs last a lifetime."],
+mirroring:["Mirroring, idealizing and twinship","The three selfobject transferences: wanting to be admired, wanting to merge with an admired figure, and wanting to feel essentially alike."],
+transmuting:["Transmuting internalization","Through tolerable failures of the selfobject (optimal frustration), a person gradually takes in the function and can provide it for themselves."],
+empathy:["Empathy as vicarious introspection","Kohut's definition of the psychoanalytic method: knowing another person's inner life by imagining oneself into it."],
+"bipersonal-field":["Bipersonal field","The Barangers' view that analyst and patient form one dynamic field with its own unconscious fantasy, not reducible to either person."],
+bastion:["Bastion","A part of the field that both participants unconsciously keep out of the process. The work moves once it is noticed."],
+"analytic-third":["Analytic third","Ogden's term for the intersubjectivity created jointly by analyst and patient, which each experiences through their own subjectivity."],
+"subjugating-third":["Subjugating third","Ogden's reading of projective identification: a third in which both participants' individual subjectivity is temporarily taken over."],
+"relational-matrix":["Relational matrix","Mitchell's frame in which self, other and the space between them form the basic unit of mind, replacing drive."],
+enactment:["Enactment","An event in which analyst and patient both live out something dissociated or unformulated before they can think about it. Relational theory treats it as unavoidable and useful."],
+"self-states":["Self-states and dissociation","Bromberg's view of the self as many states, normally linked. Trauma breaks the links, and analysis helps a person stand in the spaces between states."],
+mutuality:["Mutuality and asymmetry","Aron's formulation. Analyst and patient influence each other mutually, but their roles and responsibilities stay asymmetrical."],
+"isolated-mind":["The myth of the isolated mind","Stolorow and Atwood's critique of the idea that a mind exists apart from its relational context."],
+"organizing-principles":["Organizing principles","Prereflective, unconscious patterns that shape how a person experiences the world, formed in early relational contexts."],
+"intersubjective-field":["Intersubjective field","The system formed by two differently organized subjective worlds. In this theory, all experience emerges within such fields."],
+"mutual-recognition":["Mutual recognition","Benjamin's ideal of recognizing the other as an equivalent center of experience while being recognized in turn."],
+"doer-done-to":["Doer and done-to","The complementary twoness that follows a breakdown of recognition, in which each person feels acted upon by the other."],
+"moral-third":["The third (Benjamin)","A shared space or principle both partners can surrender to, which lets them step out of complementarity. Compare Ogden's third, which is created whether or not anyone works for it."],
+};
+
+const ids=Object.keys(N);
+const kids=id=>ids.filter(k=>N[k].parents.includes(id));
+let selected=null, view=null, hlLine=null, picking=false, picks=[];
+const LINE={freud:"origins",klein:"origins",ferenczi:"origins","ego-psychology":"self","american-or":"self","contemporary-freudian":"self",attachment:"british",bion:"british",independents:"british","field-theory":"british",interpersonal:"relational",relational:"relational","self-psychology":"self",intersubjective:"self",jung:"side",lacan:"side",adler:"side",fanon:"side"};
+const ORIGIN={freud:"Vienna","contemporary-freudian":"New York and Washington",adler:"Vienna",fanon:"Saint-Alban and Blida",jung:"Zurich",lacan:"Paris",klein:"Budapest and Berlin, then London",ferenczi:"Budapest","ego-psychology":"Vienna, then New York",bion:"London",independents:"London and Edinburgh",interpersonal:"New York and Washington–Baltimore","self-psychology":"Chicago","american-or":"New York, New Haven and Topeka","field-theory":"Buenos Aires and Montevideo, then Pavia",attachment:"London",relational:"New York",intersubjective:"New Jersey, then Los Angeles"};
+const TCT={"contemporary-freudian": "Transference is a compromise formation like any other, analyzed for its wishes, fears and defenses. Countertransference is examined but stays in the background.", "adler": "Less central than in Freud. The therapist is an equal who encourages; the patient's style of life shows itself in the relationship and is understood rather than regressed into.", "fanon": "The colonial relation enters the room: the clinician can be lived as the colonizer, and the clinician's own position, race and power have to be examined.", "freud": "The past displaced onto the analyst, to be interpreted. Countertransference is the analyst's interference, to be analyzed away.", "jung": "A meeting of two psyches in which both are changed. The analyst's reactions are part of the work.", "lacan": "The patient installs the analyst as “the subject supposed to know,” a position the analyst declines to fill.", "klein": "The analyst is lived as good breast or bad breast, in the total situation of phantasy. After Heimann, countertransference becomes a source of information.", "ferenczi": "Transference includes the analyst's real failures. Countertransference is openly acknowledged, even mutually analyzed.", "ego-psychology": "Transference begins as resistance and becomes an arena for developmental repair. Countertransference is minimized in favor of the working alliance.", "bion": "The analyst receives the patient's projective identifications. Countertransference is the container's experience of what the patient cannot yet think.", "independents": "The analyst is the old bad object and a possible new good one. Countertransference is legitimate data, as in Winnicott's “Hate in the Countertransference.”", "interpersonal": "Old patterns enacted with a real participant. Countertransference is data from participant-observation.", "self-psychology": "Mirroring, idealizing and twinship transferences are allowed to unfold. Countertransference is the analyst's discomfort at being used, to be tolerated.", "american-or": "Split, shifting images of self and other (Kernberg). Countertransference is the analyst's total emotional response, used diagnostically.", "field-theory": "Transference as a phenomenon of the shared field. Countertransference arrives as the analyst's reverie.", "attachment": "Old working models brought to the analyst as a potential secure base. Countertransference includes the analyst's own attachment patterns.", "relational": "Co-constructed by both people. Countertransference and enactment are unavoidable, used, and sometimes disclosed.", "intersubjective": "Transference is the patient's organizing activity. Countertransference reflects the analyst's own organizing principles, and together they form the field."};
+const NEWC={"contemporary-freudian": ["Compromise formation replaces the energy model", "Unconscious fantasy as a constant organizer of experience", "Defense analyzed moment to moment in the session", "A Freudian account of therapeutic action through a new object"], "adler": ["Inferiority and compensation, not sexuality, as the engine of neurosis", "The person as an indivisible whole, moving toward goals", "Social interest as the measure of health", "Face-to-face, egalitarian treatment"], "fanon": ["Racism and colonialism as causes of psychic suffering", "Sociogeny added to ontogeny", "A critique of the universal Oedipus complex", "Psychiatry as political and institutional practice"], "freud": ["Symptoms have meaning, rather than being only neurological", "A dynamic unconscious, not just forgotten material", "Sexuality begins in childhood", "The talking cure replaces hypnosis and suggestion"], "jung": ["Libido widened from sexual to general psychic energy", "A collective unconscious beneath the personal one", "Dreams and symptoms look forward, not only back", "Treatment as mutual influence between two people"], "lacan": ["A return to Freud's texts against the adaptation model", "The ego as a site of misrecognition, not an ally", "Language, not biology, structures the unconscious"], "klein": ["The oedipal drama pushed back into the first year of life", "Phantasy is constant, not just a disguise for wishes", "Positions replace psychosexual stages", "Children made analyzable through play"], "ferenczi": ["Real trauma, not only fantasy", "The analyst's own contribution to the patient's suffering", "Warmth and elasticity in place of strict abstinence", "Corrective experience alongside insight"], "ego-psychology": ["Focus shifts from id content to the ego's defenses", "Analysis works from the surface down", "Adaptation and conflict-free functions, beyond conflict", "Development studied in actual infants and mothers", "The analyst as working ally, not adversary"], "bion": ["Projective identification becomes communication, not only fantasy", "A theory of how thinking itself develops", "The analyst's mind as container", "Envy attacks the mind's own links, not just the object"], "independents": ["Libido seeks objects, not pleasure", "Real parenting, not constitutional aggression, shapes the self", "Pathology as deficit and false self, not only conflict", "The setting itself heals: holding over interpretation"], "interpersonal": ["Drive theory dropped: what happens between people is the stuff of mind", "The analyst as participant, not detached observer", "Culture and society shape character", "A self organized horizontally by dissociation, not vertically by repression"], "self-psychology": ["Narcissism as its own healthy line, not immaturity to outgrow", "Deficit before conflict: Tragic Man over Guilty Man", "Empathy becomes the method, not the backdrop", "Narcissistic patients made treatable, with their transferences allowed to unfold", "Aggression as reactive, not a drive"], "american-or": ["Relationships built into ego psychology without abandoning drive", "The analyst as a new object, not only a screen", "Borderline and narcissistic patients made treatable", "Narcissism as defense, in contrast to Kohut"], "field-theory": ["The field, not either person, as the object of analysis", "The analyst's reverie as clinical data", "From decoding the past to dreaming in the present"], "attachment": ["Attachment as a primary need, not secondary to feeding", "Real separations and losses, not only fantasy", "Empirical research brought to psychoanalytic questions"], "relational": ["The relational matrix replaces drive", "The analyst moves from observer to co-participant", "Enactment shifts from error to route of change", "Gender, race and class as constitutive"], "intersubjective": ["A field of subjectivities replaces the isolated self", "Transference as organizing activity, not distortion", "Drive theory and metapsychology dropped entirely", "From empathy alone to reciprocal, mutual influence"]};
+const KEYLAB="Theory of change";
+const KEY={"contemporary-freudian":["Analyzing conflict and defense","widens the ego's choices"],adler:["Encouragement turns striving","toward social interest"],fanon:["Disalienation means changing","the world, not only the mind"],freud:["Where id was,","there ego shall be"],jung:["Integrating the","unconscious into a whole"],lacan:["Language uncovers","unconscious desire"],klein:["Interpreting phantasy, so love and hate","can meet in one whole object"],ferenczi:["A responsive analyst","repairs trauma's damage"],"ego-psychology":["Strengthening the ego,","not only freeing the id"],bion:["Containment makes","thinking possible"],independents:["Insight is not enough;","a new object frees the self"],interpersonal:["Inquiry expands awareness","of patterns with others"],"self-psychology":["Empathy builds","the self"],"american-or":["Integrating split images","of self and other"],"field-theory":["Dreaming together","what was never dreamt"],attachment:["Security makes","reflection possible"],relational:["What heals is engagement","with an authentic other"],intersubjective:["Change happens in the shared, co-created","emotional field of the dyad"]};
+const COAST=new Set(["self-psychology","relational","intersubjective"]);
+const STACK={"american-or":["American","object","relations"],"contemporary-freudian":["Contemporary","Freudian"],ferenczi:["Budapest","school"],independents:["British","object","relations"],"ego-psychology":["Ego","psychology"],"self-psychology":["Self","psychology"]};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const treeEl=document.getElementById("tree"), edgesEl=document.getElementById("edges");
+const chip=k=>`<button type="button" class="chip" data-go="${k}">${esc(N[k].name)}</button>`;
+
+function nodeDetail(id){
+  const n=N[id], up=n.parents, down=kids(id), [place,reg]=P[id], infIn=n.infl||[], infOut=ids.filter(k=>(N[k].infl||[]).includes(id));
+  return `<h2>${esc(n.full)}</h2>
+    ${KEY[id]?`<div class="change"><span class="lab">${KEYLAB}</span><p>${esc(KEY[id][0]+" "+KEY[id][1])}</p></div>`:""}
+    <div class="meta"><span class="tag fill">${esc(n.yrs)}</span>${ORIGIN[id]?`<span class="tag">Origin: ${esc(ORIGIN[id])}</span>`:""}</div>
+    ${COAST.has(id)&&place?`<p class="place">${esc(place)}</p>`:""}
+    <div class="dgrid">
+    <div class="dcol">
+      <p class="lede">${esc(n.sum)}</p>
+      <h3>Key concepts</h3>
+      <dl class="concepts">${n.co.map(c=>`<div><dt>${esc(C[c][0])}</dt><dd>${esc(C[c][1])}</dd></div>`).join("")}</dl>
+      ${TCT[id]?`<h3>Transference</h3><p class="tct">${esc(TCT[id])}</p>`:""}
+    </div>
+    <div class="dcol">
+      <h3>Key thinkers</h3>
+      <div class="list">${n.th.map(t=>`<button type="button" class="trow" data-th="${t}"><span>${esc(T[t][0])}</span><span class="d">${esc(T[t][1])} →</span></button>`).join("")}${(n.br||[]).map(t=>`<button type="button" class="trow also" data-th="${t}"><span>${esc(T[t][0])} <em>also</em></span><span class="d">${esc(T[t][1])} →</span></button>`).join("")}</div>
+      <h3>Key texts</h3>
+      <dl class="texts">${n.tx.map(([y,ti,by])=>`<dt>${y}</dt><dd><i>${esc(ti)}</i> <span class="by">· ${esc(by)}</span></dd>`).join("")}</dl>
+      <h3>On the tree</h3>
+      ${up.length?`<div class="links"><span class="lab">Descends from</span>${up.map(chip).join("")}</div>`:""}
+      ${infIn.length?`<div class="links"><span class="lab">Influenced by</span>${infIn.map(chip).join("")}</div>`:""}
+      ${down.length?`<div class="links"><span class="lab">Leads to</span>${down.map(chip).join("")}</div>`:""}
+      ${infOut.length?`<div class="links"><span class="lab">Influenced</span>${infOut.map(chip).join("")}</div>`:""}
+    </div></div>`;
+}
+function thinkerDetail(t,from){
+  const [name,dates,blurb,ideas,works]=T[t];
+  const appears=ids.filter(k=>N[k].th.includes(t)), also=ids.filter(k=>(N[k].br||[]).includes(t));
+  return `<button type="button" class="back" data-backto>← ${esc(N[from].full)}</button>
+    <h2>${esc(name)}</h2>
+    ${dates?`<p class="dates">${esc(dates)}</p>`:""}
+    <div class="dgrid"><div class="dcol">
+      <p class="lede">${esc(blurb)}</p>
+      <h3>Key ideas</h3>
+      <ul class="ideas">${ideas.map(i=>`<li>${esc(i)}</li>`).join("")}</ul>
+    </div><div class="dcol">
+      <h3>Key works</h3>
+      <dl class="texts">${works.map(([y,ti])=>`<dt>${y}</dt><dd><i>${esc(ti)}</i></dd>`).join("")}</dl>
+      <h3>On the tree</h3>
+      <div class="links"><span class="lab">Home school</span>${appears.map(chip).join("")}</div>${also.length?`<div class="links"><span class="lab">Also shaped</span>${also.map(chip).join("")}</div>`:""}
+    </div></div>`;
+}
+
+function stackLines(k){
+  const words=STACK[k]||N[k].name.split(" ");
+  return words.map(w=>`<span class="ln">${esc(w)}</span>`).join("")+`<span class="ln sl">${esc(N[k].yrs)}</span>`;
+}
+
+function renderTree(scrollTo){
+  const keepY=window.scrollY, frag=document.createDocumentFragment();
+  for(let g=0; g<GENS.length; g++){
+    const inGen=ids.filter(k=>N[k].gen===g);
+    if(!inGen.length) continue;
+    const row=document.createElement("div"); row.className="row";
+    const yr=k=>+(N[k].yrs.match(/\d{4}/)||[0])[0], rowMin=Math.min(...inGen.map(yr));
+    inGen.sort((a,b)=>N[a].col-N[b].col).forEach(k=>{
+      const n=N[k], sel=k===selected;
+      const el=document.createElement("div");
+      el.className="node"+(n.side?" side":"")+(sel?" sel":"")+(picks.includes(k)?" pick":"")+(k==="freud"?" freud":"")+(hlLine&&LINE[k]===hlLine?" hl":"");
+      el.dataset.id=k;
+      if(!sel) el.style.marginTop=(g===0&&n.side?(k==="fanon"?65:0):Math.min(63,(yr(k)-rowMin)*1.45))+"px";
+      if(k!=="freud" && !sel) el.style.gridColumn=n.span?`${n.col+1} / span ${n.span}`:String(n.col+1);
+      el.innerHTML=(picks.includes(k)?`<span class="pk">${picks.indexOf(k)+1}</span>`:"")+`<button type="button" class="head" data-head="${k}" aria-expanded="${sel}" aria-label="${esc(n.full)}"><span class="stack"><svg aria-hidden="true"><path/></svg>${stackLines(k)}</span></button>
+        ${sel?`<div class="detail"><button type="button" class="x" data-close aria-label="Close">×</button>${view.t==="thinker"?thinkerDetail(view.id,k):nodeDetail(k)}</div>`:""}`;
+      row.appendChild(el);
+    });
+    frag.appendChild(row);
+  }
+  treeEl.querySelectorAll(".row").forEach(r=>r.remove());
+  treeEl.appendChild(frag);
+  layout();
+  if(!scrollTo && window.scrollY!==keepY) window.scrollTo(0,keepY);
+  requestAnimationFrame(()=>{ layout();
+    if(scrollTo){const el=treeEl.querySelector(`[data-id="${scrollTo}"]`); if(el) el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});}
+  });
+}
+
+function rounded(pts,r){
+  const n=pts.length; let d="";
+  for(let i=0;i<n;i++){
+    const p=pts[(i-1+n)%n], v=pts[i], q=pts[(i+1)%n];
+    const l1=Math.hypot(p[0]-v[0],p[1]-v[1]), l2=Math.hypot(q[0]-v[0],q[1]-v[1]);
+    const d1=Math.min(r,l1/2), d2=Math.min(r,l2/2);
+    const a=[v[0]+(p[0]-v[0])/l1*d1, v[1]+(p[1]-v[1])/l1*d1], b=[v[0]+(q[0]-v[0])/l2*d2, v[1]+(q[1]-v[1])/l2*d2];
+    d+=(i?"L":"M")+a[0].toFixed(1)+","+a[1].toFixed(1)+" Q"+v[0].toFixed(1)+","+v[1].toFixed(1)+" "+b[0].toFixed(1)+","+b[1].toFixed(1)+" ";
+  }
+  return d+"Z";
+}
+function outline(stack){
+  const R=[...stack.querySelectorAll(".ln")].map(l=>({x0:l.offsetLeft,x1:l.offsetLeft+l.offsetWidth,y0:l.offsetTop,y1:l.offsetTop+l.offsetHeight}));
+  if(!R.length||R.some(r=>r.x1-r.x0<4||r.y1-r.y0<4)) return;
+  let pts=[[R[0].x0,R[0].y0],[R[0].x1,R[0].y0]];
+  R.forEach((r,i)=>{ pts.push([r.x1,r.y1]); if(i<R.length-1) pts.push([R[i+1].x1,r.y1]); });
+  const last=R[R.length-1]; pts.push([last.x0,last.y1]);
+  for(let i=R.length-1;i>0;i--){ pts.push([R[i].x0,R[i].y0]); pts.push([R[i-1].x0,R[i].y0]); }
+  if(window.PILL){ const x0=Math.min(...R.map(r=>r.x0)),x1=Math.max(...R.map(r=>r.x1)),y0=R[0].y0,y1=R[R.length-1].y1,rr=Math.min(16,(y1-y0)/2);
+    stack.querySelector("svg path").setAttribute("d",`M${x0+rr},${y0}H${x1-rr}A${rr},${rr} 0 0 1 ${x1},${y0+rr}V${y1-rr}A${rr},${rr} 0 0 1 ${x1-rr},${y1}H${x0+rr}A${rr},${rr} 0 0 1 ${x0},${y1-rr}V${y0+rr}A${rr},${rr} 0 0 1 ${x0+rr},${y0}Z`); return; }
+  const clean=[];
+  pts.forEach(p=>{ const q=clean[clean.length-1]; if(!q||Math.abs(q[0]-p[0])>.5||Math.abs(q[1]-p[1])>.5) clean.push(p); });
+  if(clean.length>1){const f=clean[0],l=clean[clean.length-1]; if(Math.abs(f[0]-l[0])<.5&&Math.abs(f[1]-l[1])<.5) clean.pop();}
+  const col=[];
+  for(let i=0;i<clean.length;i++){ const p=clean[(i-1+clean.length)%clean.length], v=clean[i], q=clean[(i+1)%clean.length];
+    if((Math.abs(p[0]-v[0])<.5&&Math.abs(v[0]-q[0])<.5)||(Math.abs(p[1]-v[1])<.5&&Math.abs(v[1]-q[1])<.5)) continue; col.push(v); }
+  stack.querySelector("svg path").setAttribute("d",rounded(col,13));
+}
+
+function layout(){ treeEl.querySelectorAll(".stack").forEach(outline); drawEdges(); }
+
+function wave(x1,y1,x2,y2){
+  const lift=Math.min(70,Math.abs(x2-x1)*0.18);
+  const c1x=x1+(x2-x1)*0.35, c2x=x1+(x2-x1)*0.75, top=Math.min(y1,y2)-lift;
+  return `M${x1.toFixed(1)},${y1.toFixed(1)} C${c1x.toFixed(1)},${top.toFixed(1)} ${c2x.toFixed(1)},${top.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`;
+}
+function drawEdges(){
+  const box=treeEl.getBoundingClientRect();
+  const pos=id=>{const el=treeEl.querySelector(`[data-id="${id}"]`); if(!el) return null;
+    const h=el.querySelector(".stack").getBoundingClientRect(), o=el.getBoundingClientRect(), f=el.querySelector(".ln").getBoundingClientRect();
+    return {x:h.left-box.left+h.width/2, top:h.top-box.top, bot:o.bottom-box.top, fy:f.top-box.top+f.height/2, fl:f.left-box.left, fr:f.right-box.left, sl:h.left-box.left, sr:h.right-box.left, sy:h.top-box.top+h.height/2, st:h.top-box.top};};
+  let s="";
+  ids.forEach(c=>{
+    const cp=pos(c); if(!cp) return;
+    (N[c].infl||[]).forEach(p=>{ const pp=pos(p); if(!pp) return;
+      const on=selected===c||selected===p, st=on?"var(--link)":"var(--pink)", sw=on?2.4:1.6, span=N[c].gen-N[p].gen;
+      let d;
+      if(span>1){ const xg=(pp.x+cp.x)/2, g=36; d=`M${pp.x},${pp.bot} C${pp.x},${pp.bot+g} ${xg},${pp.bot} ${xg},${pp.bot+g} L${xg},${cp.top-g} C${xg},${cp.top} ${cp.x},${cp.top-g} ${cp.x},${cp.top}`; }
+      else { const my=(pp.bot+cp.top)/2; d=`M${pp.x},${pp.bot} C${pp.x},${my} ${cp.x},${my} ${cp.x},${cp.top}`; }
+      s+=`<path d="${d}" fill="none" stroke="${st}" stroke-width="${sw}" stroke-dasharray="3 5" stroke-linecap="round"/>`;});
+    N[c].parents.forEach(p=>{ const pp=pos(p); if(!pp) return;
+      const dash=N[c].side?' stroke-dasharray="0.1 6" stroke-linecap="round"':'', on=selected===c||selected===p, st=on?"var(--link)":"var(--pink)", sw=on?2.4:(N[c].side?2.4:1.6);
+      const my=(pp.bot+cp.top)/2;
+      if(N[c].side && Math.abs(cp.st-pp.st)<24){ const L=cp.x<pp.x, x0=L?pp.sl:pp.sr, x1=L?cp.sr:cp.sl;
+        s+=`<path d="M${x0},${pp.sy} L${x1},${cp.sy}" fill="none" stroke="${st}" stroke-width="${sw}"${dash}/>`; return; }
+      s+=`<path d="M${pp.x},${pp.bot} C${pp.x},${my} ${cp.x},${my} ${cp.x},${cp.top}" fill="none" stroke="${st}" stroke-width="${sw}"${dash}/>`;});
+  });
+  edgesEl.innerHTML=s;
+}
+
+function setHash(k){ try{ history.replaceState(null,"",k?"#"+k:location.pathname+location.search);}catch(e){} }
+function openNode(k){ selected=k; view={t:"node",id:k}; setHash(k); renderTree(k); }
+function closeNode(){ const k=selected; selected=null; view=null; setHash(null); renderTree(); const h=treeEl.querySelector(`[data-head="${k}"]`); if(h) h.focus({preventScroll:true}); }
+
+treeEl.addEventListener("click",e=>{
+  const t=e.target;
+  const head=t.closest("[data-head]"); if(head){ const k=head.dataset.head; if(picking){ const i=picks.indexOf(k); if(i>-1) picks.splice(i,1); else picks.push(k); renderTree(); renderFab(); return; } if(selected===k) closeNode(); else openNode(k); return; }
+  if(t.closest("[data-close]")){ closeNode(); return; }
+  const th=t.closest("[data-th]"); if(th){ view={t:"thinker",id:th.dataset.th}; renderTree(selected); return; }
+  if(t.closest("[data-backto]")){ view={t:"node",id:selected}; renderTree(selected); return; }
+  const go=t.closest("[data-go]"); if(go){ openNode(go.dataset.go); return; }
+});
+document.addEventListener("keydown",e=>{ if(e.key!=="Escape") return; if(picking){ stopPicking(); return; } if(selected) closeNode(); });
+
+const fab=document.getElementById("fab"), cmpEl=document.getElementById("cmp");
+const NAV={origins:"Origins",british:"Kleinian and British",relational:"Interpersonal and relational",self:"Ego and self psychology",side:"Others"};
+function renderFab(){
+  document.body.classList.toggle("picking",picking);
+  if(!picking){ fab.innerHTML=`<button type="button" class="disk" data-fab="start" aria-label="Compare schools"><span class="coin"><span class="face">Compare</span><span class="face back" aria-hidden="true">Compare</span></span></button>`; return; }
+  const n=picks.length;
+  fab.innerHTML=(n<2?`<span class="hint">Pick ${n?"one more":"two or more"}</span>`:`<button type="button" class="primary" data-fab="show">Compare ${n}</button>`)
+    +(n?`<button type="button" data-fab="clear">Clear</button>`:"")+`<button type="button" data-fab="cancel">Cancel</button>`;
+}
+function startPicking(){ picking=true; if(selected){ selected=null; view=null; setHash(null); } renderTree(); renderFab(); }
+function stopPicking(){ picking=false; if(cmpEl.hidden) picks=[]; renderTree(); renderFab(); }
+fab.addEventListener("click",e=>{
+  const b=e.target.closest("[data-fab]"); if(!b) return;
+  const a=b.dataset.fab;
+  if(a==="start") startPicking();
+  else if(a==="cancel") stopPicking();
+  else if(a==="clear"){ picks=[]; renderTree(); renderFab(); }
+  else if(a==="show"){ picking=false; renderCompare(); renderTree(); renderFab(); cmpEl.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"}); }
+});
+function renderCompare(){
+  const keepY=window.scrollY;
+  try{ renderCompareInner(); } finally { if(window.scrollY!==keepY) window.scrollTo(0,keepY); }
+}
+function renderCompareInner(){
+  if(picks.length<2){ cmpEl.hidden=true; cmpEl.innerHTML=""; return; }
+  const cols=picks.map(k=>N[k]);
+  const anyCoast=picks.some(k=>COAST.has(k));
+  const row=(label,fn)=>`<div class="lab">${label}</div>`+picks.map(k=>`<div>${fn(k,N[k])}</div>`).join("");
+  const list=a=>a.length?`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:`<span class="none">None</span>`;
+  const names=a=>a.length?a.map(k=>esc(N[k].name)).join(", "):`<span class="none">None</span>`;
+  let h=`<div class="lab">School</div>`+picks.map(k=>`<div class="colhead"><div class="colrow"><span class="colname">${esc(N[k].name)}</span><button type="button" class="colrm" data-rm="${k}" aria-label="Remove ${esc(N[k].name)}">×</button></div></div>`).join("");
+  h+=row("When",(k,n)=>esc(n.yrs));
+  h+=row("Origin",k=>ORIGIN[k]?esc(ORIGIN[k]):`<span class="none">—</span>`);
+  h+=row("Theory of change",k=>KEY[k]?`<b>${esc(KEY[k][0]+" "+KEY[k][1])}</b>`:"");
+  h+=row("Descends from",(k,n)=>names(n.parents)+((n.infl||[]).length?`<br><span class="none">Influenced by</span> ${names(n.infl)}`:""));
+  h+=row("New contributions",k=>list(NEWC[k]||[]));
+  h+=row("In brief",(k,n)=>esc(n.sum));
+  h+=row("Key concepts",(k,n)=>list(n.co.map(c=>C[c][0])));
+  h+=row("Transference",k=>TCT[k]?esc(TCT[k]):"");
+  h+=row("Key thinkers",(k,n)=>list(n.th.map(t=>T[t][0])));
+  cmpEl.innerHTML=`<div class="cmptop"><h2>Compare</h2><div class="acts"><button type="button" class="cx" data-cmp="close" aria-label="Close comparison">×</button></div></div>
+    <div class="cmpscroll"><div class="cmp" style="grid-template-columns:minmax(150px,170px) repeat(${cols.length}, minmax(260px,1fr))">${h}</div></div>`;
+  cmpEl.hidden=false;
+}
+cmpEl.addEventListener("click",e=>{
+  const rm=e.target.closest("[data-rm]"); if(rm){ picks=picks.filter(k=>k!==rm.dataset.rm); renderCompare(); renderTree(); renderFab(); return; }
+  const a=e.target.closest("[data-cmp]"); if(!a) return;
+  if(a.dataset.cmp==="close"){ cmpEl.hidden=true; cmpEl.innerHTML=""; picks=[]; picking=false; renderTree(); renderFab(); }
+  else { picking=true; renderTree(); renderFab(); document.getElementById("tree").scrollIntoView({behavior:"smooth",block:"start"}); }
+});
+renderFab();
+
+const navBtns=[...document.querySelectorAll("nav [data-line]")];
+function applyHl(){ treeEl.querySelectorAll(".node").forEach(el=>el.classList.toggle("hl",!!hlLine&&LINE[el.dataset.id]===hlLine)); navBtns.forEach(b=>b.classList.toggle("on",b.dataset.line===hlLine)); }
+let pinned=null;
+navBtns.forEach(b=>{
+  b.addEventListener("mouseenter",()=>{hlLine=b.dataset.line; applyHl();});
+  b.addEventListener("mouseleave",()=>{hlLine=pinned; applyHl();});
+  b.addEventListener("click",()=>{pinned=pinned===b.dataset.line?null:b.dataset.line; hlLine=pinned; applyHl();});
+});
+
+function placeSpool(){
+  const w=document.getElementById("titlewrap"), o=document.getElementById("linesof"), sp=document.getElementById("spool"); if(!w||!o||!sp) return;
+  const wr=w.getBoundingClientRect(), or=o.getBoundingClientRect(), sw=sp.getBoundingClientRect().width;
+  sp.style.left=(or.right-wr.left+sw*0.14)+"px";
+  sp.style.top=(or.top-wr.top-sw*0.32)+"px";
+}
+window.addEventListener("resize",placeSpool);
+if(document.fonts) document.fonts.ready.then(placeSpool);
+setTimeout(placeSpool,50);
+function fromHash(){ const h=decodeURIComponent((location.hash||"").slice(1)); if(N[h]){ if(selected!==h) openNode(h); return true; } return false; }
+window.addEventListener("hashchange",fromHash);
+if(!fromHash()) renderTree();
+const ro=new ResizeObserver(()=>layout()); ro.observe(treeEl);
+new MutationObserver(()=>treeEl.querySelectorAll(".stack").forEach(st=>{ if(!st.dataset.ro){ st.dataset.ro=1; ro.observe(st); } })).observe(treeEl,{childList:true,subtree:true});
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden) layout(); });
+window.addEventListener("load",layout); setTimeout(layout,400); setTimeout(layout,1500);
+if(document.fonts) document.fonts.ready.then(layout);
+</script>
+
+</body>
+</html>
