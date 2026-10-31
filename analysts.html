@@ -209,6 +209,7 @@ const P=[
 ["bicudo","Virgínia Leone Bicudo","1910–2003","São Paulo","Analyzed by Koch; sociologist of race and the first Black psychoanalyst in Brazil."],
 ["kosawa","Heisaku Kosawa","1897–1968","Vienna, then Tokyo","Analyzed by Sterba and supervised by Federn in Vienna; founder of psychoanalysis in Japan, known for the Ajase complex."],
 ["eissler","Ruth Eissler","1906–1989","Vienna, Chicago, then New York","Analyzed by Reik, then Sterba in Vienna; Kohut's training analyst in Chicago."],
+["racker","Heinrich Racker","1910–1961","Vienna, then Buenos Aires","Analyzed by Lampl-de Groot in Vienna, then Garma and Langer in Buenos Aires; a founding theorist of countertransference."],
 ["eiminder","Sándor Eiminder","dates unknown","Vienna, then Barcelona","Hungarian; worked in Aichhorn's group in Vienna, then fled to Barcelona, where he analyzed Tosquelles."],
 ["wittenberg","Wilhelm Wittenberg","1874–1928","Munich","First analyst of both Fromm-Reichmann and Fromm."],
 ["aichhorn","August Aichhorn","1878–1949","Vienna","Analyst of delinquent youth; Mahler's second analyst."],
@@ -226,7 +227,7 @@ const E=[
 ["sharpe","little"],["sharpe","khan"],["winnicott","guntrip"],["winnicott","little"],["winnicott","khan"],["khan","phillips"],["fairbairn","guntrip"],["bion","grotstein"],
 ["anna","erikson"],["deutsch","mahler"],["rado","hartmann"],["thompson","sullivan"],["freichmann","fromm"],
 ["loewenstein","lacan"],["lacan","laplanche"],["lacan","pontalis"],["lacan","leclaire"],["lacan","guattari"],["reik","garma"],
-["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"]];
+["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"],["garma","racker"],["langer","racker"]];
 const byId=Object.fromEntries(P.map(([id,name,dates,city,blurb])=>[id,{id,name,dates,city,blurb,born:(dates.match(/\d{4}/)?+dates.match(/\d{4}/)[0]:({connell:1880}[id]||1900))}]));
 const nodes=Object.values(byId);
 const WK=[["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
