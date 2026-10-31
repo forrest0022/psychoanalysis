@@ -130,13 +130,13 @@ header nav{display:flex!important;justify-content:flex-end;margin:0 0 .6rem;posi
   <div class="stage">
     <div class="web" id="web">
       <svg id="svg" role="img" aria-label="Network of psychoanalysts linked by training analyses, arranged by birth year"></svg>
-      <div class="legend"><span><i></i>Analyzed by</span><span><i class="b"></i>Analyzed</span><span><i class="o"></i>Trained/supervised</span></div>
+      <div class="legend"><span><i></i>↑ Their analysts</span><span><i class="b"></i>↓ Their analysands</span><span><i class="o"></i>Trained/supervised</span></div>
       <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zfit" aria-label="Reset view">⤢</button></div>
     </div>
     <aside class="card" id="card" aria-live="polite">
       <div class="find"><input id="q" list="names" placeholder="Find an analyst" autocomplete="off" aria-label="Find an analyst"><datalist id="names"></datalist></div>
       <div id="info"></div>
-      <p class="note">Solid lines show documented analyses, from analyst to analysand; orange lines show training and supervision, including Freud's first circle, who learned from him without a formal analysis. Click a name: black shows who analyzed them, traced back up the line; blue shows whom they analyzed. People are placed by birth year, oldest at the top. Many analyses were brief, informal or partial, and some were with several analysts in turn.</p>
+      <p class="note">Solid lines show documented analyses, from analyst to analysand; orange lines show training and supervision, including Freud's first circle, who learned from him without a formal analysis. Click a name: black leads up to their analysts, and their analysts' analysts; blue leads down to their analysands. People are placed by birth year, oldest at the top. Many analyses were brief, informal or partial, and some were with several analysts in turn.</p>
     </aside>
   </div>
 </div>
@@ -191,7 +191,7 @@ const P=[
 ["phillips","Adam Phillips","b. 1954","London","Essayist and analyst; trained in child psychotherapy and was analyzed by Masud Khan."],
 ["grotstein","James Grotstein","1925–2015","Los Angeles","Analyzed by Bion in Los Angeles."],
 ["erikson","Erik Erikson","1902–1994","Vienna, then the United States","Analyzed by Anna Freud."],
-["mahler","Margaret Mahler","1897–1985","Vienna, then New York","Analyzed by Deutsch, then Aichhorn, then Hoffer."],
+["mahler","Margaret Mahler","1897–1985","Vienna, then New York","Analyzed by Deutsch, then Aichhorn."],
 ["hartmann","Heinz Hartmann","1894–1970","Vienna, then New York","Analyzed by Radó, then Freud."],
 ["loewenstein","Rudolph Loewenstein","1898–1976","Paris, then New York","Lacan's analyst; later an ego psychologist."],
 ["lacan","Jacques Lacan","1901–1981","Paris","Analyzed by Loewenstein in the 1930s."],
@@ -214,7 +214,6 @@ const P=[
 ["eiminder","Sándor Eiminder","dates unknown","Vienna, then Barcelona","Hungarian; worked in Aichhorn's group in Vienna, then fled to Barcelona, where he analyzed Tosquelles."],
 ["wittenberg","Wilhelm Wittenberg","1874–1928","Munich","First analyst of both Fromm-Reichmann and Fromm."],
 ["aichhorn","August Aichhorn","1878–1949","Vienna","Analyst of delinquent youth; Mahler's second analyst."],
-["hoffer","Willi Hoffer","1897–1967","Vienna, then London","Mahler's final analyst; close to Anna Freud."],
 ["payne","Sylvia Payne","1880–1976","London","Analyzed by Sachs; one of Klein's later analysts."],
 ];
 const E=[
@@ -229,7 +228,7 @@ const E=[
 ["sharpe","little"],["sharpe","khan"],["winnicott","guntrip"],["winnicott","little"],["winnicott","khan"],["khan","phillips"],["fairbairn","guntrip"],["bion","grotstein"],
 ["anna","erikson"],["deutsch","mahler"],["rado","hartmann"],["thompson","sullivan"],["freichmann","fromm"],
 ["loewenstein","lacan"],["lacan","laplanche"],["lacan","pontalis"],["lacan","leclaire"],["lacan","guattari"],["reik","garma"],
-["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["hoffer","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"]];
+["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"]];
 const byId=Object.fromEntries(P.map(([id,name,dates,city,blurb])=>[id,{id,name,dates,city,blurb,born:(dates.match(/\d{4}/)?+dates.match(/\d{4}/)[0]:({connell:1880}[id]||1900))}]));
 const nodes=Object.values(byId);
 const WK=[["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
@@ -299,10 +298,10 @@ function select(id,fromSearch){
   const n=byId[id];
   const chips=(arr,b)=>arr.length?`<div class="chips">${arr.map(k=>`<button type="button" class="chip${b?" b":""}" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:`<p class="none">None documented here</p>`;
   document.getElementById("info").innerHTML=`<button type="button" class="cx" data-clear aria-label="Clear selection">×</button><h2>${esc(n.name)}</h2><p class="dates">${esc(n.dates)} · ${esc(n.city)}</p><p>${esc(n.blurb)}</p>
-    <p class="lab">Was analyzed by</p>${chips([...U],false)}
+    <p class="lab">Their analysts</p>${chips([...U],false)}
     ${TU.size?`<p class="lab">Trained/supervised by</p><div class="chips">${[...TU].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
     ${A.size>U.size?`<p class="lab">Full lineage</p>${chips([...A].filter(k=>!U.has(k)).sort((a,b)=>byId[a].born-byId[b].born),false)}`:""}
-    <p class="lab">Analyzed</p>${chips([...D],true)}
+    <p class="lab">Their analysands</p>${chips([...D],true)}
     ${TD.size?`<p class="lab">Trained/supervised</p><div class="chips">${[...TD].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
     ${[...K].filter(k=>!A.has(k)).length?`<p class="lab">Collaborated with</p>${chips([...K].filter(k=>!A.has(k)),false)}`:""}`;
   try{ history.replaceState(null,"","#"+id);}catch(e){}
