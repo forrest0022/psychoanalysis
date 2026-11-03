@@ -79,6 +79,9 @@ nav a:hover{color:var(--link);font-weight:700}
 .card p{margin:0;font-size:16px;line-height:1.6}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{font:500 13.5px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.02em;background:none;border:1.6px solid var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer;color:var(--ink)}
+.chip.s{text-decoration:none;display:inline-block;border-color:#EF82C8;color:var(--ink)}
+.chip.s em{font-style:normal;text-transform:none;color:var(--muted)}
+.chip.s:hover{background:#EF82C8;border-color:#EF82C8;color:var(--ink)}
 .chip.b{border-color:var(--link);color:var(--link)}
 .chip:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
 .none{color:var(--muted);font-size:15px}
@@ -140,6 +143,7 @@ header nav{display:flex!important;justify-content:flex-end;margin:0 0 .6rem;posi
   </div>
 </div>
 
+<script src="school-links.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
 const P=[
@@ -300,6 +304,7 @@ function select(id,fromSearch){
   const n=byId[id];
   const chips=(arr,b)=>arr.length?`<div class="chips">${arr.map(k=>`<button type="button" class="chip${b?" b":""}" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:`<p class="none">None documented here</p>`;
   document.getElementById("info").innerHTML=`<button type="button" class="cx" data-clear aria-label="Clear selection">×</button><h2>${esc(n.name)}</h2><p class="dates">${esc(n.dates)} · ${esc(n.city)}</p><p>${esc(n.blurb)}</p>
+    ${(window.SCHOOLS_OF||{})[id]?`<p class="lab">School of thought</p><div class="chips">${window.SCHOOLS_OF[id].map(([k,nm,t,al])=>`<a class="chip s" href="schools.html#${k}/${t}">${esc(nm)}${al?" <em>also</em>":""}</a>`).join("")}</div>`:""}
     <p class="lab">Their analysts</p>${chips([...U],false)}
     ${TU.size?`<p class="lab">Trained/supervised by</p><div class="chips">${[...TU].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
     ${A.size>U.size?`<p class="lab">Full lineage</p>${chips([...A].filter(k=>!U.has(k)).sort((a,b)=>byId[a].born-byId[b].born),false)}`:""}
