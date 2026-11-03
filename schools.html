@@ -750,7 +750,7 @@ function placeSpool(){
 window.addEventListener("resize",placeSpool);
 if(document.fonts) document.fonts.ready.then(placeSpool);
 setTimeout(placeSpool,50);
-function fromHash(){ const h=decodeURIComponent((location.hash||"").slice(1)); if(N[h]){ if(selected!==h) openNode(h); return true; } return false; }
+function fromHash(){ const h=decodeURIComponent((location.hash||"").slice(1)); const [hs,ht]=h.split("/"); if(ht&&N[hs]&&T[ht]){ selected=hs; view={t:"thinker",id:ht}; renderTree(hs); return true; } if(N[h]){ if(selected!==h) openNode(h); return true; } return false; }
 window.addEventListener("hashchange",fromHash);
 if(!fromHash()) renderTree();
 const ro=new ResizeObserver(()=>layout()); ro.observe(treeEl);
@@ -760,6 +760,7 @@ window.addEventListener("load",layout); setTimeout(layout,400); setTimeout(layou
 if(document.fonts) document.fonts.ready.then(layout);
 </script>
 
+<script src="search.js"></script>
 <script data-goatcounter="https://transferenceworld.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
 </html>
