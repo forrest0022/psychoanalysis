@@ -12,6 +12,8 @@ const root=path.resolve(__dirname,'..'), url=f=>'file://'+path.join(root,f);
   const seen=new Set();
   Object.entries(s.N).forEach(([k,n])=>n.th.forEach(t=>{ if(seen.has(t)) return; seen.add(t);
     out.push([s.T[t][0],"Thinker · "+n.name,"schools.html#"+k+"/"+t]); }));
+  Object.entries(s.N).forEach(([k,n])=>(n.br||[]).forEach(t=>{ if(seen.has(t)) return; seen.add(t);
+    out.push([s.T[t][0],"Thinker · "+n.name,"schools.html#"+k+"/"+t]); }));
   // Which analysts on the web are key thinkers on the Schools page
   const fold=x=>x.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z ]/g,"").trim();
   const links={};
