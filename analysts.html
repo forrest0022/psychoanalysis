@@ -306,10 +306,10 @@ function select(id,fromSearch){
   const chips=(arr,b)=>arr.length?`<div class="chips">${arr.map(k=>`<button type="button" class="chip${b?" b":""}" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:`<p class="none">None documented here</p>`;
   document.getElementById("info").innerHTML=`<button type="button" class="cx" data-clear aria-label="Clear selection">×</button><h2>${esc(n.name)}</h2><p class="dates">${esc(n.dates)} · ${esc(n.city)}</p><p>${esc(n.blurb)}</p>
     ${(window.SCHOOLS_OF||{})[id]?`<p class="lab">School of thought</p><div class="chips">${window.SCHOOLS_OF[id].map(([k,nm,t,al])=>`<a class="chip s" href="schools.html#${k}/${t}">${esc(nm)}${al?" <em>also</em>":""}</a>`).join("")}</div>`:""}
-    <p class="lab">Their analysts</p>${chips([...U],false)}
+    <p class="lab">Analysts</p>${chips([...U],false)}
     ${TU.size?`<p class="lab">Trained/supervised by</p><div class="chips">${[...TU].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
     ${A.size>U.size?`<p class="lab">Full lineage</p>${chips([...A].filter(k=>!U.has(k)).sort((a,b)=>byId[a].born-byId[b].born),false)}`:""}
-    <p class="lab">Their analysands</p>${chips([...D],true)}
+    <p class="lab">Analysands</p>${chips([...D],true)}
     ${TD.size?`<p class="lab">Trained/supervised</p><div class="chips">${[...TD].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
     ${[...K].filter(k=>!A.has(k)).length?`<p class="lab">Collaborated with</p>${chips([...K].filter(k=>!A.has(k)),false)}`:""}`;
   try{ history.replaceState(null,"","#"+id);}catch(e){}
