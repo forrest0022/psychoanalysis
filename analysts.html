@@ -61,10 +61,10 @@ nav a:hover{color:var(--link);font-weight:700}
 .node.up rect{stroke-width:2.4}
 .node.down rect{stroke:var(--link);stroke-width:2.4} .node.down text{fill:var(--link)}
 .node.dim{opacity:.22}
-.zoom{position:absolute;right:12px;bottom:12px;display:flex;gap:6px}
+.zoom{position:absolute;right:12px;top:10px;display:flex;gap:6px;z-index:2}
 .zoom button{width:34px;height:34px;border-radius:50%;border:1.6px solid var(--ink);background:var(--paper);font:500 17px/1 var(--wide);cursor:pointer;color:var(--ink)}
 .zoom button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
-.legend{position:absolute;left:14px;top:12px;display:flex;gap:14px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--muted);background:var(--paper);padding:4px 8px;border-radius:8px}
+.legend{position:absolute;left:14px;top:12px;max-width:calc(100% - 150px);display:flex;gap:14px;flex-wrap:wrap;font:400 12px var(--mono);color:var(--muted);background:var(--paper);padding:4px 8px;border-radius:8px}
 .legend i{display:inline-block;width:22px;height:0;border-top:2.4px solid var(--ink);vertical-align:middle;margin-right:6px}
 .legend i.b{border-color:var(--link)}
 #info{position:relative}
