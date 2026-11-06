@@ -195,6 +195,9 @@ h1.ttl span{display:inline;padding:0}
   .node.sel .detail .dgrid{grid-template-columns:minmax(0,1fr)}
   .node.sel .detail ul.ideas{font-size:15px}
   body:has(.node.sel) .disk{display:none}
+  .node.sel{z-index:200!important;transform:none!important}
+  .scroller:has(.node.sel){position:relative;z-index:200}
+  .row:has(.node.sel){position:relative;z-index:200}
 }
 </style>
 <style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
