@@ -42,7 +42,9 @@
     f.addEventListener("submit",function(e){ e.preventDefault();
       var v=inp.value.trim().toLowerCase().replace(/\s+/g,"");
       var h=sha256(v);
-      if(h===H){ try{ localStorage.setItem(KEY,H); }catch(_){} g.remove(); d.classList.remove("tm-locked"); try{ window.dispatchEvent(new Event("resize")); }catch(_){} }
+      if(h===H){ var saved=false; try{ localStorage.setItem(KEY,H); saved=localStorage.getItem(KEY)===H; }catch(_){}
+        // reload so the maps lay out at full size (they measured themselves while hidden)
+        if(saved) location.reload(); else { g.remove(); d.classList.remove("tm-locked"); try{ window.dispatchEvent(new Event("resize")); }catch(_){} } }
       else { err.textContent="That's not it. Try again."; inp.select(); }
     });
   }
