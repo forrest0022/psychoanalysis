@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="robots" content="noindex">
+<title>Room · Transference Maps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
+<style>
+:root{--paper:#FFFFFF;--ink:#0E0E0E;--muted:#55554F;--faint:#B9BBB3;--link:#0038FF;--train:#FF5A1F;
+  --wide:"Archivo","Helvetica Neue",Arial,sans-serif;--mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;color-scheme:light}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:16px;line-height:1.55;margin:0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:1320px;margin:0 auto;padding-block:40px 80px}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+::selection{background:var(--link);color:var(--paper)}
+h1.ttl{margin:0 0 clamp(1.2rem,3vw,2.2rem);font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;font-size:clamp(2rem,5.2vw,4.4rem);text-transform:uppercase;padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
+.big{font-weight:500;font-size:clamp(1.05rem,1.45vw,1.25rem);line-height:1.35;letter-spacing:-.005em}
+a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+<style>
+.site{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 28px;margin:0 0 clamp(28px,5vw,56px);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:100%;font-weight:600;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.2;letter-spacing:-.005em;color:#0E0E0E}
+.site a{color:inherit;text-decoration:none}
+.site .brand{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:baseline}
+.site .brand b{font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.site .brand b i{font-style:normal;font-weight:400}
+.site .brand span{font-weight:500}
+.site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
+.site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu a:hover{color:#EF82C8}
+.site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
+@media (max-width:640px){.site{flex-direction:column;gap:10px}}
+</style>
+<div class="site" role="navigation" aria-label="Site">
+  <a class="brand" href="analysts.html"><b>Transference <i>Maps</i></b></a>
+  <div class="menu">
+    <a href="analysts.html">Analysts</a>
+    <a href="schools.html">Schools</a>
+    <a href="institutes.html">Institutes</a>
+    <a href="names.html">Index</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+
+<style>
+.room{max-width:980px;margin:0 auto}
+.room svg{width:100%;height:auto;display:block}
+.r *{stroke:#0E0E0E;fill:none;stroke-width:.7;stroke-linecap:round;stroke-linejoin:round}
+.f{cursor:pointer;outline:none}
+.f *{stroke:#0E0E0E;fill:#fff;stroke-width:.95;stroke-linecap:round;stroke-linejoin:round;transition:stroke .12s}
+.f .ln{fill:none}
+.f.on *,.f:focus-visible *{stroke:#EF82C8}
+.site .menu a.on{color:#EF82C8;border-bottom-color:transparent}
+.hint{text-align:center;color:var(--muted);font-size:14px;margin:14px 0 0}
+</style>
+<div class="room">
+<svg viewBox="0 0 380 290" role="group" aria-label="A consulting room. Each object leads to a section of the site.">
+ <g class="r"><path d="M90 50 H290 V180 H90 Z"/><path d="M20 10 L90 50 M360 10 L290 50 M0 285 L90 180 M380 285 L290 180"/></g>
+ <a class="f" href="about.html" data-href="about.html" aria-label="About"><path d="M150 64 H230 V150 H150 Z"/><path class="ln" d="M190 64 V150" stroke-width=".9"/></a>
+ <a class="f" href="schools.html" data-href="schools.html" aria-label="Schools of thought" id="shelf"></a>
+ <a class="f" href="names.html" data-href="names.html" aria-label="Index" id="art"></a>
+ <g transform="translate(-44 0)">
+  <a class="f" href="analysts.html" data-href="analysts.html" aria-label="Analysts">
+   <g transform="translate(14 -20)">
+    <g transform="translate(0 -9)">
+     <path d="M244 207 C244 203 248 201 252 200 L282 195 C288 194 292 195 296 198 L300 201 C304 204 302 208 298 209 L264 217 C258 218 254 217 250 214 Z"/>
+     <path d="M244 207 V215 C244 219 248 223 254 225 L264 227 L298 218 C302 217 304 214 304 211 V208"/>
+     <path d="M278 197 C276 184 280 172 290 170 C298 169 304 176 304 188 V208"/>
+    </g>
+    <path class="ln" d="M250 214 L248 224 M266 218 L265 229 M298 209 L299 219" style="stroke-width:1.1"/>
+   </g>
+   <g transform="translate(24 34)">
+    <path class="ln" d="M122 234 L121 245 M174 234 L175 245 M213 182 L214 192" style="stroke-width:1.1"/>
+    <g transform="translate(0 -9)">
+     <path d="M116 236 L170 180 L218 180 L180 236 Z"/><path d="M116 236 v6 h64 v-6 M180 242 l38 -56 v-6"/><path d="M170 182 L176 166 L214 166 L212 182 Z"/>
+    </g>
+   </g>
+  </a>
+ </g>
+</svg>
+</div>
+<script>
+(function(){
+ const h0=decodeURIComponent((location.hash||"").slice(1)); if(h0){ location.replace("schools.html#"+encodeURIComponent(h0)); return; }
+ const f=v=>v.toFixed(1);
+ const lt=x=>50-(90-x)*40/70+8, lb=x=>180+(90-x)*105/90-4;
+ const LP=(x,t)=>f(x)+' '+f(lt(x)+(lb(x)-lt(x))*t);
+ const xa=10,xb=58;
+ let s=`<path d="M${LP(xa,0)} L${LP(xb,0)} L${LP(xb,1)} L${LP(xa,1)} Z"/>`;
+ for(let i=1;i<6;i++) s+=`<path class="ln" d="M${LP(xa,i/6)} L${LP(xb,i/6)}"/>`;
+ for(let i=0;i<6;i++){const t0=i/6,t1=(i+1)/6;let x=xb-4,sd=i*7+3;while(x>xa+5){sd=(sd*37+11)%17;const w=1.6+(sd%4),h=.55+(sd%5)/10;s+=`<path class="ln" d="M${LP(x,t1)} L${LP(x,t1-(t1-t0)*h)}" stroke-width="1"/>`;x-=w+.8;if(sd%6===0)x-=5;}}
+ document.getElementById('shelf').innerHTML=s;
+ const rt=x=>50-(x-290)*40/70, rb=x=>180+(x-290)*105/90;
+ const RP=(u,v)=>{const x=318+u*46; const t=0.2+v*0.3; return [x, rt(x)+(rb(x)-rt(x))*t];};
+ const Q=(u,v)=>RP(u,v).map(f).join(' ');
+ let a=`<path d="M${Q(0,0)} L${Q(1,0)} L${Q(1,1)} L${Q(0,1)} Z"/>`;
+ a+=`<path class="ln" d="M${Q(.08,.08)} L${Q(.92,.08)} L${Q(.92,.92)} L${Q(.08,.92)} Z" stroke-width=".8"/>`;
+ const line=(seed,n,step,w)=>{let sd=seed, pts=[], u=.5, v=.5;
+  for(let i=0;i<n;i++){sd=(sd*9301+49297)%233280; const r1=sd/233280; sd=(sd*9301+49297)%233280; const r2=sd/233280;
+   u=Math.min(.88,Math.max(.12,u+(r1-.5)*step)); v=Math.min(.88,Math.max(.12,v+(r2-.5)*step)); pts.push(RP(u,v));}
+  let d=`M${f(pts[0][0])} ${f(pts[0][1])}`;
+  for(let i=1;i<pts.length-1;i++){const m=[(pts[i][0]+pts[i+1][0])/2,(pts[i][1]+pts[i+1][1])/2]; d+=` Q${f(pts[i][0])} ${f(pts[i][1])} ${f(m[0])} ${f(m[1])}`;}
+  return `<path class="ln" d="${d}" style="stroke-width:${w}"/>`;};
+ a+=line(5,110,.4,.35)+line(17,70,.5,.25)+line(29,40,.6,.45);
+ document.getElementById('art').innerHTML=a;
+ const objs=[...document.querySelectorAll('.f')], menu=[...document.querySelectorAll('.site .menu a')];
+ const set=h=>{objs.forEach(o=>o.classList.toggle('on',o.dataset.href===h)); menu.forEach(m=>m.classList.toggle('on',m.getAttribute('href')===h));};
+ [...objs,...menu].forEach(el=>{const h=el.dataset.href||el.getAttribute('href');
+  el.addEventListener('mouseenter',()=>set(h)); el.addEventListener('mouseleave',()=>set(null));
+  el.addEventListener('focus',()=>set(h)); el.addEventListener('blur',()=>set(null));});
+})();
+</script>
+</div>
+<script src="search.js"></script>
+<script data-goatcounter="https://transferenceworld.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
