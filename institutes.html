@@ -25,6 +25,12 @@ body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:
 h1.ttl{margin:0 0 clamp(1.2rem,3vw,2.2rem);font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;font-size:clamp(2rem,5.2vw,4.4rem);text-transform:uppercase;padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
 .big{font-weight:500;font-size:clamp(1.05rem,1.45vw,1.25rem);line-height:1.35;letter-spacing:-.005em}
 a{color:inherit}
+g.inst.clin .ln{stroke-width:1.5;stroke:var(--clinic)}
+g.inst.clin .lab{fill:var(--clinic)}
+g.inst.clin .dot{stroke:var(--clinic)}
+g.inst.clin .bar{stroke:var(--clinic)}
+g.inst.clin:hover .ln,g.inst.clin.on .ln,g.inst.clin:hover .bar,g.inst.clin.on .bar,g.inst.clin:focus-visible .ln{stroke:var(--link)}
+g.inst.clin:hover .lab,g.inst.clin.on .lab{fill:var(--link)}g.inst.clin:hover .dot,g.inst.clin.on .dot{stroke:var(--link)}
 </style>
 </head>
 <body>
@@ -53,7 +59,7 @@ a{color:inherit}
   </div>
 </div>
 <style>
-:root{--pink:#EF82C8;--train:#FF5A1F;--faint:#D9D9D3}
+:root{--pink:#EF82C8;--train:#FF5A1F;--faint:#D9D9D3;--clinic:#16915C}
 
 .draft{font:400 12px var(--mono);color:var(--train);margin:0 0 18px}
 .key{display:flex;gap:18px;flex-wrap:wrap;white-space:nowrap;font:400 12px var(--mono);color:var(--muted);margin:0 0 10px}
@@ -71,7 +77,7 @@ svg{display:block;font-family:var(--wide)}
 .band text.city{font:700 12px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink)}
 .yr{font:400 11px var(--mono);fill:var(--muted)}
 .inst{cursor:pointer}
-.clin .ln{stroke-width:1.5!important}
+
 .clin .lab{font-weight:500;font-style:italic}
 .inst .ln.arw{stroke-linejoin:round}
 .inst .ln{stroke:var(--ink);stroke-width:2.6;fill:none;stroke-linecap:round}
@@ -105,7 +111,7 @@ svg{display:block;font-family:var(--wide)}
 </style>
 <h1 class="ttl">Institute Splits</h1>
 <div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
-<div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues today</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#0E0E0E" stroke-width="1.6"/><path d="M8,7 H30" stroke="#0E0E0E" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#EF82C8" stroke-width="2.2"/></svg>Merger</span></div>
+<div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues today</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#16915C" stroke-width="1.6"/><path d="M8,7 H30" stroke="#16915C" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#EF82C8" stroke-width="2.2"/></svg>Merger</span></div>
 <div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
 </div>
 <script src="search-data.js"></script>
@@ -205,7 +211,7 @@ function draw(){
     s+=`<g class="inst${cl?" clin":""}" data-id="${id}" tabindex="0" role="button" aria-label="${name}"><rect x="${x0-6}" y="${y0-16}" width="${(re?X(Y1):x1)-x0+12}" height="24" fill="transparent"/>
       <path class="ln" d="${seg}"/>${(!e||re)?`<path class="ln arw" d="M${X(Y1)-8},${y0-5.5} L${X(Y1)},${y0} L${X(Y1)-8},${y0+5.5}"/>`:""}${br?(()=>{ const FADE=110, g="g_"+id, xa=kids.length>1?x0-BR:Math.max(x0-BR,X(byId[kids[0]][3])+2), xb=Math.min(x0+FADE,x1);
         const mg=kids.length>1;
-        return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${mg?"#EF82C8":"#FF5A1F"}"/><stop offset="1" stop-color="#0E0E0E"/></linearGradient></defs><path class="brn" stroke="url(#${g})" d="${br} M${x0},${y0} L${xb},${y0}"/>`; })():""}${bar?`<line x1="${x1}" x2="${x1}" y1="${y0-6}" y2="${y0+6}" stroke="var(--ink)" stroke-width="2.4"/>`:""}
+        return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${mg?"#EF82C8":"#FF5A1F"}"/><stop offset="1" stop-color="${cl?"#16915C":"#0E0E0E"}"/></linearGradient></defs><path class="brn" stroke="url(#${g})"${cl?' style="stroke-width:1.5"':""} d="${br} M${x0},${y0} L${xb},${y0}"/>`; })():""}${bar?`<line class="bar" x1="${x1}" x2="${x1}" y1="${y0-6}" y2="${y0+6}" stroke="var(--ink)" stroke-width="2.4"/>`:""}
       ${dot?(cl?`<rect class="dot" x="${x0-3.6}" y="${y0-3.6}" width="7.2" height="7.2"/>`:`<circle class="dot" cx="${x0}" cy="${y0}" r="4.2"/>`):""}<text class="lab" x="${x0>W-200?x0-8:x0+8}" y="${y0-7}"${x0>W-200?' text-anchor="end"':""}>${name}</text></g>`; });
   svg.setAttribute("width",W); svg.setAttribute("height",H); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.innerHTML=s;
   // keep names clear of branch curves: slide a label right past any split that runs through it
