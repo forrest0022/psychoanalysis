@@ -57,7 +57,7 @@ a{color:inherit}
 
 .draft{font:400 12px var(--mono);color:var(--train);margin:0 0 18px}
 .key{display:flex;gap:18px;flex-wrap:wrap;white-space:nowrap;font:400 12px var(--mono);color:var(--muted);margin:0 0 10px}
-.tog{display:flex;gap:8px;margin:0 0 14px}
+.tog{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
 .tog button{all:unset;cursor:pointer;font:600 13px var(--wide);letter-spacing:.04em;text-transform:uppercase;border:1.6px solid var(--ink);border-radius:999px;padding:5px 14px}
 .tog button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .tog button:hover{border-color:var(--link);color:var(--link)}.tog button[aria-pressed="true"]:hover{color:var(--paper);background:var(--link)}
@@ -104,7 +104,7 @@ svg{display:block;font-family:var(--wide)}
 
 </style>
 <h1 class="ttl">Institute Splits</h1>
-<div class="tog" role="group" aria-label="Show"><button type="button" data-c="0">Institutes</button><button type="button" data-c="1">Institutes + Clinics</button></div>
+<div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
 <div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues today</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#0E0E0E" stroke-width="1.6"/><path d="M8,7 H30" stroke="#0E0E0E" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#EF82C8" stroke-width="2.2"/></svg>Merger</span></div>
 <div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
 </div>
@@ -176,8 +176,8 @@ const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
 const CLINICS=new Set(["amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","riggs","chestnut","menn","lafargue"]);
-let withClinics=false; try{ withClinics=localStorage.getItem("tm-clinics")==="1"; }catch(_){}
-const vis=r=>withClinics||!CLINICS.has(r[0]);
+let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
+const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
 function draw(){
   const W=Math.max(980,svg.parentNode.clientWidth), px=(W-LEFT-RIGHT)/(Y1-Y0), X=y=>LEFT+(y-Y0)*px;
   // band positions
@@ -243,8 +243,8 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!card.hidden) clos
 document.addEventListener("click",e=>{ if(!card.hidden&&!card.contains(e.target)&&!e.target.closest(".inst")) close(); });
 card.addEventListener("click",e=>{ const a=e.target.closest("[data-go]"); if(a){ e.preventDefault(); show(a.dataset.go); } });
 const togs=[...document.querySelectorAll(".tog button")], keyEl=document.querySelector(".key");
-function setTog(){ togs.forEach(b=>b.setAttribute("aria-pressed",String((b.dataset.c==="1")===withClinics))); keyEl.classList.toggle("wc",withClinics); }
-togs.forEach(b=>b.onclick=()=>{ withClinics=b.dataset.c==="1"; try{ localStorage.setItem("tm-clinics",withClinics?"1":"0"); }catch(_){} if(cur&&!vis(byId[cur])) close(); setTog(); draw(); if(cur) show(cur); });
+function setTog(){ togs.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===mode))); keyEl.classList.toggle("wc",mode!=="i"); }
+togs.forEach(b=>b.onclick=()=>{ mode=b.dataset.c; try{ localStorage.setItem("tm-clinics",mode); }catch(_){} if(cur&&!vis(byId[cur])) close(); setTog(); draw(); if(cur) show(cur); });
 setTog();
 addEventListener("resize",()=>{ draw(); if(cur) show(cur); }); draw();
 </script><script src="search.js"></script>
