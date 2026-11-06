@@ -59,16 +59,21 @@ a{color:inherit}
 .idx a{text-decoration:none;color:var(--ink)}
 .idx a:hover,.idx a:focus-visible{color:var(--train)}
 </style>
+<script src="search-data.js"></script>
 <h1 class="ttl">Index</h1>
 <ul class="idx" id="idx"></ul>
 <script>
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const full={hd:"Hilda Doolittle (H.D.)",winnicott:"Donald Winnicott",fairbairn:"Ronald Fairbairn",pontalis:"Jean-Bertrand Pontalis"};
-document.getElementById("idx").innerHTML=DATA.people
-  .map(p=>({id:p.id,n:full[p.id]||p.name}))
+// everyone on the Lines of Descent web, plus key thinkers who appear only on Schools of Thought
+const fold=t=>t.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z ]/g,"").trim();
+const people=DATA.people.map(p=>({n:full[p.id]||p.name,h:"analysts.html#"+p.id}));
+const seen=new Set(people.map(p=>fold(p.n.replace(/\s*\(.*\)$/,""))));
+(window.SEARCH||[]).forEach(([n,k,h])=>{ if(!/^Thinker/.test(k)) return; const f=fold(n); if(seen.has(f)) return; seen.add(f); people.push({n,h}); });
+document.getElementById("idx").innerHTML=people
   .map(p=>({...p,k:p.n.replace(/\s*\(.*\)$/,"").split(" ").pop()+" "+p.n}))
   .sort((a,b)=>a.k.localeCompare(b.k,"en",{sensitivity:"base"}))
-  .map(p=>`<li><a href="analysts.html#${p.id}">${esc(p.n)}</a></li>`).join("");
+  .map(p=>`<li><a href="${p.h}">${esc(p.n)}</a></li>`).join("");
 </script>
 </div>
 <script src="search.js"></script>
