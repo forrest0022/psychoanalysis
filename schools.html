@@ -184,20 +184,19 @@ h1.ttl span{display:inline;padding:0}
 .wrap>header{position:relative}
 .wrap>header>nav{top:0!important;right:0!important}
 
-/* phones: the tree scrolls sideways, so a school's card opens as a full-screen sheet that fits the screen */
-@media (max-width:760px){
-  .node.sel .detail{position:fixed;inset:12px;width:auto;max-width:none;margin:0;overflow-y:auto;overscroll-behavior:contain;z-index:60;font-size:15.5px;padding:22px 18px 28px;border-radius:18px;box-shadow:0 12px 40px rgba(14,14,14,.22)}
-  .node.sel .detail h2{font-size:1.3rem;margin-right:48px}
-  .node.sel .detail .x{top:14px;right:14px;width:34px;height:34px;font-size:18px}
-  .node.sel .detail .lede{font-size:16px}
-  .node.sel .detail .change{padding:14px 16px}
-  .node.sel .detail .change p{font-size:1.2rem}
-  .node.sel .detail .dgrid{grid-template-columns:minmax(0,1fr)}
-  .node.sel .detail ul.ideas{font-size:15px}
-  body:has(.node.sel) .disk{display:none}
-  .node.sel{z-index:200!important;transform:none!important}
-  .scroller:has(.node.sel){position:relative;z-index:200}
-  .row:has(.node.sel){position:relative;z-index:200}
+/* phones: the tree scrolls sideways, so the open card is lifted into a sheet that fits the screen */
+.sheet[hidden]{display:none}
+.sheet{position:fixed;inset:0;z-index:300;background:rgba(14,14,14,.18);display:flex;padding:12px}
+.sheet .detail{margin:0;width:100%;max-width:none;overflow-y:auto;overscroll-behavior:contain;font-size:15.5px;padding:22px 18px 28px;border-radius:18px;box-shadow:0 12px 40px rgba(14,14,14,.22);container-type:inline-size}
+.sheet .detail h2{font-size:1.3rem;margin-right:48px}
+.sheet .detail .x{top:14px;right:14px;width:34px;height:34px;font-size:18px}
+.sheet .detail .lede{font-size:16px}
+.sheet .detail .change{padding:14px 16px}
+.sheet .detail .change p{font-size:1.2rem}
+.sheet .detail .dgrid{grid-template-columns:minmax(0,1fr)}
+.sheet .detail ul.ideas{font-size:15px}
+body:has(.sheet:not([hidden])) .disk{display:none}
+body:has(.sheet:not([hidden])){overflow:hidden}
 }
 </style>
 <style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
@@ -598,6 +597,7 @@ function stackLines(k){
   return words.map(w=>`<span class="ln">${esc(w)}</span>`).join("")+`<span class="ln sl">${esc(N[k].yrs)}</span>`;
 }
 
+const sheetEl=document.createElement("div"); sheetEl.className="sheet"; sheetEl.hidden=true; document.body.appendChild(sheetEl);
 function renderTree(scrollTo){
   const keepY=window.scrollY, frag=document.createDocumentFragment();
   for(let g=0; g<GENS.length; g++){
@@ -620,6 +620,8 @@ function renderTree(scrollTo){
   }
   treeEl.querySelectorAll(".row").forEach(r=>r.remove());
   treeEl.appendChild(frag);
+  sheetEl.innerHTML=""; sheetEl.hidden=true;
+  if(innerWidth<760){ const d=treeEl.querySelector(".node.sel .detail"); if(d){ sheetEl.appendChild(d); sheetEl.hidden=false; d.scrollTop=0; } }
   layout();
   if(!scrollTo && window.scrollY!==keepY) window.scrollTo(0,keepY);
   requestAnimationFrame(()=>{ layout();
@@ -705,14 +707,16 @@ function setHash(k){ try{ history.replaceState(null,"",k?"#"+k:location.pathname
 function openNode(k){ selected=k; view={t:"node",id:k}; setHash(k); renderTree(k); }
 function closeNode(){ const k=selected; selected=null; view=null; setHash(null); renderTree(); const h=treeEl.querySelector(`[data-head="${k}"]`); if(h) h.focus({preventScroll:true}); }
 
-treeEl.addEventListener("click",e=>{
+const onTreeClick=e=>{
   const t=e.target;
   const head=t.closest("[data-head]"); if(head){ const k=head.dataset.head; if(picking){ const i=picks.indexOf(k); if(i>-1) picks.splice(i,1); else picks.push(k); renderTree(); renderFab(); return; } if(selected===k) closeNode(); else openNode(k); return; }
   if(t.closest("[data-close]")){ closeNode(); return; }
   const th=t.closest("[data-th]"); if(th){ view={t:"thinker",id:th.dataset.th}; renderTree(selected); return; }
   if(t.closest("[data-backto]")){ view={t:"node",id:selected}; renderTree(selected); return; }
   const go=t.closest("[data-go]"); if(go){ openNode(go.dataset.go); return; }
-});
+};
+treeEl.addEventListener("click",onTreeClick);
+sheetEl.addEventListener("click",e=>{ if(e.target===sheetEl){ closeNode(); return; } onTreeClick(e); });
 document.addEventListener("keydown",e=>{ if(e.key!=="Escape") return; if(picking){ stopPicking(); return; } if(selected) closeNode(); });
 
 const fab=document.getElementById("fab"), cmpEl=document.getElementById("cmp");
