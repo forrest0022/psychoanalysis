@@ -183,6 +183,19 @@ h1.ttl span{display:inline;padding:0}
 .trow.also em{font-style:normal;font-size:.72em;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 6px;margin-left:6px;vertical-align:2px}
 .wrap>header{position:relative}
 .wrap>header>nav{top:0!important;right:0!important}
+
+/* phones: the tree scrolls sideways, so a school's card opens as a full-screen sheet that fits the screen */
+@media (max-width:760px){
+  .node.sel .detail{position:fixed;inset:12px;width:auto;max-width:none;margin:0;overflow-y:auto;overscroll-behavior:contain;z-index:60;font-size:15.5px;padding:22px 18px 28px;border-radius:18px;box-shadow:0 12px 40px rgba(14,14,14,.22)}
+  .node.sel .detail h2{font-size:1.3rem;margin-right:48px}
+  .node.sel .detail .x{top:14px;right:14px;width:34px;height:34px;font-size:18px}
+  .node.sel .detail .lede{font-size:16px}
+  .node.sel .detail .change{padding:14px 16px}
+  .node.sel .detail .change p{font-size:1.2rem}
+  .node.sel .detail .dgrid{grid-template-columns:minmax(0,1fr)}
+  .node.sel .detail ul.ideas{font-size:15px}
+  body:has(.node.sel) .disk{display:none}
+}
 </style>
 <style>img{max-width:100%}[hidden]{display:none!important}body{margin:0}</style>
 </head>
