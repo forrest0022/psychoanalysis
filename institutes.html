@@ -122,6 +122,9 @@ const I=[
  ["sexpol","Vienna",2,1929,1934,"Sex-Pol clinics",[],"Wilhelm Reich","Free sexual counseling and mental-health clinics for working people, started by Reich in Vienna in 1929 and extended to Berlin; ended in 1934."],
  ["amb","Vienna",1,1922,1938,"Vienna Ambulatorium",["wpv"],"Eduard Hitschmann","The society's free outpatient clinic, opened on May 22, 1922, and closed after the Anschluss in 1938."],
  ["hun","Budapest",0,1913,1949,"Hungarian Psychoanalytical Society",[],"Sándor Ferenczi","Founded quickly by Ferenczi in 1913 to give Freud another voting bloc in the coming showdown with Jung. Home of the Budapest school; forced to dissolve under the Communist government in 1949."],
+ ["bfc","Budapest",1,1929,-1,"Budapest Free Clinic",["hun"],"Sándor Ferenczi","Ferenczi opened the free outpatient clinic he had long planned in 1929, with Michael Bálint among its analysts. When it closed is not recorded here."],
+ ["zfc","Zagreb",0,1928,-1,"Zagreb Free Clinic",[],"Stjepan Betlheim and others","A free psychoanalytic clinic founded in 1928; Betlheim had trained in Vienna and became a pillar of Yugoslav psychoanalysis. When it closed is not recorded here."],
+ ["ffmc","Frankfurt",1,1930,1933,"Frankfurt Psychoanalytic Clinic",["ffm"],"Karl Landauer, Heinrich Meng; S. H. Foulkes, director","The outpatient clinic of the Frankfurt Institute and the last of the interwar free clinics, with close ties to the university and Horkheimer's Institute for Social Research. It lasted only a few years before the Nazis closed it."],
  ["bpv","Berlin",0,1908,1938,"Berlin Psychoanalytic Society",[],"Karl Abraham","Founded the year Abraham moved to Berlin from Zurich. The first psychoanalytic society outside Vienna. Taken over under the Nazi regime and dissolved in 1938."],
  ["poli","Berlin",1,1920,1933,"Berlin Poliklinik and Institute",["bpv"],"Max Eitingon, Ernst Simmel, Karl Abraham","The first psychoanalytic free clinic and the first training institute. It pioneered time-limited analysis and standardized training (personal analysis, supervision, seminars), the model institutes still follow. Aryanized in 1933, then folded into the Nazi-run Göring Institute in 1936."],
  ["tegel","Berlin",3,1927,1931,"Schloss Tegel Sanatorium",[],"Ernst Simmel","The first psychoanalytic inpatient clinic, opened April 10, 1927, in a manor outside Berlin. Freud stayed there while being treated in the city. It closed in 1931 for lack of money."],
@@ -177,11 +180,11 @@ const I=[
  ["ips","Kolkata",0,1922,null,"Indian Psychoanalytical Society",[],"Girindrasekhar Bose","The first society in Asia."],
  ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa",""]
 ];
-const CITIES=["Vienna","Budapest","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","São Paulo","Kolkata","Tokyo"];
+const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","São Paulo","Kolkata","Tokyo"];
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
-const CLINICS=new Set(["amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","riggs","chestnut","menn","lafargue"]);
+const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","riggs","chestnut","menn","lafargue"]);
 let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
 const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
 function draw(){
@@ -201,15 +204,15 @@ function draw(){
   // a split branches off its parent line; a merger is two lines running together into one
   const BR=30, merged=new Set();
   V.forEach(r=>{ if(par(r).length>1) par(r).forEach(p=>{ if(byId[p][4]===r[3]) merged.add(p); }); });
-  V.forEach(r=>{ const [id,c,l,a,e,name]=r, y0=LY(r), x0=X(a), x1=X(e||Y1), re=r[9], kids=par(r), cl=CLINICS.has(id);
+  V.forEach(r=>{ const [id,c,l,a,e0,name]=r, unk=e0===-1, e=unk?a+12:e0, y0=LY(r), x0=X(a), x1=X(e||Y1), re=r[9], kids=par(r), cl=CLINICS.has(id);
     let seg="", br="", start=x0, dot=!kids.length;
     if(kids.length===1){ const P=byId[kids[0]], yp=LY(P), xs=Math.max(x0-BR,X(P[3])+2), m=(xs+x0)/2; br=`M${xs},${yp} C${m},${yp} ${m},${y0} ${x0},${y0} `; }
     else if(kids.length>1){ kids.forEach(p=>{ const yp=LY(byId[p]); br+=`M${x0-BR},${yp} C${x0-BR/2},${yp} ${x0-BR/2},${y0} ${x0},${y0} `; }); }
     seg+=re?`M${x0},${y0} L${x1},${y0} M${X(re)},${y0} L${X(Y1)},${y0}`:`M${x0},${y0} L${x1},${y0}`;
-    const bar=e&&!merged.has(id), end=merged.has(id)?x1-BR:x1;
+    const bar=e&&!unk&&!merged.has(id), end=merged.has(id)?x1-BR:x1;
     if(merged.has(id)) seg=seg.replace(`L${x1},${y0}`,`L${end},${y0}`);
     s+=`<g class="inst${cl?" clin":""}" data-id="${id}" tabindex="0" role="button" aria-label="${name}"><rect x="${x0-6}" y="${y0-16}" width="${(re?X(Y1):x1)-x0+12}" height="24" fill="transparent"/>
-      <path class="ln" d="${seg}"/>${(!e||re)?`<path class="ln arw" d="M${X(Y1)-8},${y0-5.5} L${X(Y1)},${y0} L${X(Y1)-8},${y0+5.5}"/>`:""}${br?(()=>{ const FADE=110, g="g_"+id, xa=kids.length>1?x0-BR:Math.max(x0-BR,X(byId[kids[0]][3])+2), xb=Math.min(x0+FADE,x1);
+      ${unk?`<defs><linearGradient id="u_${id}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0"><stop offset=".55" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}" stop-opacity="0"/></linearGradient></defs>`:""}<path class="ln${unk?" unk":""}" d="${seg}"${unk?` style="stroke:url(#u_${id})"`:""}/>${(!e||re)?`<path class="ln arw" d="M${X(Y1)-8},${y0-5.5} L${X(Y1)},${y0} L${X(Y1)-8},${y0+5.5}"/>`:""}${br?(()=>{ const FADE=110, g="g_"+id, xa=kids.length>1?x0-BR:Math.max(x0-BR,X(byId[kids[0]][3])+2), xb=Math.min(x0+FADE,x1);
         const mg=kids.length>1;
         return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${mg?"#0038FF":"#FF5A1F"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/></linearGradient></defs><path class="brn" stroke="url(#${g})"${cl?' style="stroke-width:1.5"':""} d="${br} M${x0},${y0} L${xb},${y0}"/>`; })():""}${bar?`<line class="bar" x1="${x1}" x2="${x1}" y1="${y0-6}" y2="${y0+6}" stroke="var(--ink)" stroke-width="2.4"/>`:""}
       ${dot?(cl?`<rect class="dot" x="${x0-3.6}" y="${y0-3.6}" width="7.2" height="7.2"/>`:`<circle class="dot" cx="${x0}" cy="${y0}" r="4.2"/>`):""}<text class="lab" x="${x0>W-200?x0-8:x0+8}" y="${y0-7}"${x0>W-200?' text-anchor="end"':""}>${name}</text></g>`; });
@@ -234,7 +237,7 @@ function founders(t){ return t.split(/(,\s*|\s+and\s+|;\s*)/).map(part=>{ const 
 function show(id){ cur=id; mark(id); const r=byId[id], kids=I.filter(k=>k[6].includes(id)&&vis(k));
   const row=x=>`<button type="button" data-go="${x[0]}"><span>${esc(x[5])}</span><span>${x[3]}</span></button>`;
   card.innerHTML=`<button type="button" class="x" aria-label="Close">×</button><h2>${esc(r[5])}</h2>
-   <div class="meta"><span class="tag fill">${esc(r[1])}</span><span class="tag">${r[3]}${r[4]?"–"+r[4]:"–present"}</span>${r[9]?`<span class="tag">Refounded ${r[9]}</span>`:""}</div>
+   <div class="meta"><span class="tag fill">${esc(r[1])}</span><span class="tag">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}</span>${r[9]?`<span class="tag">Refounded ${r[9]}</span>`:""}</div>
    ${r[8]?`<p>${esc(r[8])}</p>`:""}
    ${r[7]?`<h3>Founders</h3><p class="fd">${founders(r[7])}</p>`:""}
    ${r[6].filter(p=>vis(byId[p])).length?`<h3>Came out of</h3><div class="list">${r[6].filter(p=>vis(byId[p])).map(p=>row(byId[p])).join("")}</div>`:""}
