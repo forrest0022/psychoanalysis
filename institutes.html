@@ -92,6 +92,8 @@ svg{display:block;font-family:var(--wide)}
 .inst:focus-visible .lab{fill:var(--link)}
 .detail{position:absolute;z-index:3;width:min(560px,calc(100% - 32px));border:2.4px solid var(--ink);border-radius:22px;background:var(--paper);padding:26px 30px 28px;font-size:16px;line-height:1.6;box-shadow:0 10px 30px rgba(14,14,14,.10)}
 .detail[hidden]{display:none}
+.detail.sheet{position:fixed;left:16px;right:16px;top:50%;width:auto;max-height:82vh;overflow:auto;transform:translateY(-50%);padding:22px 20px 24px;z-index:50;box-shadow:0 12px 40px rgba(14,14,14,.22)}
+@media (prefers-reduced-motion: no-preference){.detail.sheet:not([hidden]){animation:none}}
 @media (prefers-reduced-motion: no-preference){.detail:not([hidden]){animation:open .22s ease-out}@keyframes open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}}
 .detail .x{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font:500 19px/1 var(--wide);cursor:pointer}
 .detail .x:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
@@ -245,7 +247,10 @@ function show(id){ cur=id; mark(id); const r=byId[id], kids=I.filter(k=>k[6].inc
   card.hidden=false;
   const g=svg.querySelector(`.inst[data-id="${id}"]`), dot=g.querySelector("text.lab"), st=svg.parentNode.getBoundingClientRect(), bb=dot.getBoundingClientRect();
   const W=svg.parentNode.clientWidth, cw=card.offsetWidth;
-  card.style.left=Math.max(16,Math.min(bb.left-st.left-10,W-cw-16))+"px"; card.style.top=(bb.bottom-st.top+22)+"px";
+  // on phones the map scrolls sideways, so the card opens centered on screen instead of under the line
+  const sheet=innerWidth<760; card.classList.toggle("sheet",sheet);
+  if(sheet){ card.style.left=""; card.style.top=""; card.scrollTop=0; }
+  else { card.style.left=Math.max(16,Math.min(bb.left-st.left-10,W-cw-16))+"px"; card.style.top=(bb.bottom-st.top+22)+"px"; }
   card.querySelector(".x").onclick=close; }
 function close(){ card.hidden=true; cur=null; mark(null); }
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!card.hidden) close(); });
