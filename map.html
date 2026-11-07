@@ -416,7 +416,11 @@ const gm=root.insert("g",()=>gc.node()).attr("class","moves");
 svgW.select("defs").append("marker").attr("id","mvarr").attr("viewBox","0 0 10 10").attr("refX",8).attr("refY",5).attr("markerWidth",7).attr("markerHeight",7).attr("orient","auto-start-reverse").attr("markerUnits","userSpaceOnUse")
   .append("path").attr("d","M0,0 L10,5 L0,10 Z").attr("fill","#55E000");
 let SHOWMV=false; try{ SHOWMV=localStorage.getItem("tm-moves")==="1"; }catch(_){}
-function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx=b[0]-a[0], dy=b[1]-a[1], d=Math.hypot(dx,dy), k=Math.min(.32,26/d+.12);
+// fan out arcs that travel the same corridor so they don't bundle into one thick band
+const FAN=(()=>{ const g={}, out=new Map(); MOVES.forEach(m=>{ const a=(LL[m[2]]||EX[m[2]]), b=(LL[m[3]]||EX[m[3]]); if(!a||!b) return;
+  const key=[Math.round(a[0]/25),Math.round(a[1]/25),Math.round(b[0]/25),Math.round(b[1]/25)].join(","); (g[key]=g[key]||[]).push(m); });
+  Object.values(g).forEach(arr=>arr.forEach((m,i)=>out.set(m, arr.length<2?0:(i-(arr.length-1)/2)/(arr.length-1)))); return out; })();
+function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx=b[0]-a[0], dy=b[1]-a[1], d=Math.hypot(dx,dy), f=FAN.get(m)||0, k=Math.min(.32,26/d+.12)+f*.34;
   const cx=(a[0]+b[0])/2-dy*k, cy=(a[1]+b[1])/2+dx*k; return `M${a[0]},${a[1]} Q${cx},${cy} ${b[0]},${b[1]}`; }
 function paintMoves(){
   const data=SHOWMV?MOVES.filter(m=>m[4]<=year):[];
