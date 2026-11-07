@@ -238,8 +238,9 @@ const P=[
 ["wschmideberg","Walter Schmideberg","1890–1954","Vienna, then Berlin and London","A training analyst at the British Institute, Melitta Schmideberg's husband, and Ignacio Matte Blanco's analyst."],
 ["matteblanco","Ignacio Matte Blanco","1908–1995","London, then Santiago and Rome","Training analysis with Walter Schmideberg in London; built the Chilean Psychoanalytic Association, then theorized the unconscious as infinite sets."],
 ["marcondes","Durval Marcondes","1899–1981","São Paulo","Founded a first Brazilian psychoanalytic society in 1927; among the first six people Koch analyzed after she arrived in 1936."],
-["safouan","Moustapha Safouan","1921–2020","Alexandria, then Paris","Began analysis with Marc Schlumberger, then a training analysis with Lacan from 1949; translated Freud's Interpretation of Dreams into Arabic."],
+["safouan","Moustapha Safouan","1921–2020","Alexandria, then Paris","Born in Alexandria; analyzed by Marc Schlumberger in Paris from 1945, with control analysis under Lacan from 1949. Exiled from Nasser's Egypt in 1959; his Arabic Interpretation of Dreams (1958) is still the standard."],
 ["basaglia","Franco Basaglia","1924–1980","Gorizia, then Trieste","Psychiatrist trained in phenomenology rather than analysis; opened the asylums at Gorizia and Trieste and led the movement behind Italy's Law 180 (1978)."],
+["zewar","Mustafa Zewar","1907–1990","Paris, then Cairo","Analyzed by René Laforgue, 1935–39, then by Sacha Nacht; the first Arab member of the SPP and the IPA, he founded the psychology department at Ain Shams University in 1950."],
 ["bollas", "Christopher Bollas", "b. 1943", "Buffalo, then London", "Analyzed by Masud Khan; trained at the British Institute, where Paula Heimann and John Bowlby were among his teachers. An Independent, known for the unthought known."],
 ["federn","Paul Federn","1871–1950","Vienna, then New York","Early member of Freud's circle; Aichhorn's analyst."],
 ["connell","E. H. Connell","dates unknown","Edinburgh","Australian-trained analyst; Fairbairn's analyst when Fairbairn was a medical student. Who analyzed him is undocumented."],
@@ -251,7 +252,7 @@ const P=[
 ["kohut","Heinz Kohut","1913–1981","Vienna, then Chicago","Analyzed by Aichhorn, then Ruth Eissler in Chicago; founder of self psychology."],
 ["hitschmann","Eduard Hitschmann","1871–1957","Vienna, then Boston","Early member of Freud's Wednesday circle and the Freud family doctor; Sterba's analyst."],
 ["sterba","Richard Sterba","1898–1989","Vienna, then Detroit","Analyzed by Hitschmann; author of the first psychoanalytic dictionary."],
-["langer","Marie Langer","1910–1987","Vienna, Buenos Aires, then Mexico City","Analyzed by Sterba; Marxist analyst and a founder of the Argentine Psychoanalytic Association."],
+["langer","Marie Langer","1910–1987","Vienna, Buenos Aires, then Mexico City","Analyzed by Sterba, who ended the analysis in 1934 over her clandestine party work; fought in the Spanish Civil War, helped found the Argentine Psychoanalytic Association, left it in 1970, and in Mexican exile from 1974 co-coordinated the Internationalist Team of Mental Health Workers, Mexico–Nicaragua."],
 ["bicudo","Virgínia Leone Bicudo","1910–2003","São Paulo","Analyzed by Koch; sociologist of race and the first Black psychoanalyst in Brazil."],
 ["kosawa","Heisaku Kosawa","1897–1968","Vienna, then Tokyo","Analyzed by Sterba and supervised by Federn in Vienna; founder of psychoanalysis in Japan, known for the Ajase complex."],
 ["eissler","Ruth Eissler","1906–1989","Vienna, Chicago, then New York","Analyzed by Reik, then Sterba in Vienna; Kohut's training analyst in Chicago."],
@@ -262,7 +263,7 @@ const P=[
 ["payne","Sylvia Payne","1880–1976","London","Analyzed by Sachs; one of Klein's later analysts."],
 ];
 const E=[
-["abraham","simmel"],["wschmideberg","matteblanco"],["koch","marcondes"],["schlumberger","safouan"],["lacan","safouan"],
+["abraham","simmel"],["wschmideberg","matteblanco"],["koch","marcondes"],["laforgue","zewar"],["schlumberger","safouan"],
 ["khan","bollas"],["freud","sokolnicka"],["ferenczi","sokolnicka"],["sokolnicka","laforgue"],["laforgue","dolto"],["laforgue","schlumberger"],["schlumberger","marty"],["loewenstein","lagache"],["riviere","bouvet"],["bouvet","green"],["lacan","aulagnier"],["garma","rascovsky"],["pichon","wbaranger"],["glover","melitta"],
 ["garma", "pichon"],["garma", "aberastury"],["lacan", "anzieu"],
 ["freud","stekel"],["stekel","greenson"],["fenichel","greenson"],
@@ -280,7 +281,7 @@ const E=[
 ["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"],["garma","racker"],["langer","racker"]];
 const byId=Object.fromEntries(P.map(([id,name,dates,city,blurb])=>[id,{id,name,dates,city,blurb,born:(dates.match(/\d{4}/)?+dates.match(/\d{4}/)[0]:({connell:1880}[id]||1900))}]));
 const nodes=Object.values(byId);
-const WK=[["pichon","liberman"],["pichon", "bleger"],["heimann", "bollas"],["bowlby", "bollas"],["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
+const WK=[["lacan","safouan"],["pichon","liberman"],["pichon", "bleger"],["heimann", "bollas"],["bowlby", "bollas"],["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
 const FAM=[["freud","anna"],["klein","melitta"]];
 const links=E.map(([s,t])=>({source:s,target:t,w:false})).concat(WK.map(([s,t])=>({source:s,target:t,w:true})));
 const TR=new Set(WK.map(e=>e[0]+">"+e[1]));
