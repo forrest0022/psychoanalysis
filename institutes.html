@@ -44,6 +44,8 @@ g.inst.clin:hover .lab,g.inst.clin.on .lab{fill:var(--link)}g.inst.clin:hover .d
 .site .brand span{font-weight:500}
 .site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
 .site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu{align-items:flex-start}
+.site .menu .two{display:block;line-height:1.05}
 .site .menu a:hover{color:#EF82C8}
 .site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
 @media (max-width:640px){.site{flex-direction:column;gap:10px}}
@@ -53,7 +55,7 @@ g.inst.clin:hover .lab,g.inst.clin.on .lab{fill:var(--link)}g.inst.clin:hover .d
   <div class="menu">
     <a href="analysts.html">Analysts</a>
     <a href="schools.html">Schools</a>
-    <a href="institutes.html" aria-current="page">Institutions</a>
+    <a href="institutes.html" aria-current="page"><span class="two">Institutes &amp;<br>Clinics</span></a>
     <a href="names.html">Index</a>
     <a href="about.html">About</a>
   </div>
@@ -160,6 +162,9 @@ const I=[
  ["iptar","New York",6,1958,null,"Institute for Psychoanalytic Training and Research (IPTAR)",["npap"],"NPAP-trained analysts","Founded in 1958 as a membership society for analysts interested in Freud's theory and technique."],
  ["cmps","New York",8,1971,null,"Center for Modern Psychoanalytic Studies (CMPS)",[],"Phyllis Meadow, Selwyn Brody, Louis and Joan Ormont, Harold Stern and others","Home of modern psychoanalysis, built on Hyman Spotnitz's work with severe disturbance."],
  ["bos","Boston",0,1914,null,"Boston Psychoanalytic Society",[],"James Jackson Putnam, Isador Coriat","Founded in May 1914, the second society in the United States. Émigrés including Hanns Sachs, Helene Deutsch and Eduard Hitschmann trained analysts here."],
+ ["pps","Philadelphia",0,1937,2001,"Philadelphia Psychoanalytic Society and Institute",[],"O. Spurgeon English, Sidney G. Biddle, LeRoy M. A. Maeder, George W. Smeltz, Robert Waelder","Founded October 27, 1937, and accepted by the American Psychoanalytic Association in 1939. Waelder, who arrived from Vienna by way of Boston in 1943, became a training analyst at its institute."],
+ ["pap","Philadelphia",1,1949,2001,"Philadelphia Association for Psychoanalysis",["pps"],"","Broke away from the Philadelphia Psychoanalytic Institute and Society in 1949, over differences between liberal and conservative camps as well as personal conflicts. Robert Waelder later served as its president, 1953–55."],
+ ["pcop","Philadelphia",2,2001,null,"Psychoanalytic Center of Philadelphia",["pps","pap"],"","The two Philadelphia groups voted to reunite in 2001, ending the split of 1949."],
  ["wbps","Washington–Baltimore",0,1930,null,"Washington–Baltimore Psychoanalytic Society",[],"Clara Thompson (first president), Harry Stack Sullivan","Founded in 1930 and accredited by the American Psychoanalytic Association in 1932. Frieda Fromm-Reichmann, of nearby Chestnut Lodge, was its president from 1939 to 1941."],
  ["wsp","Washington–Baltimore",1,1936,null,"Washington School of Psychiatry",[],"Harry Stack Sullivan","Sullivan's school for interpersonal psychiatry; its New York branch became the William Alanson White Institute."],
  ["riggs","Stockbridge",0,1919,null,"Austen Riggs Center",[],"Austen Fox Riggs","An open psychiatric hospital in the Berkshires; Erik Erikson, David Rapaport and Robert Knight worked here."],
@@ -187,7 +192,7 @@ const I=[
  ["ips","Kolkata",0,1922,null,"Indian Psychoanalytical Society",[],"Girindrasekhar Bose","The first society in Asia."],
  ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa",""]
 ];
-const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro","Caracas","Kolkata","Tokyo"];
+const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Philadelphia","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro","Caracas","Kolkata","Tokyo"];
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
