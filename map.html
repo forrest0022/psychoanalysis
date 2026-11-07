@@ -378,7 +378,7 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then
 const slider=document.getElementById("wyr"), yl=document.getElementById("wyl"); const NOW=new Date().getFullYear(); slider.max=NOW; slider.value=NOW; let year=NOW, sel=null;
 const live=(r,y)=>r[3]<=y && (r[4]===null || (r[4]===-1 ? y<=r[3]+12 : y<r[4]) || (r[9]&&y>=r[9]));
 // ---- Movements prototype ----
-const EX={"Oslo":[10.75,59.91],"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
+const EX={"Oslo":[10.75,59.91],"Manchester":[-2.24,53.48],"Detroit":[-83.05,42.33],"Nuremberg":[11.08,49.45],"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
 const P_=c=>proj(LL[c]||EX[c]);
 // [id or "", name, from, to, year, reason, note]
 const MOVES=[
@@ -386,6 +386,23 @@ const MOVES=[
  ["spielrein","Sabina Spielrein","Geneva","Moscow",1923,"return","Returned to Russia, where she taught until psychoanalysis was banned."],
  ["rado","Sándor Radó","Berlin","New York",1931,"invitation","Came to organize training at the New York Psychoanalytic Institute."],
  ["horney","Karen Horney","Berlin","Chicago",1932,"invitation","Joined Franz Alexander at the new Chicago Institute."],
+ ["","Franz Alexander","Berlin","Chicago",1930,"invitation","Lectured at the University of Chicago in 1930, then returned in 1932 to found the Chicago Institute."],
+ ["erikson","Erik Erikson","Vienna","Boston",1933,"fascism","One of the first analysts to leave Vienna; settled in Boston by the end of 1933, after months in Copenhagen."],
+ ["rosenfeld","Herbert Rosenfeld","Nuremberg","London",1935,"fascism","Left Germany under the anti-Jewish laws and requalified in Britain."],
+ ["federn","Paul Federn","Vienna","New York",1938,"fascism","Emigrated after the Anschluss and settled in New York."],
+ ["hartmann","Heinz Hartmann","Vienna","Paris",1938,"fascism","Left after the Anschluss for Paris, then Switzerland."],
+ ["burlingham","Dorothy Burlingham","Vienna","London",1938,"fascism","Fled Vienna in 1938 and, after a short stay in the United States, settled near Anna Freud in London."],
+ ["bick","Esther Bick","Vienna","London",1938,"fascism","Reached London after the Anschluss and became Klein's student."],
+ ["hitschmann","Eduard Hitschmann","Vienna","London",1938,"fascism","Fled the Nazis and took refuge in London."],
+ ["stekel","Wilhelm Stekel","Vienna","London",1938,"fascism","Fled to England; he died there in 1940."],
+ ["","Grete Bibring","Vienna","London",1938,"fascism","Emigrated with Edward Bibring to Britain in May 1938."],
+ ["balint","Michael Balint","Budapest","Manchester",1939,"fascism","Emigrated with Alice Balint under the pressure of anti-Semitism, January 1939."],
+ ["sterba","Richard Sterba","Vienna","Detroit",1939,"fascism","Left Austria on March 16, 1938, for Switzerland; settled in Detroit in 1939."],
+ ["racker","Heinrich Racker","Vienna","Buenos Aires",1939,"fascism","Fled after the Anschluss and, after many difficulties, reached Buenos Aires."],
+ ["hartmann","Heinz Hartmann","Paris","New York",1941,"fascism","Reached New York after three years in Paris and Switzerland."],
+ ["jacobson","Edith Jacobson","Berlin","New York",1941,"fascism","Emigrated to the United States in 1941."],
+ ["","Grete Bibring","London","Boston",1941,"emigration","Moved on to Boston, where she became a training analyst."],
+ ["hitschmann","Eduard Hitschmann","London","Boston",1944,"emigration","Moved from London to Boston, where he worked as a training analyst."],
  ["eitingon","Max Eitingon","Berlin","Palestine",1933,"fascism","Left Berlin after the Nazi takeover and founded the society in Jerusalem."],
  ["simmel","Ernst Simmel","Berlin","Los Angeles",1934,"fascism","Briefly imprisoned by the Nazis; reached Los Angeles in 1934."],
  ["fromm","Erich Fromm","Frankfurt","New York",1933,"fascism","Fled Nazi Germany in 1933 for the United States."],
