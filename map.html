@@ -423,8 +423,13 @@ let SHOWMV=false; try{ SHOWMV=localStorage.getItem("tm-moves")==="1"; }catch(_){
 const FAN=(()=>{ const g={}, out=new Map(); MOVES.forEach(m=>{ const a=(LL[m[2]]||EX[m[2]]), b=(LL[m[3]]||EX[m[3]]); if(!a||!b) return;
   const key=[Math.round(a[0]/25),Math.round(a[1]/25),Math.round(b[0]/25),Math.round(b[1]/25)].join(","); (g[key]=g[key]||[]).push(m); });
   Object.values(g).forEach(arr=>arr.forEach((m,i)=>out.set(m, arr.length<2?0:(i-(arr.length-1)/2)/(arr.length-1)))); return out; })();
+let CEXT={};
 function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx=b[0]-a[0], dy=b[1]-a[1], d=Math.hypot(dx,dy), f=FAN.get(m)||0, k=Math.min(.32,26/d+.12)+f*.34;
-  const cx=(a[0]+b[0])/2-dy*k, cy=(a[1]+b[1])/2+dx*k; return `M${a[0]},${a[1]} Q${cx},${cy} ${b[0]},${b[1]}`; }
+  const cx=(a[0]+b[0])/2-dy*k, cy=(a[1]+b[1])/2+dx*k;
+  // start just outside the origin cluster and stop at the edge of the destination cluster, arrivals spread around it
+  const out=(p,r,rot)=>{ let ux=cx-p[0], uy=cy-p[1]; const L=Math.hypot(ux,uy)||1; ux/=L; uy/=L; const c=Math.cos(rot), s=Math.sin(rot); return [p[0]+(ux*c-uy*s)*r, p[1]+(ux*s+uy*c)*r]; };
+  const A=out(a,(CEXT[m[2]]||0)+5/K,0), B=out(b,(CEXT[m[3]]||0)+7/K,f*1.1);
+  return `M${A[0]},${A[1]} Q${cx},${cy} ${B[0]},${B[1]}`; }
 // captions: while playing, each event holds for a few seconds even as the years keep moving
 let capQ=[], capShown=null, capUntil=0, lastCapYear=1899;
 const capEl=()=>document.getElementById("wev");
@@ -471,6 +476,7 @@ function paint(){
       if(!RING){ const rr=r0*1.5; return `M0,${-rr} Q0,0 ${rr},0 Q0,0 0,${rr} Q0,0 ${-rr},0 Q0,0 0,${-rr}Z`; }
       if(cl&&CSH==="dot"){ const q=r0*.92; return `M${-q},${-q}H${q}V${q}H${-q}Z`; } const rr=cl?r0*.85:r0; return `M${rr},0A${rr},${rr} 0 1 1 ${-rr},0A${rr},${rr} 0 1 1 ${rr},0Z`; })
     .select("title").text(x=>`${x.r[5]} (${x.r[3]}${x.r[4]===-1?"–?":x.r[4]?"–"+x.r[4]:"–"})`);
+  CEXT={}; data.forEach(d=>CEXT[d.c]=ext(d));
   g.select("text").text(d=>d.c).attr("x",d=>ext(d)+4/K).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px");
   yl.textContent=year>=NOW?"Today":year;
   paintMoves();
