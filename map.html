@@ -435,7 +435,7 @@ function paintMoves(){
         const r=box.getBoundingClientRect(); let x=e.clientX-r.left+14, y=e.clientY-r.top+14; if(x>r.width-290) x-=300; tip.style.left=x+"px"; tip.style.top=y+"px"; })
     .on("mouseleave",()=>{ p.classed("hov",false); tip.hidden=true; });
   svgW.select("#mvarr").attr("markerWidth",11/K).attr("markerHeight",11/K);
-  const ev=[...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=5&&year<NOW);
+  const ev=[...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=9&&year<NOW);
   document.getElementById("wev").textContent=ev?`${ev[0]} · ${ev[1]}`:"";
 }
 
@@ -467,11 +467,14 @@ function panel(){
   const reg=(REGIONS.find(x=>x[1].includes(sel))||[""])[0];
   p.innerHTML=`<h2>${esc(sel)}</h2><p class="sub">${esc(reg)}</p><ul>${rs.map(r=>`<li class="${CLINICS.has(r[0])?"cl":""}${live(r,year)?"":" gone"}"><span>${esc(r[5])}</span><span>${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–"}</span></li>`).join("")}</ul><p class="sub" style="margin-top:14px"><a href="#" id="openpop">Open this city's history →</a></p>`; const op=document.getElementById("openpop"); if(op) op.onclick=e=>{e.preventDefault(); popCity(sel);};
 }
-slider.oninput=()=>{year=+slider.value; paint(); panel();};
+slider.oninput=()=>{ if(timer) stopPlay(); year=+slider.value; paint(); panel();};
 const PLAYI='<svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg>', PAUSEI='<svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><rect x="3" y="2" width="5.5" height="20" fill="currentColor"/><rect x="13.5" y="2" width="5.5" height="20" fill="currentColor"/></svg>';
 let timer=null; const pb=document.getElementById("wplay");
-pb.onclick=()=>{ if(timer){clearInterval(timer);timer=null;pb.innerHTML=PLAYI;return;} if(year>=NOW){year=1900;slider.value=1900;} pb.innerHTML=PAUSEI;
-  timer=setInterval(()=>{ year++; slider.value=year; paint(); panel(); if(year>=NOW){clearInterval(timer);timer=null;pb.innerHTML=PLAYI;} },90); };
+const EVY=new Set(EVENTS.map(e=>e[0]));
+const stopPlay=()=>{ clearTimeout(timer); timer=null; pb.innerHTML=PLAYI; };
+// one year every 150ms, pausing about 3 seconds on each event so the caption can be read
+const step=()=>{ year++; slider.value=year; paint(); panel(); if(year>=NOW){ stopPlay(); return; } timer=setTimeout(step, EVY.has(year)?3200:150); };
+pb.onclick=()=>{ if(timer){ stopPlay(); return; } if(year>=NOW){year=1900;slider.value=1900;} pb.innerHTML=PAUSEI; timer=setTimeout(step, EVY.has(year)?3200:150); };
 document.querySelectorAll(".tog button").forEach(b=>b.addEventListener("click",()=>setTimeout(()=>{paint();panel();},0)));
 function cityHistory(c){
   const all=I.filter(r=>r[1]===c&&vis(r)).sort((a,b)=>a[3]-b[3]||a[2]-b[2]), ids=new Set(all.map(r=>r[0])), rows=[], done=new Set();
