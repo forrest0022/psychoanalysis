@@ -440,7 +440,7 @@ function paint(){
   const data=[...by].map(([c,rs])=>({c,items:rs.slice().sort((a,b)=>CLINICS.has(a[0])-CLINICS.has(b[0])||a[3]-b[3])}));
   const g=gc.selectAll("g.city").data(data,d=>d.c).join(e=>{const g=e.append("g").attr("class","city"); g.append("circle").attr("class","hit").attr("fill","transparent"); g.append("g").attr("class","mk"); g.append("text"); return g;});
   g.attr("transform",d=>`translate(${proj(LL[d.c])})`).classed("on",d=>d.c===sel).on("click",(e,d)=>{sel=d.c; panel(); paint(); popCity(d.c);});
-  const SP=9.6/K, r0=4.6/K, GA=Math.PI*(3-Math.sqrt(5));
+  const SP=8.4/K, r0=3.9/K, GA=Math.PI*(3-Math.sqrt(5));
   const pos=i=>i===0?[0,0]:[SP*.62*Math.sqrt(i+.4)*Math.cos(i*GA), SP*.62*Math.sqrt(i+.4)*Math.sin(i*GA)];
   const ext=d=>{ const n=d.items.length; return n<2?r0:SP*.62*Math.sqrt(n-1+.4)+r0; };
   const RING=MK.startsWith("ring");
