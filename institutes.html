@@ -82,6 +82,13 @@ svg{display:block;font-family:var(--wide)}
 .band text.city{font:700 12px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink)}
 .yr{font:400 11px var(--mono);fill:var(--muted)}
 .inst{cursor:pointer}
+.band{cursor:default}
+.band.hl text.city{fill:var(--link)}
+svg.cityhl .inst{transition:opacity .15s}
+svg.cityhl .inst:not(.hl){opacity:.2}
+svg.cityhl .inst.hl .ln,svg.cityhl .inst.hl .bar,svg.cityhl .inst.hl .brn{stroke:var(--link)}
+svg.cityhl .inst.hl .lab{fill:var(--link)}
+svg.cityhl .inst.hl .dot{stroke:var(--link)}
 
 .clin .lab{font-weight:500;font-style:italic}
 .inst .ln.arw{stroke-linejoin:round}
@@ -243,7 +250,7 @@ function draw(){
   for(let d=Y0; d<=2020; d+=10){ s+=`<line x1="${X(d)}" x2="${X(d)}" y1="${TOP-6}" y2="${H}" stroke="${d%50?"#F0F0EC":"#E2E2DC"}"/><text class="yr" x="${X(d)}" y="14" text-anchor="middle">${d}</text>`; }
   heads.forEach(h=>{ s+=`<rect x="0" y="${h.y+4}" width="${W}" height="${RHEAD-4}" fill="var(--paper,#fff)"/><line x1="12" x2="${W-RIGHT}" y1="${h.y+RHEAD}" y2="${h.y+RHEAD}" stroke="#EF82C8" stroke-width="2.2" stroke-dasharray="0.1 6" stroke-linecap="round"/><text class="region" x="14" y="${h.y+RHEAD-9}">${h.g}</text>`; });
   SHOWN.forEach((c,i)=>{ const b=band[c]; if(i&&!b.first) s+=`<line x1="12" x2="${W-RIGHT}" y1="${b.y}" y2="${b.y}" stroke="#E2E2DC"/>`;
-    s+=`<g class="band"><text class="city" x="14" y="${b.y+BANDPAD/2+LANE*.62+4}">${c}</text></g>`; });
+    s+=`<g class="band" data-city="${c}"><rect x="0" y="${b.y}" width="${LEFT-8}" height="${b.h}" fill="transparent"/><text class="city" x="14" y="${b.y+BANDPAD/2+LANE*.62+4}">${c}</text></g>`; });
   // a split branches off its parent line; a merger is two lines running together into one
   const BR=30, merged=new Set();
   V.forEach(r=>{ if(par(r).length>1) par(r).forEach(p=>{ if(byId[p][4]===r[3]) merged.add(p); }); });
@@ -254,7 +261,7 @@ function draw(){
     seg+=re?`M${x0},${y0} L${x1},${y0} M${X(re)},${y0} L${X(Y1)},${y0}`:`M${x0},${y0} L${x1},${y0}`;
     const bar=e&&!unk&&!merged.has(id), end=merged.has(id)?x1-BR:x1;
     if(merged.has(id)) seg=seg.replace(`L${x1},${y0}`,`L${end},${y0}`);
-    s+=`<g class="inst${cl?" clin":""}" data-id="${id}" tabindex="0" role="button" aria-label="${name}"><rect x="${x0-6}" y="${y0-16}" width="${(re?X(Y1):x1)-x0+12}" height="24" fill="transparent"/>
+    s+=`<g class="inst${cl?" clin":""}" data-id="${id}" data-city="${c}" tabindex="0" role="button" aria-label="${name}"><rect x="${x0-6}" y="${y0-16}" width="${(re?X(Y1):x1)-x0+12}" height="24" fill="transparent"/>
       ${unk?`<defs><linearGradient id="u_${id}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0"><stop offset=".55" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}" stop-opacity="0"/></linearGradient></defs>`:""}<path class="ln${unk?" unk":""}" d="${seg}"${unk?` style="stroke:url(#u_${id})"`:""}/>${(!e||re)?`<path class="ln arw" d="M${X(Y1)-8},${y0-5.5} L${X(Y1)},${y0} L${X(Y1)-8},${y0+5.5}"/>`:""}${br?(()=>{ const FADE=110, g="g_"+id, xa=kids.length>1?x0-BR:Math.max(x0-BR,X(byId[kids[0]][3])+2), xb=Math.min(x0+FADE,x1);
         const mg=kids.length>1;
         return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${mg?"#0038FF":"#FF5A1F"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/></linearGradient></defs><path class="brn" stroke="url(#${g})"${cl?' style="stroke-width:1.5"':""} d="${br} M${x0},${y0} L${xb},${y0}"/>`; })():""}${bar?`<line class="bar" x1="${x1}" x2="${x1}" y1="${y0-6}" y2="${y0+6}" stroke="var(--ink)" stroke-width="2.4"/>`:""}
@@ -265,6 +272,10 @@ function draw(){
   svg.querySelectorAll("text.lab").forEach(t=>{ if(t.getAttribute("text-anchor")==="end") return;
     for(let n=0;n<4;n++){ const b=t.getBBox(); const own=t.closest(".inst").dataset.id; const hit=curves.find(c=>c.own!==own && c.x<b.x+b.width+4 && c.x+Math.min(c.width,40)>b.x-4 && c.y<b.y+b.height && c.y+c.height>b.y+2);
       if(!hit) break; t.setAttribute("x", hit.x+Math.min(hit.width,40)+6); } });
+  svg.querySelectorAll(".band").forEach(b=>{ const c=b.dataset.city;
+    const on=()=>{ svg.classList.add("cityhl"); b.classList.add("hl"); svg.querySelectorAll(".inst").forEach(g=>g.classList.toggle("hl",g.dataset.city===c)); };
+    const off=()=>{ svg.classList.remove("cityhl"); b.classList.remove("hl"); svg.querySelectorAll(".inst.hl").forEach(g=>g.classList.remove("hl")); };
+    b.addEventListener("mouseenter",on); b.addEventListener("mouseleave",off); b.addEventListener("click",()=>b.classList.contains("hl")?off():on()); });
   svg.querySelectorAll(".inst").forEach(g=>{ g.onclick=()=>show(g.dataset.id); g.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(g.dataset.id);} }; });
   
 }
