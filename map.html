@@ -423,6 +423,19 @@ const FAN=(()=>{ const g={}, out=new Map(); MOVES.forEach(m=>{ const a=(LL[m[2]]
   Object.values(g).forEach(arr=>arr.forEach((m,i)=>out.set(m, arr.length<2?0:(i-(arr.length-1)/2)/(arr.length-1)))); return out; })();
 function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx=b[0]-a[0], dy=b[1]-a[1], d=Math.hypot(dx,dy), f=FAN.get(m)||0, k=Math.min(.32,26/d+.12)+f*.34;
   const cx=(a[0]+b[0])/2-dy*k, cy=(a[1]+b[1])/2+dx*k; return `M${a[0]},${a[1]} Q${cx},${cy} ${b[0]},${b[1]}`; }
+// captions: while playing, each event holds for a few seconds even as the years keep moving
+let capQ=[], capShown=null, capUntil=0, lastCapYear=1899;
+const capEl=()=>document.getElementById("wev");
+function showCap(e){ capShown=e; capEl().textContent=e?`${e[0]} · ${e[1]}`:""; }
+function updateCaption(){
+  if(timer){ EVENTS.forEach(e=>{ if(e[0]>lastCapYear&&e[0]<=year) capQ=[e]; }); lastCapYear=year; tickCap(); return; }
+  capQ=[]; lastCapYear=year; capUntil=0;
+  showCap(year>=NOW?null:([...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=9)||null));
+}
+function tickCap(){ const now=performance.now();
+  if(now>=capUntil&&capQ.length){ showCap(capQ.shift()); capUntil=now+2200; }
+  else if(now>=capUntil&&!timer&&capShown&&(year>=NOW||year-capShown[0]>9)) showCap(null); }
+setInterval(()=>{ if(timer||capQ.length) tickCap(); else if(performance.now()>=capUntil&&capShown&&(year>=NOW||year-capShown[0]>9)) showCap(null); },200);
 function paintMoves(){
   const data=SHOWMV?MOVES.filter(m=>m[4]<=year):[];
   gm.selectAll("path.mvh").data(data,m=>m.join("|")).join("path").attr("class","mvh").attr("d",arcD).style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?.9:.3));
@@ -435,8 +448,7 @@ function paintMoves(){
         const r=box.getBoundingClientRect(); let x=e.clientX-r.left+14, y=e.clientY-r.top+14; if(x>r.width-290) x-=300; tip.style.left=x+"px"; tip.style.top=y+"px"; })
     .on("mouseleave",()=>{ p.classed("hov",false); tip.hidden=true; });
   svgW.select("#mvarr").attr("markerWidth",11/K).attr("markerHeight",11/K);
-  const ev=[...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=9&&year<NOW);
-  document.getElementById("wev").textContent=ev?`${ev[0]} · ${ev[1]}`:"";
+  updateCaption();
 }
 
 function paint(){
@@ -473,8 +485,8 @@ let timer=null; const pb=document.getElementById("wplay");
 const EVY=new Set(EVENTS.map(e=>e[0]));
 const stopPlay=()=>{ clearTimeout(timer); timer=null; pb.innerHTML=PLAYI; };
 // one year every 150ms, pausing about 3 seconds on each event so the caption can be read
-const step=()=>{ year++; slider.value=year; paint(); panel(); if(year>=NOW){ stopPlay(); return; } timer=setTimeout(step, EVY.has(year)?3200:150); };
-pb.onclick=()=>{ if(timer){ stopPlay(); return; } if(year>=NOW){year=1900;slider.value=1900;} pb.innerHTML=PAUSEI; timer=setTimeout(step, EVY.has(year)?3200:150); };
+const step=()=>{ year++; slider.value=year; paint(); panel(); if(year>=NOW){ stopPlay(); return; } timer=setTimeout(step,240); };
+pb.onclick=()=>{ if(timer){ stopPlay(); return; } if(year>=NOW){year=1900;slider.value=1900;} capQ=[]; lastCapYear=year-1; pb.innerHTML=PAUSEI; timer=setTimeout(step,240); };
 document.querySelectorAll(".tog button").forEach(b=>b.addEventListener("click",()=>setTimeout(()=>{paint();panel();},0)));
 function cityHistory(c){
   const all=I.filter(r=>r[1]===c&&vis(r)).sort((a,b)=>a[3]-b[3]||a[2]-b[2]), ids=new Set(all.map(r=>r[0])), rows=[], done=new Set();
