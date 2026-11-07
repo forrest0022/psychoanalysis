@@ -134,6 +134,7 @@ const I=[
  ["ffmc","Frankfurt",1,1930,1933,"Frankfurt Psychoanalytic Clinic",["ffm"],"Karl Landauer, Heinrich Meng; S. H. Foulkes, director","The outpatient clinic of the Frankfurt Institute and the last of the interwar free clinics, with close ties to the university and Horkheimer's Institute for Social Research. It lasted only a few years before the Nazis closed it."],
  ["bpv","Berlin",0,1908,1938,"Berlin Psychoanalytic Society",[],"Karl Abraham","Founded the year Abraham moved to Berlin from Zurich. The first psychoanalytic society outside Vienna. Taken over under the Nazi regime and dissolved in 1938."],
  ["poli","Berlin",1,1920,1933,"Berlin Poliklinik and Institute",["bpv"],"Max Eitingon, Ernst Simmel, Karl Abraham","The first psychoanalytic free clinic and the first training institute. It pioneered time-limited analysis and standardized training (personal analysis, supervision, seminars), the model institutes still follow. Aryanized in 1933, then folded into the Nazi-run Göring Institute in 1936."],
+ ["isw","Berlin",3,1919,1933,"Institute for Sexual Science",[],"Magnus Hirschfeld","The world's first clinic devoted to sexuality, offering free sex advice, marriage counselling and treatment for venereal disease. Hirschfeld had helped found the Berlin Psychoanalytic Association in 1908. Nazi students raided and destroyed the institute on May 6, 1933."],
  ["tegel","Berlin",3,1927,1931,"Schloss Tegel Sanatorium",[],"Ernst Simmel","The first psychoanalytic inpatient clinic, opened April 10, 1927, in a manor outside Berlin. Freud stayed there while being treated in the city. It closed in 1931 for lack of money."],
  ["dpv","Berlin",2,1950,null,"German Psychoanalytical Association (DPV)",[],"Carl Müller-Braunschweig","Founded after the war and admitted to the IPA."],
  ["ffm","Frankfurt",0,1929,1933,"Frankfurt Psychoanalytic Institute",[],"Karl Landauer, Frieda Fromm-Reichmann, Heinrich Meng","Founded February 10, 1929, as the institute of the Southwest German Psychoanalytic Working Group, and housed beside the Institute for Social Research, where analysts and the Frankfurt School sociologists met. Erich Fromm and S. H. Foulkes taught here. Closed when the Nazis came to power."],
@@ -224,7 +225,7 @@ const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flat
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
-const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","cnicolle","pccpal","nicteam","riggs","chestnut","menn","lafargue"]);
+const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","isw","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","cnicolle","pccpal","nicteam","riggs","chestnut","menn","lafargue"]);
 let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
 const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
 function draw(){
