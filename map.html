@@ -151,8 +151,9 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .fsw button[data-k="c"] .trk{background:#0038FF}
 .fsw .trk.off,.fsw button .trk.off{background:#E4E4DF}
 
-#wsvg .mv{fill:none;stroke:#7CF000;stroke-dasharray:.1 5;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke}
-#wsvg .mv:hover{stroke:#3FA800}
+#wsvg .mv{fill:none;stroke:#55E000;stroke-width:2.6;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke}
+#wsvg .mvh{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;opacity:.9;pointer-events:none;vector-effect:non-scaling-stroke}
+#wsvg .mv:hover{stroke:#0E0E0E}
 .wev{margin:0;padding:0 18px 14px;min-height:1.4em;font:italic 300 15px var(--wide);color:var(--ink)}
 .fsw button[data-k="m"] .trk{background:#7CF000}
 .wwrap{grid-template-columns:minmax(0,1fr)!important}
@@ -406,19 +407,19 @@ const MOVES=[
 const EVENTS=[[1900,"Freud publishes The Interpretation of Dreams"],[1910,"The International Psychoanalytical Association is founded"],[1920,"The Berlin Poliklinik opens: the first free clinic and training institute"],[1926,"Melanie Klein moves to London"],[1933,"The Nazis take power; analysts begin to leave Berlin"],[1936,"Civil war in Spain"],[1938,"The Anschluss: Freud and much of the Vienna Society flee"],[1942,"The Argentine Psychoanalytic Association is founded in Buenos Aires"],[1953,"The first Paris split: Lacan and Lagache leave the SPP"],[1954,"War of independence begins in Algeria; Fanon is at Blida"],[1961,"Basaglia opens the wards at Gorizia"],[1968,"Bion moves to Los Angeles"],[1971,"Plataforma and Documento break with the Argentine association"],[1974,"Langer flees to Mexico; the Escuela Freudiana is founded in Buenos Aires"],[1976,"A military coup in Argentina sends analysts into exile"],[1978,"Italy's Law 180 begins closing the asylums"],[1980,"Lacan dissolves the École Freudienne de Paris"],[2009,"Beirut: the first IPA society in the Arab world"]];
 const gm=root.insert("g",()=>gc.node()).attr("class","moves");
 svgW.select("defs").append("marker").attr("id","mvarr").attr("viewBox","0 0 10 10").attr("refX",8).attr("refY",5).attr("markerWidth",7).attr("markerHeight",7).attr("orient","auto-start-reverse").attr("markerUnits","userSpaceOnUse")
-  .append("path").attr("d","M0,0 L10,5 L0,10 Z").attr("fill","#7CF000");
+  .append("path").attr("d","M0,0 L10,5 L0,10 Z").attr("fill","#55E000");
 let SHOWMV=false; try{ SHOWMV=localStorage.getItem("tm-moves")==="1"; }catch(_){}
 function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx=b[0]-a[0], dy=b[1]-a[1], d=Math.hypot(dx,dy), k=Math.min(.32,26/d+.12);
   const cx=(a[0]+b[0])/2-dy*k, cy=(a[1]+b[1])/2+dx*k; return `M${a[0]},${a[1]} Q${cx},${cy} ${b[0]},${b[1]}`; }
 function paintMoves(){
   const data=SHOWMV?MOVES.filter(m=>m[4]<=year):[];
-  const p=gm.selectAll("path").data(data,m=>m.join("|")).join(e=>{const p=e.append("path").attr("class","mv"); p.append("title"); return p;})
+  gm.selectAll("path.mvh").data(data,m=>m.join("|")).join("path").attr("class","mvh").attr("d",arcD).style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?.9:.3));
+  const p=gm.selectAll("path.mv").data(data,m=>m.join("|")).join(e=>{const p=e.append("path").attr("class","mv"); p.append("title"); return p;})
     .attr("d",arcD).attr("marker-end","url(#mvarr)")
     .style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?1:.32))
     .on("click",(e,m)=>{ if(m[0]) location.href="analysts.html#"+m[0]; });
   p.select("title").text(m=>`${m[1]}: ${m[2]} → ${m[3]}, ${m[4]}. ${m[6]}`);
-  gm.selectAll("path").attr("stroke-width",1.8/K);
-  svgW.select("#mvarr").attr("markerWidth",8/K).attr("markerHeight",8/K);
+  svgW.select("#mvarr").attr("markerWidth",11/K).attr("markerHeight",11/K);
   const ev=[...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=5&&year<NOW);
   document.getElementById("wev").textContent=ev?`${ev[0]} · ${ev[1]}`:"";
 }
