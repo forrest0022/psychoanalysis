@@ -71,6 +71,8 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .mk-ringblue #wsvg .city .c{fill:none;stroke:var(--mc);stroke-width:2}
 .mk-ringblue #wsvg .city .i{fill:var(--mi)}
 .mk-ringblue.is-ring #wsvg .city .i{fill:#fff;stroke:var(--mi);stroke-width:1.8}
+.mk-ringblue.cs-dot #wsvg .city .c{fill:var(--mc);stroke:none}
+.mk-ringblue.cs-dot #wsvg .city.on .c,.mk-ringblue.cs-dot #wsvg .city:hover .c{fill:#EF82C8}
 .mk-ringpink #wsvg .city:hover .i,.mk-ringpink #wsvg .city.on .i,.mk-ringblue #wsvg .city:hover .i,.mk-ringblue #wsvg .city.on .i{fill:#0038FF}
 .mk-ringblue #wsvg .city:hover .i,.mk-ringblue #wsvg .city.on .i{fill:#EF82C8}
 .mk-blue #wsvg .city .i,.mk-orange #wsvg .city .i{fill:var(--ink)}
@@ -224,7 +226,7 @@ svg.cityhl .inst.hl .dot{stroke:var(--link)}
 <div class="viewtog"><a href="institutes.html">Timeline</a><a class="on" href="#">Map</a></div>
 <div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
 <div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
-<div id="world"><div class="wkey"><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#0E0E0E"/></svg>Institute</span><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="3.6" fill="none" stroke="#0038FF" stroke-width="1.6"/></svg>Clinic or hospital</span><span>One mark per institution · drag to pan · scroll or +/− to zoom</span></div>
+<div id="world"><div class="wkey"><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#7A4A24"/></svg>Institute</span><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#0038FF"/></svg>Clinic or hospital</span><span>One mark per institution · drag to pan · scroll or +/− to zoom</span></div>
 <div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
 <div class="wctl"><button type="button" id="wplay" aria-label="Play">▶</button><input type="range" id="wyr" min="1900" max="2026" value="2026"><span class="wyear" id="wyl">Today</span></div></div>
 <aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a city to open its history. Drag the slider or press play to watch the field spread.</p></aside></div></div>
@@ -427,8 +429,8 @@ const LL={"Vienna":[16.37,48.21],"Budapest":[19.04,47.5],"Zagreb":[15.98,45.81],
 "Mexico City":[-99.13,19.43],"León and Managua":[-86.6,12.3],"Bogotá":[-74.07,4.71],"Caracas":[-66.9,10.48],"Lima":[-77.04,-12.05],"Santiago":[-70.67,-33.45],"Buenos Aires":[-58.38,-34.6],"Montevideo":[-56.16,-34.9],"São Paulo":[-46.63,-23.55],"Rio de Janeiro":[-43.2,-22.91],
 "Kolkata":[88.36,22.57],"Sendai":[140.87,38.27],"Tokyo":[139.69,35.69]};
 const svgW=d3.select("#wsvg"); let Wd=960, Hd=500;
-const QS=new URLSearchParams(location.search), STY=QS.get("style")||"pinkline"; document.body.classList.add("st-"+STY); const MK=QS.get("mk")||"ringblue", IC=QS.get("ic")||"#0E0E0E", CC=QS.get("cc")||"#0038FF", ISH=QS.get("is")||"dot";
-document.documentElement.style.setProperty("--mi",IC); document.documentElement.style.setProperty("--mc",CC); document.body.classList.add("mk-"+MK); document.body.classList.add("is-"+ISH);
+const QS=new URLSearchParams(location.search), STY=QS.get("style")||"pinkline"; document.body.classList.add("st-"+STY); const MK=QS.get("mk")||"ringblue", IC=QS.get("ic")||"#7A4A24", CC=QS.get("cc")||"#0038FF", ISH=QS.get("is")||"dot", CSH=QS.get("cs")||"dot";
+document.documentElement.style.setProperty("--mi",IC); document.documentElement.style.setProperty("--mc",CC); document.body.classList.add("mk-"+MK); document.body.classList.add("is-"+ISH); document.body.classList.add("cs-"+CSH);
 const proj=STY==="globe"?d3.geoOrthographic().scale(235).translate([Wd/2,Hd/2]).rotate([-5,-28]).clipAngle(90):d3.geoNaturalEarth1().fitWidth(Wd-4,{type:"Sphere"}), path=d3.geoPath(proj);
 if(STY!=="globe"){ const bb=path.bounds({type:"Sphere"}); proj.translate([proj.translate()[0]+2-bb[0][0],proj.translate()[1]+2-bb[0][1]]); Hd=Math.ceil(bb[1][1]-bb[0][1])+4; svgW.attr("viewBox",`0 0 ${Wd} ${Hd}`); }
 svgW.append("defs").html('<pattern id="dotpat" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.05" fill="#BDBDB6"/></pattern>');
@@ -458,7 +460,7 @@ function paint(){
     .attr("transform",x=>`translate(${pos(x.i)})`)
     .attr("d",x=>{ const cl=CLINICS.has(x.r[0]);
       if(!RING){ const rr=r0*1.5; return `M0,${-rr} Q0,0 ${rr},0 Q0,0 0,${rr} Q0,0 ${-rr},0 Q0,0 0,${-rr}Z`; }
-      const rr=cl?r0*.85:r0; return `M${rr},0A${rr},${rr} 0 1 1 ${-rr},0A${rr},${rr} 0 1 1 ${rr},0Z`; })
+      const rr=cl&&CSH!=="dot"?r0*.85:r0; return `M${rr},0A${rr},${rr} 0 1 1 ${-rr},0A${rr},${rr} 0 1 1 ${rr},0Z`; })
     .select("title").text(x=>`${x.r[5]} (${x.r[3]}${x.r[4]===-1?"–?":x.r[4]?"–"+x.r[4]:"–"})`);
   g.select("text").text(d=>d.c).attr("x",d=>ext(d)+4/K).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px");
   yl.textContent=year>=NOW?"Today":year;
