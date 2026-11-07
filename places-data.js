@@ -70,7 +70,7 @@ const I=[
  ["apm","Mexico City",0,1957,null,"Asociación Psicoanalítica Mexicana",[],"","Became Mexico's first IPA society in 1957. Marie Langer worked in Mexico City after leaving Argentina in 1974."],
  ["apa","Buenos Aires",0,1942,null,"Asociación Psicoanalítica Argentina",[],"Ángel Garma, Celes Cárcamo, Marie Langer, Enrique Pichon-Rivière, Arnaldo Rascovsky, Guillermo Ferrari Hardoy","The first Latin American society; home of the Barangers' field theory."],
  ["apdeba","Buenos Aires",1,1977,null,"Asociación Psicoanalítica de Buenos Aires",["apa"],"","Split from the APA in 1977."],
- ["platdoc","Buenos Aires",2,1971,-1,"Plataforma and Documento",["apa"],"Marie Langer, Diego and Gilou García Reynoso and others","Left-wing groups that broke from the APA in 1971 over its politics and training hierarchy."],
+ ["platdoc","Buenos Aires",2,1971,-1,"Plataforma and Documento",["apa"],"Marie Langer, Diego and Gilou García Reynoso and others","Left-wing groups that broke from the APA, and from the IPA, in 1971 over the association's apolitical stance."],
  ["efba","Buenos Aires",3,1974,null,"Escuela Freudiana de Buenos Aires",[],"Oscar Masotta","Founded June 28, 1974, after Masotta's study groups introduced Lacan in Argentina; described as the oldest continuously functioning Lacanian school."],
  ["apch","Santiago",0,1949,null,"Asociación Psicoanalítica Chilena",[],"Ignacio Matte Blanco","Built around Matte Blanco after his return from London and the US in 1943, and recognized by the IPA in 1949. Increasingly Kleinian after Matte Blanco left for Rome in 1966."],
  ["spp_pe","Lima",0,1977,null,"Sociedad Peruana de Psicoanálisis",[],"Saúl Peña, Carlos Crisanto, Max Hernández","Grew out of the Centro para el Desarrollo del Psicoanálisis, formed at the end of the 1960s by three analysts returning from training at the British Society. Recognized as an IPA study group in 1977, a provisional society in 1985 and a component society in 1987."],
@@ -127,7 +127,7 @@ const SPLIT_WHY={
 "pap": "Liberal versus conservative camps, plus personal conflicts.",
 "scp": "Objection to the Los Angeles society's many lay (non-medical) analysts.",
 "apdeba": "Disputes over institutional attitudes and training.",
-"platdoc": "The APA's politics and training hierarchy."
+"platdoc": "Ideology. In 1971 Marie Langer and other leftist analysts left both the APA and the IPA. Plataforma's declaration said the APA had cut itself off from the social and political reality around it; Langer later said its apolitical analysts had become supporters of \"an ideological state apparatus.\" Documento was a second group that left in the same period."
 };
 // branches that are a society's own clinic or training arm, not splits
 const ARM=new Set(["amb","bfc","ffmc","poli","lcp","topeka"]);
