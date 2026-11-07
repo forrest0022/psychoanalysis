@@ -148,6 +148,7 @@ const I=[
  ["ecf","Paris",5,1981,null,"École de la Cause freudienne",["efp"],"Jacques-Alain Miller and Lacan's circle","Formed after the EFP's dissolution."],
  ["ipso","Paris",6,1972,null,"Institut de psychosomatique (IPSO)",[],"Pierre Marty, Michel Fain","Home of the Paris school of psychosomatics, built on Marty, de M'Uzan and David's L'Investigation psychosomatique (1963). Its hospital, opened in 1978, now bears Marty's name."],
  ["stalban","Saint-Alban",0,1940,null,"Saint-Alban Hospital",[],"François Tosquelles","A rural psychiatric hospital in the Lozère where Tosquelles, a refugee from the Spanish Civil War, began institutional psychotherapy during the Occupation. Frantz Fanon trained here."],
+ ["blida","Blida (near Algiers)",0,1938,null,"Blida-Joinville Psychiatric Hospital",[],"","A colonial psychiatric hospital in Algeria. Frantz Fanon, who had trained with Tosquelles at Saint-Alban, ran a ward here from 1953, bringing institutional psychotherapy to his Muslim and European patients through film screenings, a café, football clubs and a ward newsletter. He resigned in 1956 to join the independence struggle and was expelled from Algeria in January 1957. The hospital now bears his name."],
  ["laborde","Cour-Cheverny",0,1953,null,"La Borde Clinic",[],"Jean Oury","Founded by Oury, who had trained with Tosquelles at Saint-Alban. Félix Guattari worked here from 1955; patients and staff share in running the clinic."],
  ["pps","Jerusalem",0,1933,null,"Palestine (later Israel) Psychoanalytic Society",[],"Max Eitingon","Founded by Eitingon after he left Berlin in 1933; it later became the Israel Psychoanalytic Society, with its own institute."],
  ["nyps","New York",0,1911,null,"New York Psychoanalytic Society and Institute (NYPSI)",[],"A. A. Brill","The first psychoanalytic society in the United States. Its institute was organized in 1931 by Sándor Radó on the Berlin model."],
@@ -190,11 +191,11 @@ const I=[
  ["ips","Kolkata",0,1922,null,"Indian Psychoanalytical Society",[],"Girindrasekhar Bose","The first society in Asia."],
  ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa",""]
 ];
-const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Philadelphia","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro","Caracas","Kolkata","Tokyo"];
+const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Blida (near Algiers)","Jerusalem","New York","Boston","Stockbridge","Philadelphia","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro","Caracas","Kolkata","Tokyo"];
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
-const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","riggs","chestnut","menn","lafargue"]);
+const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","blida","riggs","chestnut","menn","lafargue"]);
 let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
 const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
 function draw(){
