@@ -548,7 +548,7 @@ paint();
   render();
 })();</script>
 <script>(function(){ const f=document.querySelector(".fsw"); if(!f||!location.pathname.endsWith("map.html")) return;
-  const b=document.createElement("button"); b.type="button"; b.dataset.k="m"; b.setAttribute("role","switch"); b.innerHTML='<span class="trk"><i></i></span><span>Movements</span>'; f.appendChild(b);
+  const b=document.createElement("button"); b.type="button"; b.dataset.k="m"; b.setAttribute("role","switch"); b.innerHTML='<span class="trk"><i></i></span><span>Migrations</span>'; f.appendChild(b);
   const r=()=>{ b.querySelector(".trk").className="trk"+(SHOWMV?" r":" off"); b.querySelector("span:last-child").className=SHOWMV?"":"dim"; b.setAttribute("aria-checked",String(SHOWMV)); };
   b.onclick=()=>{ SHOWMV=!SHOWMV; try{ localStorage.setItem("tm-moves",SHOWMV?"1":"0"); }catch(_){} r(); paintMoves(); }; r(); })();</script>
 <script src="search.js"></script>
