@@ -216,12 +216,11 @@ const I=[
  ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa","Established in October 1955 by Kosawa, who had trained in Vienna in 1932–33 (analysis with Richard Sterba, supervision with Paul Federn) and opened a private clinic in Tokyo on his return. It remains Japan's only IPA-recognized psychoanalytic organization."]
 ];
 const REGIONS=[
- ["Africa", ["Berrechid", "Blida (near Algiers)", "Cairo", "Dakar", "Johannesburg", "Tunis"]],
- ["Europe", ["Berlin", "Budapest", "Cour-Cheverny", "Frankfurt", "Gorizia", "London", "Paris", "Saint-Alban", "Trieste", "Vienna", "Zagreb", "Zurich"]],
+ ["Africa & the Arab World", ["Beirut", "Berrechid", "Blida (near Algiers)", "Cairo", "Dakar", "Johannesburg", "Palestine", "Tunis"]],
+ ["Europe", ["Berlin", "Budapest", "Cour-Cheverny", "Frankfurt", "Gorizia", "Istanbul", "London", "Paris", "Saint-Alban", "Trieste", "Vienna", "Zagreb", "Zurich"]],
  ["Latin America", ["Bogotá", "Buenos Aires", "Caracas", "León and Managua", "Lima", "Mexico City", "Montevideo", "Rio de Janeiro", "Santiago", "São Paulo"]],
  ["North America", ["Boston", "Chicago", "Los Angeles", "New York", "Philadelphia", "San Francisco", "Stockbridge", "Topeka", "Washington–Baltimore"]],
- ["South and East Asia", ["Kolkata", "Sendai", "Tokyo"]],
- ["Southwest Asia", ["Beirut", "Istanbul", "Palestine"]]];
+ ["South and East Asia", ["Kolkata", "Sendai", "Tokyo"]]];
 const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
 const svg=document.getElementById("map"), card=document.getElementById("card");
