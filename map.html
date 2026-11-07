@@ -68,7 +68,9 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .st-pinkline #wsvg .borders{stroke:#F6C6E3;stroke-width:.6}
 .mk-ringpink #wsvg .city .i,.mk-ringblue #wsvg .city .i{fill:var(--ink)}
 .mk-ringpink #wsvg .city .c{fill:none;stroke:#EF82C8;stroke-width:2.2}
-.mk-ringblue #wsvg .city .c{fill:none;stroke:#0038FF;stroke-width:2}
+.mk-ringblue #wsvg .city .c{fill:none;stroke:var(--mc);stroke-width:2}
+.mk-ringblue #wsvg .city .i{fill:var(--mi)}
+.mk-ringblue.is-ring #wsvg .city .i{fill:#fff;stroke:var(--mi);stroke-width:1.8}
 .mk-ringpink #wsvg .city:hover .i,.mk-ringpink #wsvg .city.on .i,.mk-ringblue #wsvg .city:hover .i,.mk-ringblue #wsvg .city.on .i{fill:#0038FF}
 .mk-ringblue #wsvg .city:hover .i,.mk-ringblue #wsvg .city.on .i{fill:#EF82C8}
 .mk-blue #wsvg .city .i,.mk-orange #wsvg .city .i{fill:var(--ink)}
@@ -425,7 +427,8 @@ const LL={"Vienna":[16.37,48.21],"Budapest":[19.04,47.5],"Zagreb":[15.98,45.81],
 "Mexico City":[-99.13,19.43],"León and Managua":[-86.6,12.3],"Bogotá":[-74.07,4.71],"Caracas":[-66.9,10.48],"Lima":[-77.04,-12.05],"Santiago":[-70.67,-33.45],"Buenos Aires":[-58.38,-34.6],"Montevideo":[-56.16,-34.9],"São Paulo":[-46.63,-23.55],"Rio de Janeiro":[-43.2,-22.91],
 "Kolkata":[88.36,22.57],"Sendai":[140.87,38.27],"Tokyo":[139.69,35.69]};
 const svgW=d3.select("#wsvg"); let Wd=960, Hd=500;
-const QS=new URLSearchParams(location.search), STY=QS.get("style")||"pinkline"; document.body.classList.add("st-"+STY); const MK=QS.get("mk")||"ringblue"; document.body.classList.add("mk-"+MK);
+const QS=new URLSearchParams(location.search), STY=QS.get("style")||"pinkline"; document.body.classList.add("st-"+STY); const MK=QS.get("mk")||"ringblue", IC=QS.get("ic")||"#0E0E0E", CC=QS.get("cc")||"#0038FF", ISH=QS.get("is")||"dot";
+document.documentElement.style.setProperty("--mi",IC); document.documentElement.style.setProperty("--mc",CC); document.body.classList.add("mk-"+MK); document.body.classList.add("is-"+ISH);
 const proj=STY==="globe"?d3.geoOrthographic().scale(235).translate([Wd/2,Hd/2]).rotate([-5,-28]).clipAngle(90):d3.geoNaturalEarth1().fitWidth(Wd-4,{type:"Sphere"}), path=d3.geoPath(proj);
 if(STY!=="globe"){ const bb=path.bounds({type:"Sphere"}); proj.translate([proj.translate()[0]+2-bb[0][0],proj.translate()[1]+2-bb[0][1]]); Hd=Math.ceil(bb[1][1]-bb[0][1])+4; svgW.attr("viewBox",`0 0 ${Wd} ${Hd}`); }
 svgW.append("defs").html('<pattern id="dotpat" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.05" fill="#BDBDB6"/></pattern>');
