@@ -54,6 +54,8 @@ h1 .tagline .rot.out{opacity:0}
 .ctl button[data-k="c"] .trk{background:#0038FF}
 .ctl .trk.off,.ctl button .trk.off{background:#E4E4DF}
 @media (max-width:760px){.ctl{display:grid;grid-template-columns:auto auto;justify-content:start;gap:14px 22px}.fsw{display:contents}.vsw,.ctl button{font-size:12.5px;gap:8px}.trk{width:50px;height:26px}.trk i{width:20px;height:20px}.trk.r i{left:27px}}
+.brhit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:help}
+.brtip{position:fixed;z-index:20;pointer-events:none;max-width:280px;background:#fff;border:1.6px solid var(--ink,#0E0E0E);border-radius:12px;padding:8px 11px;font:13px/1.4 var(--wide,inherit)}.brtip b{display:block;font-weight:600}.brtip span{display:block;color:var(--muted,#55554F);font-size:12px;margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -196,6 +198,13 @@ function draw(){
   svg.querySelectorAll("text.lab").forEach(t=>{ if(t.getAttribute("text-anchor")==="end") return;
     for(let n=0;n<4;n++){ const b=t.getBBox(); const own=t.closest(".inst").dataset.id; const hit=curves.find(c=>c.own!==own && c.x<b.x+b.width+4 && c.x+Math.min(c.width,40)>b.x-4 && c.y<b.y+b.height && c.y+c.height>b.y+2);
       if(!hit) break; t.setAttribute("x", hit.x+Math.min(hit.width,40)+6); } });
+  // hover a split's branch to see why it happened
+  const tip=document.getElementById("brtip")||document.body.appendChild(Object.assign(document.createElement("div"),{id:"brtip",className:"brtip",hidden:true}));
+  svg.querySelectorAll(".brn").forEach(p=>{ const g=p.closest(".inst"), id=g.dataset.id, w=(window.SPLIT_WHY||SPLIT_WHY)[id]; if(!w||par(byId[id]).length!==1) return;
+    const h=document.createElementNS("http://www.w3.org/2000/svg","path"); h.setAttribute("class","brhit"); h.setAttribute("d",p.getAttribute("d")); g.appendChild(h);
+    const P=byId[par(byId[id])[0]];
+    h.addEventListener("mousemove",e=>{ tip.innerHTML=`<b>${byId[id][5]}</b><span>from ${P[5]}, ${byId[id][3]}</span>${w}`; tip.hidden=false; const x=Math.min(e.clientX+14,innerWidth-300); tip.style.left=x+"px"; tip.style.top=(e.clientY+16)+"px"; });
+    h.addEventListener("mouseleave",()=>tip.hidden=true); });
   svg.querySelectorAll(".band").forEach(b=>{ const c=b.dataset.city;
     const on=()=>{ svg.classList.add("cityhl"); b.classList.add("hl"); svg.querySelectorAll(".inst").forEach(g=>g.classList.toggle("hl",g.dataset.city===c)); };
     const off=()=>{ svg.classList.remove("cityhl"); b.classList.remove("hl"); svg.querySelectorAll(".inst.hl").forEach(g=>g.classList.remove("hl")); };

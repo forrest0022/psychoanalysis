@@ -105,3 +105,27 @@ const REGIONS=[
  ["North America", ["Boston", "Chicago", "Los Angeles", "New York", "Philadelphia", "San Francisco", "Stockbridge", "Topeka", "Washington–Baltimore"]]];
 const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","isw","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","cnicolle","pccpal","nicteam","riggs","chestnut","menn","lafargue"]);
+
+// why each split happened (hover on the branch)
+const SPLIT_WHY={
+"amb": "Not a split: the Vienna society opened it as its free outpatient clinic.",
+"bfc": "Not a split: Ferenczi opened it as the Hungarian society's free clinic.",
+"ffmc": "Not a split: the Frankfurt Institute's own outpatient clinic.",
+"poli": "Not a split: the Berlin society's free clinic and training institute.",
+"lcp": "Not a split: the British Society's free clinic, on the Berlin model.",
+"topeka": "Not a split: the Menninger Clinic's own training institute.",
+"sfp": "Training, and Lacan's short sessions.",
+"apf": "Stayed with the IPA when it required Lacan's removal as a training analyst.",
+"efp": "Lacan founded his own school after the IPA barred him as a training analyst.",
+"q4": "Opposition to the pass, Lacan's procedure for becoming an analyst.",
+"ecf": "Formed after Lacan dissolved the EFP.",
+"aip": "The New York society demoted Horney to lecturer; she and her allies walked out.",
+"wawi": "Partly over Fromm's standing as a non-physician training analyst.",
+"col": "Rado was removed as a training analyst at the New York Institute (1944).",
+"nyfs": "Ostensibly theoretical: NPAP seemed not Freudian enough. Probably personal underneath.",
+"iptar": "Formed by members who left NPAP; our sources don't record the grounds.",
+"pap": "Liberal versus conservative camps, plus personal conflicts.",
+"scp": "Objection to the Los Angeles society's many lay (non-medical) analysts.",
+"apdeba": "Disputes over institutional attitudes and training.",
+"platdoc": "The APA's politics and training hierarchy."
+};
