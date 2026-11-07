@@ -241,7 +241,7 @@ function draw(){
   const H=y+8, LY=r=>band[r[1]].y+BANDPAD/2+LN[r[0]]*LANE+LANE*.62;
   let s="";
   for(let d=Y0; d<=2020; d+=10){ s+=`<line x1="${X(d)}" x2="${X(d)}" y1="${TOP-6}" y2="${H}" stroke="${d%50?"#F0F0EC":"#E2E2DC"}"/><text class="yr" x="${X(d)}" y="14" text-anchor="middle">${d}</text>`; }
-  heads.forEach(h=>{ s+=`<rect x="0" y="${h.y+4}" width="${W}" height="${RHEAD-4}" fill="var(--paper,#fff)"/><line x1="12" x2="${W-RIGHT}" y1="${h.y+RHEAD}" y2="${h.y+RHEAD}" stroke="#0E0E0E" stroke-width="1.5"/><text class="region" x="14" y="${h.y+RHEAD-9}">${h.g}</text>`; });
+  heads.forEach(h=>{ s+=`<rect x="0" y="${h.y+4}" width="${W}" height="${RHEAD-4}" fill="var(--paper,#fff)"/><line x1="12" x2="${W-RIGHT}" y1="${h.y+RHEAD}" y2="${h.y+RHEAD}" stroke="#EF82C8" stroke-width="2.2" stroke-dasharray="0.1 6" stroke-linecap="round"/><text class="region" x="14" y="${h.y+RHEAD-9}">${h.g}</text>`; });
   SHOWN.forEach((c,i)=>{ const b=band[c]; if(i&&!b.first) s+=`<line x1="12" x2="${W-RIGHT}" y1="${b.y}" y2="${b.y}" stroke="#E2E2DC"/>`;
     s+=`<g class="band"><text class="city" x="14" y="${b.y+BANDPAD/2+LANE*.62+4}">${c}</text></g>`; });
   // a split branches off its parent line; a merger is two lines running together into one
