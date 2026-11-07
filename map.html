@@ -378,7 +378,7 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then
 const slider=document.getElementById("wyr"), yl=document.getElementById("wyl"); const NOW=new Date().getFullYear(); slider.max=NOW; slider.value=NOW; let year=NOW, sel=null;
 const live=(r,y)=>r[3]<=y && (r[4]===null || (r[4]===-1 ? y<=r[3]+12 : y<r[4]) || (r[9]&&y>=r[9]));
 // ---- Movements prototype ----
-const EX={"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
+const EX={"Oslo":[10.75,59.91],"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
 const P_=c=>proj(LL[c]||EX[c]);
 // [id or "", name, from, to, year, reason, note]
 const MOVES=[
@@ -390,6 +390,8 @@ const MOVES=[
  ["simmel","Ernst Simmel","Berlin","Los Angeles",1934,"fascism","Briefly imprisoned by the Nazis; reached Los Angeles in 1934."],
  ["fromm","Erich Fromm","Frankfurt","New York",1933,"fascism","Fled Nazi Germany in 1933 for the United States."],
  ["deutsch","Helene Deutsch","Vienna","Boston",1935,"fascism","Emigrated to Boston as fascism rose in Austria."],
+ ["reich","Wilhelm Reich","Vienna","Berlin",1930,"politics","Left Vienna for Berlin to join communist and psychoanalytic work."],
+ ["reich","Wilhelm Reich","Berlin","Oslo",1934,"fascism","Excluded from the IPA at Lucerne in 1934, he took refuge in Oslo."],
  ["koch","Adelheid Koch","Berlin","São Paulo",1936,"fascism","Forced out of Nazi Germany, she became Brazil's first training analyst."],
  ["langer","Marie Langer","Vienna","Montevideo",1938,"fascism","After the International Brigades in Spain, four years in Uruguay."],
  ["freud","Sigmund Freud","Vienna","London",1938,"fascism","Left Vienna after the Anschluss; died in London in 1939."],
