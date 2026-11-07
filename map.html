@@ -151,9 +151,15 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .fsw button[data-k="c"] .trk{background:#0038FF}
 .fsw .trk.off,.fsw button .trk.off{background:#E4E4DF}
 
-#wsvg .mv{fill:none;stroke:#55E000;stroke-width:2.6;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke}
-#wsvg .mvh{fill:none;stroke:#fff;stroke-width:6;stroke-linecap:round;opacity:.9;pointer-events:none;vector-effect:non-scaling-stroke}
-#wsvg .mv:hover{stroke:#0E0E0E}
+#wsvg .mv{fill:none;stroke:#55E000;stroke-width:1.5;stroke-linecap:round;pointer-events:none;vector-effect:non-scaling-stroke}
+#wsvg .mv.hov{stroke:#0E0E0E}
+#wsvg .mvhit{fill:none;stroke:transparent;stroke-width:12;pointer-events:stroke;vector-effect:non-scaling-stroke}
+.mvtip{position:absolute;z-index:5;pointer-events:none;max-width:280px;background:#fff;border:1.6px solid var(--ink);border-radius:12px;padding:8px 11px;font:13px/1.35 var(--wide)}
+.mvtip b{display:block;font-weight:700}
+.mvtip i{display:block;font:12px var(--mono);margin:2px 0 4px}
+.mvtip[hidden]{display:none}
+#wsvg .mvh{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;opacity:.9;pointer-events:none;vector-effect:non-scaling-stroke}
+
 .wev{margin:0;padding:0 18px 14px;min-height:1.4em;font:italic 300 15px var(--wide);color:var(--ink)}
 .fsw button[data-k="m"] .trk{background:#7CF000}
 .wwrap{grid-template-columns:minmax(0,1fr)!important}
@@ -246,12 +252,12 @@ svg.cityhl .inst.hl .dot{stroke:var(--link)}
 .detail .list button:hover{background:var(--link);color:var(--paper)}
 
 </style>
-<h1 class="ttl">Institutional Geographies<em class="tagline">A genealogy of psychoanalytic institutes, clinics &amp; hospitals</em></h1>
+<h1 class="ttl">Institutional Geographies<em class="tagline">A genealogy of psychoanalytic institutes, clinics &amp; asylums</em></h1>
 <div class="viewtog"><a class="on" href="map.html" aria-current="page">Map</a><a href="institutes.html">Timeline</a></div>
 <div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
-<div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinics / hospitals</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
-<div id="world"><div class="wkey"><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#4A2A12"/></svg>Institutes</span><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><rect x="-3.8" y="-3.8" width="7.6" height="7.6" fill="#0038FF"/></svg>Clinics / hospitals</span></div>
-<div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
+<div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinics / asylums</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
+<div id="world"><div class="wkey"><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#4A2A12"/></svg>Institutes</span><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><rect x="-3.8" y="-3.8" width="7.6" height="7.6" fill="#0038FF"/></svg>Clinics / asylums</span></div>
+<div class="wwrap"><div class="wbox"><div class="mvtip" id="mvtip" hidden></div><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
 <div class="wctl"><button type="button" id="wplay" aria-label="Play"><svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg></button><input type="range" id="wyr" min="1900" max="2026" value="2026"><span class="wyear" id="wyl">Today</span></div><p class="wev" id="wev"></p></div>
 <aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a city to open its history. Drag the slider or press play to watch the field spread.</p></aside></div></div>
 <div class="cpop" id="cpop" hidden><div class="box" role="dialog" aria-modal="true"><button type="button" class="x" id="cpx" aria-label="Close">×</button><div id="cpbody"></div></div></div>
@@ -415,11 +421,14 @@ function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx
 function paintMoves(){
   const data=SHOWMV?MOVES.filter(m=>m[4]<=year):[];
   gm.selectAll("path.mvh").data(data,m=>m.join("|")).join("path").attr("class","mvh").attr("d",arcD).style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?.9:.3));
-  const p=gm.selectAll("path.mv").data(data,m=>m.join("|")).join(e=>{const p=e.append("path").attr("class","mv"); p.append("title"); return p;})
+  const p=gm.selectAll("path.mv").data(data,m=>m.join("|")).join("path").attr("class","mv")
     .attr("d",arcD).attr("marker-end","url(#mvarr)")
-    .style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?1:.32))
-    .on("click",(e,m)=>{ if(m[0]) location.href="analysts.html#"+m[0]; });
-  p.select("title").text(m=>`${m[1]}: ${m[2]} → ${m[3]}, ${m[4]}. ${m[6]}`);
+    .style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?1:.32));
+  const tip=document.getElementById("mvtip"), box=document.querySelector(".wbox");
+  gm.selectAll("path.mvhit").data(data,m=>m.join("|")).join("path").attr("class","mvhit").attr("d",arcD)
+    .on("mousemove",(e,m)=>{ p.classed("hov",x=>x===m); tip.innerHTML=`<b>${esc(m[1])}</b><i>${esc(m[2])} → ${esc(m[3])}, ${m[4]}</i>${esc(m[6])}`; tip.hidden=false;
+        const r=box.getBoundingClientRect(); let x=e.clientX-r.left+14, y=e.clientY-r.top+14; if(x>r.width-290) x-=300; tip.style.left=x+"px"; tip.style.top=y+"px"; })
+    .on("mouseleave",()=>{ p.classed("hov",false); tip.hidden=true; });
   svgW.select("#mvarr").attr("markerWidth",11/K).attr("markerHeight",11/K);
   const ev=[...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=5&&year<NOW);
   document.getElementById("wev").textContent=ev?`${ev[0]} · ${ev[1]}`:"";
@@ -500,7 +509,7 @@ paint();
   const IS_MAP=location.pathname.endsWith("map.html");
   const ctl=document.createElement("div"); ctl.className="ctl";
   ctl.innerHTML=`<a class="vsw" href="${IS_MAP?"institutes.html":"map.html"}" role="switch" aria-checked="${IS_MAP?"false":"true"}" aria-label="Switch between map and timeline"><span class="${IS_MAP?"":"dim"}">Map</span><span class="trk${IS_MAP?"":" r"}"><i></i></span><span class="${IS_MAP?"dim":""}">Timeline</span></a>
-  <div class="fsw" role="group" aria-label="Show"><button type="button" data-k="i" role="switch"><span class="trk r"><i></i></span><span>Institutes</span></button><button type="button" data-k="c" role="switch"><span class="trk r"><i></i></span><span>Clinics / Hospitals</span></button></div>`;
+  <div class="fsw" role="group" aria-label="Show"><button type="button" data-k="i" role="switch"><span class="trk r"><i></i></span><span>Institutes</span></button><button type="button" data-k="c" role="switch"><span class="trk r"><i></i></span><span>Clinics / Asylums</span></button></div>`;
   const anchor=document.querySelector(".viewtog"); anchor.parentNode.insertBefore(ctl,anchor);
   const getMode=()=>{ try{ const m=localStorage.getItem("tm-clinics"); return m==="1"?"ic":(["i","c","ic"].includes(m)?m:"ic"); }catch(_){ return "ic"; } };
   const btns=[...ctl.querySelectorAll(".fsw button")];
