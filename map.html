@@ -375,19 +375,20 @@ const EX={"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.
 const P_=c=>proj(LL[c]||EX[c]);
 // [id or "", name, from, to, year, reason, note]
 const MOVES=[
- ["klein","Melanie Klein","Berlin","London",1926,"invitation","Invited by Ernest Jones to lecture, she settled in London."],
+ ["klein","Melanie Klein","Berlin","London",1927,"invitation","Lectured in London at Ernest Jones's invitation in 1925, and settled there in 1927."],
  ["spielrein","Sabina Spielrein","Geneva","Moscow",1923,"return","Returned to Russia, where she taught until psychoanalysis was banned."],
  ["rado","Sándor Radó","Berlin","New York",1931,"invitation","Came to organize training at the New York Psychoanalytic Institute."],
  ["horney","Karen Horney","Berlin","Chicago",1932,"invitation","Joined Franz Alexander at the new Chicago Institute."],
  ["eitingon","Max Eitingon","Berlin","Palestine",1933,"fascism","Left Berlin after the Nazi takeover and founded the society in Jerusalem."],
  ["simmel","Ernst Simmel","Berlin","Los Angeles",1934,"fascism","Briefly imprisoned by the Nazis; reached Los Angeles in 1934."],
- ["fromm","Erich Fromm","Frankfurt","New York",1934,"fascism","Left Germany as the Frankfurt Institute moved into exile."],
+ ["fromm","Erich Fromm","Frankfurt","New York",1933,"fascism","Fled Nazi Germany in 1933 for the United States."],
  ["deutsch","Helene Deutsch","Vienna","Boston",1935,"fascism","Emigrated to Boston as fascism rose in Austria."],
  ["koch","Adelheid Koch","Berlin","São Paulo",1936,"fascism","Forced out of Nazi Germany, she became Brazil's first training analyst."],
  ["langer","Marie Langer","Vienna","Montevideo",1938,"fascism","After the International Brigades in Spain, four years in Uruguay."],
  ["freud","Sigmund Freud","Vienna","London",1938,"fascism","Left Vienna after the Anschluss; died in London in 1939."],
  ["anna","Anna Freud","Vienna","London",1938,"fascism","Left Vienna with her father after the Anschluss."],
- ["reik","Theodor Reik","The Hague","New York",1938,"fascism","Fled Berlin for The Hague in 1934, then New York."],
+ ["reik","Theodor Reik","Berlin","The Hague",1934,"fascism","Left Berlin for The Hague, fearing the Nazis."],
+ ["reik","Theodor Reik","The Hague","New York",1938,"fascism","Moved on to New York, where as a lay analyst he was refused full membership of the society."],
  ["fenichel","Otto Fenichel","Berlin","Los Angeles",1938,"fascism","Left Berlin in 1933 for Oslo and Prague; came to Los Angeles in 1938."],
  ["garma","Ángel Garma","Madrid","Buenos Aires",1938,"fascism","Left Spain during the Civil War; a founder of the APA."],
  ["tosquelles","François Tosquelles","Barcelona","Saint-Alban",1939,"fascism","A Republican psychiatrist interned after Franco's victory, transferred to Saint-Alban in December 1939."],
@@ -395,16 +396,16 @@ const MOVES=[
  ["langer","Marie Langer","Montevideo","Buenos Aires",1942,"exile","Settled in Buenos Aires."],
  ["matteblanco","Ignacio Matte Blanco","London","Santiago",1943,"return","Returned to Chile after training in London and work in the US."],
  ["safouan","Moustapha Safouan","Alexandria","Paris",1945,"training","Moved to Paris and began analysis."],
- ["fromm","Erich Fromm","New York","Mexico City",1950,"invitation","Invited to lead psychoanalytic training at the National University."],
+ ["fromm","Erich Fromm","New York","Mexico City",1949,"emigration","Moved to Mexico for his wife's health, and led psychoanalytic training there from 1950."],
  ["fanon","Frantz Fanon","Saint-Alban","Algeria",1953,"work","Took up a post at Blida-Joinville after his residency with Tosquelles."],
  ["wbaranger","Willy Baranger","Buenos Aires","Montevideo",1954,"invitation","Invited to lead training in Montevideo."],
  ["fanon","Frantz Fanon","Algeria","Tunisia",1957,"decolonization","Expelled from Algeria in January 1957; moved to Tunis."],
  ["safouan","Moustapha Safouan","Alexandria","Paris",1959,"exile","Left Nasser's Egypt for exile in France."],
  ["matteblanco","Ignacio Matte Blanco","Santiago","Rome",1966,"emigration","Settled in Rome."],
- ["bion","Wilfred Bion","London","Los Angeles",1968,"invitation","Moved to Los Angeles, where he worked until 1979."],
+ ["bion","Wilfred Bion","London","Los Angeles",1968,"emigration","Left London for California in January 1968."],
  ["langer","Marie Langer","Buenos Aires","Mexico City",1974,"dictatorship","Fled to Mexico after threats from the Argentine Anticommunist Alliance."]
 ];
-const EVENTS=[[1900,"Freud publishes The Interpretation of Dreams"],[1910,"The International Psychoanalytical Association is founded"],[1920,"The Berlin Poliklinik opens: the first free clinic and training institute"],[1926,"Melanie Klein moves to London"],[1933,"The Nazis take power; analysts begin to leave Berlin"],[1936,"Civil war in Spain"],[1938,"The Anschluss: Freud and much of the Vienna Society flee"],[1942,"The Argentine Psychoanalytic Association is founded in Buenos Aires"],[1953,"The first Paris split: Lacan and Lagache leave the SPP"],[1954,"War of independence begins in Algeria; Fanon is at Blida"],[1961,"Basaglia opens the wards at Gorizia"],[1968,"Bion moves to Los Angeles"],[1971,"Plataforma and Documento break with the Argentine association"],[1974,"Langer flees to Mexico; the Escuela Freudiana is founded in Buenos Aires"],[1976,"A military coup in Argentina sends analysts into exile"],[1978,"Italy's Law 180 begins closing the asylums"],[1980,"Lacan dissolves the École Freudienne de Paris"],[2009,"Beirut: the first IPA society in the Arab world"]];
+const EVENTS=[[1900,"Freud publishes The Interpretation of Dreams"],[1910,"The International Psychoanalytical Association is founded"],[1920,"The Berlin Poliklinik opens: the first free clinic and training institute"],[1927,"Melanie Klein settles in London"],[1933,"The Nazis take power; analysts begin to leave Berlin"],[1936,"Civil war in Spain"],[1938,"The Anschluss: Freud and much of the Vienna Society flee"],[1942,"The Argentine Psychoanalytic Association is founded in Buenos Aires"],[1953,"The first Paris split: Lacan and Lagache leave the SPP"],[1954,"War of independence begins in Algeria; Fanon is at Blida"],[1961,"Basaglia opens the wards at Gorizia"],[1968,"Bion moves to Los Angeles"],[1971,"Plataforma and Documento break with the Argentine association"],[1974,"Langer flees to Mexico; the Escuela Freudiana is founded in Buenos Aires"],[1976,"A military coup in Argentina sends analysts into exile"],[1978,"Italy's Law 180 begins closing the asylums"],[1980,"Lacan dissolves the École Freudienne de Paris"],[2009,"Beirut: the first IPA society in the Arab world"]];
 const gm=root.insert("g",()=>gc.node()).attr("class","moves");
 svgW.select("defs").append("marker").attr("id","mvarr").attr("viewBox","0 0 10 10").attr("refX",8).attr("refY",5).attr("markerWidth",7).attr("markerHeight",7).attr("orient","auto-start-reverse").attr("markerUnits","userSpaceOnUse")
   .append("path").attr("d","M0,0 L10,5 L0,10 Z").attr("fill","#55E000");
