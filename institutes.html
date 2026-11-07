@@ -217,10 +217,10 @@ const I=[
 ];
 const REGIONS=[
  ["Africa & the Arab World", ["Beirut", "Berrechid", "Blida (near Algiers)", "Cairo", "Dakar", "Johannesburg", "Palestine", "Tunis"]],
+ ["Asia", ["Kolkata", "Sendai", "Tokyo"]],
  ["Europe", ["Berlin", "Budapest", "Cour-Cheverny", "Frankfurt", "Gorizia", "Istanbul", "London", "Paris", "Saint-Alban", "Trieste", "Vienna", "Zagreb", "Zurich"]],
  ["Latin America", ["Bogotá", "Buenos Aires", "Caracas", "León and Managua", "Lima", "Mexico City", "Montevideo", "Rio de Janeiro", "Santiago", "São Paulo"]],
- ["North America", ["Boston", "Chicago", "Los Angeles", "New York", "Philadelphia", "San Francisco", "Stockbridge", "Topeka", "Washington–Baltimore"]],
- ["South and East Asia", ["Kolkata", "Sendai", "Tokyo"]]];
+ ["North America", ["Boston", "Chicago", "Los Angeles", "New York", "Philadelphia", "San Francisco", "Stockbridge", "Topeka", "Washington–Baltimore"]]];
 const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
 const svg=document.getElementById("map"), card=document.getElementById("card");
@@ -258,7 +258,7 @@ function draw(){
       ${unk?`<defs><linearGradient id="u_${id}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0"><stop offset=".55" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}" stop-opacity="0"/></linearGradient></defs>`:""}<path class="ln${unk?" unk":""}" d="${seg}"${unk?` style="stroke:url(#u_${id})"`:""}/>${(!e||re)?`<path class="ln arw" d="M${X(Y1)-8},${y0-5.5} L${X(Y1)},${y0} L${X(Y1)-8},${y0+5.5}"/>`:""}${br?(()=>{ const FADE=110, g="g_"+id, xa=kids.length>1?x0-BR:Math.max(x0-BR,X(byId[kids[0]][3])+2), xb=Math.min(x0+FADE,x1);
         const mg=kids.length>1;
         return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${mg?"#0038FF":"#FF5A1F"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/></linearGradient></defs><path class="brn" stroke="url(#${g})"${cl?' style="stroke-width:1.5"':""} d="${br} M${x0},${y0} L${xb},${y0}"/>`; })():""}${bar?`<line class="bar" x1="${x1}" x2="${x1}" y1="${y0-6}" y2="${y0+6}" stroke="var(--ink)" stroke-width="2.4"/>`:""}
-      ${dot?(cl?`<rect class="dot" x="${x0-3.6}" y="${y0-3.6}" width="7.2" height="7.2"/>`:`<circle class="dot" cx="${x0}" cy="${y0}" r="4.2"/>`):""}<text class="lab" x="${x0>W-200?x0-8:x0+8}" y="${y0-7}"${x0>W-200?' text-anchor="end"':""}>${name}</text></g>`; });
+      ${dot?(cl?`<rect class="dot" x="${x0-3.6}" y="${y0-3.6}" width="7.2" height="7.2"/>`:`<circle class="dot" cx="${x0}" cy="${y0}" r="4.2"/>`):""}<text class="lab" x="${x0+14+name.length*6.4>W-RIGHT?x0-8:x0+8}" y="${y0-7}"${x0+14+name.length*6.4>W-RIGHT?' text-anchor="end"':""}>${name}</text></g>`; });
   svg.setAttribute("width",W); svg.setAttribute("height",H); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.innerHTML=s;
   // keep names clear of branch curves: slide a label right past any split that runs through it
   const curves=[...svg.querySelectorAll(".brn")].map(pth=>{ const b=pth.getBBox(); b.own=pth.closest(".inst").dataset.id; return b; });
