@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script src="gate.js"></script>
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#FFFFFF">
+<title>Institutions Map (mockup) · Transference Maps</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Space+Mono:ital@0;1&display=swap">
+<style>
+:root{--paper:#FFFFFF;--ink:#0E0E0E;--muted:#55554F;--faint:#B9BBB3;--link:#0038FF;--train:#FF5A1F;
+  --wide:"Archivo","Helvetica Neue",Arial,sans-serif;--mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;color-scheme:light}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--wide);font-size:16px;line-height:1.55;margin:0;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:1320px;margin:0 auto;padding-block:40px 80px}
+:focus-visible{outline:2px solid var(--link);outline-offset:3px}
+::selection{background:var(--link);color:var(--paper)}
+h1.ttl{margin:0 0 clamp(1.2rem,3vw,2.2rem);font-weight:800;font-stretch:88%;letter-spacing:-.005em;line-height:1;font-size:clamp(2rem,5.2vw,4.4rem);text-transform:uppercase;padding-bottom:clamp(.8rem,2vw,1.4rem);border-bottom:1.5px solid var(--ink)}
+.big{font-weight:500;font-size:clamp(1.05rem,1.45vw,1.25rem);line-height:1.35;letter-spacing:-.005em}
+a{color:inherit}
+g.inst.clin .ln{stroke-width:1.5;stroke:var(--clinic)}
+g.inst.clin .lab{fill:var(--ink)}
+g.inst.clin .dot{stroke:var(--clinic)}
+g.inst.clin .bar{stroke:var(--clinic)}
+g.inst.clin:hover .ln,g.inst.clin.on .ln,g.inst.clin:hover .bar,g.inst.clin.on .bar,g.inst.clin:focus-visible .ln{stroke:var(--link)}
+g.inst.clin:hover .lab,g.inst.clin.on .lab{fill:var(--link)}g.inst.clin:hover .dot,g.inst.clin.on .dot{stroke:var(--link)}
+
+h1 .tagline{display:block!important;margin-top:.55em;font-family:inherit;font-style:italic;font-weight:300;font-stretch:100%;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.3;letter-spacing:0;text-transform:none;color:var(--ink)}
+h1 .tagline .rot{display:inline!important;transition:opacity .35s}
+h1 .tagline .rot.out{opacity:0}
+
+.viewtog{display:flex;gap:8px;margin:0 0 14px}
+.viewtog a{all:unset;cursor:pointer;font:600 13px var(--wide);letter-spacing:.04em;text-transform:uppercase;border:1.6px solid var(--ink);border-radius:999px;padding:5px 14px}
+.viewtog a.on{background:var(--ink);color:var(--paper)}
+body.mapview .key,body.mapview .scroll{display:none!important}
+#world{margin-top:8px}
+.wwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+@media (max-width:900px){.wwrap{grid-template-columns:minmax(0,1fr)}}
+.wbox{border:2px solid var(--ink);border-radius:22px;overflow:hidden;position:relative;background:var(--paper)}
+#wsvg{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
+#wsvg .land{fill:#EDEDE7}
+#wsvg .grat{fill:none;stroke:#F2F2EE;stroke-width:.6}
+#wsvg .city{cursor:pointer}
+#wsvg .city .i{fill:var(--ink)}
+#wsvg .city .c{fill:none;stroke:var(--clinic);stroke-width:2.4}
+#wsvg .city text{font:700 10px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
+#wsvg .city:hover .i,#wsvg .city.on .i{fill:var(--link)}
+#wsvg .city:hover text,#wsvg .city.on text{fill:var(--link)}
+.wctl{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1.6px solid var(--ink)}
+.wctl button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font:600 14px var(--wide)}
+.wctl button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.wctl input{flex:1;accent-color:var(--clinic)}
+.wyear{font:800 28px var(--wide);font-stretch:88%;min-width:3.2em;text-align:right}
+.wzoom{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.wzoom button{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);display:grid;place-items:center;font:500 18px var(--wide)}
+.wzoom button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.wpanel{border:2px solid var(--ink);border-radius:22px;padding:20px}
+.wpanel h2{font-weight:500;font-stretch:112%;text-transform:uppercase;font-size:1.3rem;margin:0 0 4px}
+.wpanel .sub{font:12px var(--mono);margin:0 0 14px;color:#555}
+.wpanel ul{list-style:none;margin:0;padding:0;border-top:1.6px solid var(--ink)}
+.wpanel li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #DDD;font-size:14px}
+.wpanel li span:last-child{font:12px var(--mono);white-space:nowrap}
+.wpanel li.cl span:first-child{font-style:italic}
+.wpanel li.cl span:first-child::before{content:"";display:inline-block;width:7px;height:7px;border:1.6px solid var(--clinic);margin-right:7px;vertical-align:1px}
+.wpanel li.gone{opacity:.45}
+.wkey{display:flex;gap:18px;flex-wrap:wrap;font:12px var(--mono);margin:0 0 10px}
+.wkey i{display:inline-block;vertical-align:middle;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<style>
+.site{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 28px;margin:0 0 clamp(28px,5vw,56px);font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-stretch:100%;font-weight:600;font-size:clamp(1rem,1.45vw,1.25rem);line-height:1.2;letter-spacing:-.005em;color:#0E0E0E}
+.site a{color:inherit;text-decoration:none}
+.site .brand{display:flex;gap:6px 18px;flex-wrap:wrap;align-items:baseline}
+.site .brand b{font-weight:800;text-transform:uppercase;letter-spacing:.01em}
+.site .brand b i{font-style:normal;font-weight:400}
+.site .brand span{font-weight:500}
+.site .menu{display:flex;gap:4px 22px;flex-wrap:wrap}
+.site .menu a{border-bottom:2px solid transparent;padding-bottom:1px}
+.site .menu a:hover{color:#EF82C8}
+.site .menu a[aria-current="page"]{border-bottom-color:#0E0E0E}
+@media (max-width:640px){.site{flex-direction:column;gap:10px}}
+</style>
+<div class="site" role="navigation" aria-label="Site">
+  <a class="brand" href="analysts.html"><b>Transference <i>Maps</i></b></a>
+  <div class="menu">
+    <a href="analysts.html">Analysts</a>
+    <a href="schools.html">Schools</a>
+    <a href="institutes.html" aria-current="page">Institutions</a>
+    <a href="names.html">Index</a>
+    <a href="about.html">About</a>
+  </div>
+</div>
+<style>
+:root{--pink:#EF82C8;--train:#FF5A1F;--faint:#D9D9D3;--clinic:#EF82C8}
+
+.draft{font:400 12px var(--mono);color:var(--train);margin:0 0 18px}
+.key{display:flex;gap:18px;flex-wrap:wrap;white-space:nowrap;font:400 12px var(--mono);color:var(--muted);margin:0 0 10px}
+.tog{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+.tog button{all:unset;cursor:pointer;font:600 13px var(--wide);letter-spacing:.04em;text-transform:uppercase;border:1.6px solid var(--ink);border-radius:999px;padding:5px 14px}
+.tog button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.tog button:hover{border-color:var(--link);color:var(--link)}.tog button[aria-pressed="true"]:hover{color:var(--paper);background:var(--link)}
+.key .ck{display:none}.key.wc .ck{display:inline-flex}
+.key>span{display:inline-flex;align-items:center}
+.key i{display:inline-block;width:24px;vertical-align:middle;margin-right:6px;border-top:2.4px solid var(--ink)}
+.key i.sp{border-color:var(--pink)}.key i.em{border-top:2px dotted var(--muted)}
+.key b{display:inline-block;width:2.4px;height:11px;background:var(--ink);vertical-align:middle;margin:0 8px 0 4px}
+.scroll{overflow-x:auto;border:1.6px solid var(--ink);border-radius:22px;padding:8px 0}
+svg{display:block;font-family:var(--wide)}
+.region{font:700 15px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:#EF82C8}
+.band text.city{font:700 12px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink)}
+.yr{font:400 11px var(--mono);fill:var(--muted)}
+.inst{cursor:pointer}
+.band{cursor:default}
+.band.hl text.city{fill:var(--link)}
+svg.cityhl .inst{transition:opacity .15s}
+svg.cityhl .inst:not(.hl){opacity:.2}
+svg.cityhl .inst.hl .ln,svg.cityhl .inst.hl .bar,svg.cityhl .inst.hl .brn{stroke:var(--link)}
+svg.cityhl .inst.hl .lab{fill:var(--link)}
+svg.cityhl .inst.hl .dot{stroke:var(--link)}
+
+.clin .lab{font-weight:500;font-style:italic}
+.inst .ln.arw{stroke-linejoin:round}
+.inst .ln{stroke:var(--ink);stroke-width:2.6;fill:none;stroke-linecap:round}
+.inst .lab{font-size:11.5px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.inst .dot{fill:var(--paper);stroke:var(--ink);stroke-width:2}
+.inst:hover .ln,.inst.on .ln{stroke:var(--link)}.inst:hover .lab,.inst.on .lab{fill:var(--link)}.inst:hover .dot,.inst.on .dot{stroke:var(--link)}
+.brn{stroke-width:2.6;fill:none;stroke-linecap:round}
+.inst:hover .brn,.inst.on .brn{stroke:var(--link)}
+.stage{position:relative}
+.inst:focus{outline:none}
+.inst:focus-visible .ln,.inst:focus-visible .brn{stroke:var(--link)}
+.inst:focus-visible .lab{fill:var(--link)}
+.detail{position:absolute;z-index:3;width:min(560px,calc(100% - 32px));border:2.4px solid var(--ink);border-radius:22px;background:var(--paper);padding:26px 30px 28px;font-size:16px;line-height:1.6;box-shadow:0 10px 30px rgba(14,14,14,.10)}
+.detail[hidden]{display:none}
+.detail.sheet{position:fixed;left:16px;right:16px;top:50%;width:auto;max-height:82vh;overflow:auto;transform:translateY(-50%);padding:22px 20px 24px;z-index:50;box-shadow:0 12px 40px rgba(14,14,14,.22)}
+@media (prefers-reduced-motion: no-preference){.detail.sheet:not([hidden]){animation:none}}
+@media (prefers-reduced-motion: no-preference){.detail:not([hidden]){animation:open .22s ease-out}@keyframes open{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}}
+.detail .x{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);color:var(--ink);font:500 19px/1 var(--wide);cursor:pointer}
+.detail .x:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.detail h2{font-weight:500;font-stretch:112%;text-transform:uppercase;font-size:1.4rem;line-height:1.08;letter-spacing:-.01em;margin:0 52px 12px 0}
+.detail .meta{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.detail .tag{font-size:12px;font-stretch:112%;text-transform:uppercase;letter-spacing:.05em;border:1.6px solid var(--ink);border-radius:999px;padding:3px 11px;white-space:nowrap}
+.detail .tag.fill{background:var(--link);border-color:var(--link);color:var(--paper)}
+.detail p{margin:0 0 10px}
+.detail .fd a{color:var(--ink);text-underline-offset:.18em;text-decoration-thickness:1.5px}
+.detail .fd a:hover{color:var(--link)}
+.detail h3{font-size:12.5px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.06em;margin:18px 0 8px;padding-top:14px;border-top:1.6px solid var(--ink)}
+.detail .list{display:flex;flex-direction:column;border:1.6px solid var(--ink);border-radius:14px;overflow:hidden}
+.detail .list button{all:unset;cursor:pointer;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;border-bottom:1.2px solid var(--ink);font-weight:500}
+.detail .list button:last-child{border-bottom:0}
+.detail .list button:hover{background:var(--link);color:var(--paper)}
+
+</style>
+<h1 class="ttl">Institutional Splits<em class="tagline">A genealogy of psychoanalytic institutes, clinics &amp; hospitals</em></h1>
+<div class="viewtog"><a href="institutes.html">Timeline</a><a class="on" href="#">Map</a></div>
+<div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
+<div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
+<div id="world"><div class="wkey"><span><i style="width:10px;height:10px;border-radius:50%;background:#0E0E0E"></i>Institutes (size = number)</span><span><i style="width:10px;height:10px;border-radius:50%;border:2.4px solid #EF82C8"></i>Clinics</span><span>Drag to pan · scroll or +/− to zoom</span></div>
+<div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
+<div class="wctl"><button type="button" id="wplay" aria-label="Play">▶</button><input type="range" id="wyr" min="1900" max="2025" value="2025"><span class="wyear" id="wyl">2025</span></div></div>
+<aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a dot to list its institutions. Drag the slider or press play to watch the field spread.</p></aside></div></div>
+<div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
+</div>
+<script src="search-data.js"></script>
+<script>
+// [id, city, lane, start, end|null, name, parents[], founders, note]
+const I=[
+ ["wpv","Vienna",0,1902,1938,"Vienna Psychoanalytic Society",[],"Sigmund Freud","Began as Freud's Wednesday Psychological Society in 1902 and took this name in 1908. Dissolved after the Anschluss in 1938; refounded in 1946 under August Aichhorn.",1946],
+ ["sexpol","Vienna",2,1929,1934,"Sex-Pol clinics",[],"Wilhelm Reich","Free sexual counseling and mental-health clinics for working people, started by Reich in Vienna in 1929 and extended to Berlin; ended in 1934."],
+ ["amb","Vienna",1,1922,1938,"Vienna Ambulatorium",["wpv"],"Eduard Hitschmann","The society's free outpatient clinic, opened on May 22, 1922, and closed after the Anschluss in 1938."],
+ ["hun","Budapest",0,1913,1949,"Hungarian Psychoanalytical Society",[],"Sándor Ferenczi","Founded quickly by Ferenczi in 1913 to give Freud another voting bloc in the coming showdown with Jung. Home of the Budapest school; forced to dissolve under the Communist government in 1949."],
+ ["bfc","Budapest",1,1929,1949,"Budapest Free Clinic",["hun"],"Sándor Ferenczi","Ferenczi opened the free outpatient clinic he had long planned in 1929, with Michael Bálint among its analysts. It closed in 1949, when the Communist government forced the Hungarian society to dissolve."],
+ ["zfc","Zagreb",0,1928,1941,"Zagreb Free Clinic",[],"Stjepan Betlheim and others","A free psychoanalytic clinic founded in 1928 by Betlheim, who had trained in Vienna. It ended in 1941, when the fascist Independent State of Croatia took power: Betlheim, who was Jewish, was barred from public work and sent with other Jewish doctors to Bosnia, and later escaped to join the Partisans. After the war he founded Croatia's first outpatient psychotherapy ward, in 1953."],
+ ["ffmc","Frankfurt",1,1930,1933,"Frankfurt Psychoanalytic Clinic",["ffm"],"Karl Landauer, Heinrich Meng; S. H. Foulkes, director","The outpatient clinic of the Frankfurt Institute and the last of the interwar free clinics, with close ties to the university and Horkheimer's Institute for Social Research. It lasted only a few years before the Nazis closed it."],
+ ["bpv","Berlin",0,1908,1938,"Berlin Psychoanalytic Society",[],"Karl Abraham","Founded the year Abraham moved to Berlin from Zurich. The first psychoanalytic society outside Vienna. Taken over under the Nazi regime and dissolved in 1938."],
+ ["poli","Berlin",1,1920,1933,"Berlin Poliklinik and Institute",["bpv"],"Max Eitingon, Ernst Simmel, Karl Abraham","The first psychoanalytic free clinic and the first training institute. It pioneered time-limited analysis and standardized training (personal analysis, supervision, seminars), the model institutes still follow. Aryanized in 1933, then folded into the Nazi-run Göring Institute in 1936."],
+ ["isw","Berlin",3,1919,1933,"Institute for Sexual Science",[],"Magnus Hirschfeld","The world's first clinic devoted to sexuality, offering free sex advice, marriage counselling and treatment for venereal disease. Hirschfeld had helped found the Berlin Psychoanalytic Association in 1908. Nazi students raided and destroyed the institute on May 6, 1933."],
+ ["tegel","Berlin",3,1927,1931,"Schloss Tegel Sanatorium",[],"Ernst Simmel","The first psychoanalytic inpatient clinic, opened April 10, 1927, in a manor outside Berlin. Freud stayed there while being treated in the city. It closed in 1931 for lack of money."],
+ ["dpv","Berlin",2,1950,null,"German Psychoanalytical Association (DPV)",[],"Carl Müller-Braunschweig","Founded after the war and admitted to the IPA."],
+ ["ffm","Frankfurt",0,1929,1933,"Frankfurt Psychoanalytic Institute",[],"Karl Landauer, Frieda Fromm-Reichmann, Heinrich Meng","Founded February 10, 1929, as the institute of the Southwest German Psychoanalytic Working Group, and housed beside the Institute for Social Research, where analysts and the Frankfurt School sociologists met. Erich Fromm and S. H. Foulkes taught here. Closed when the Nazis came to power."],
+ ["sfi","Frankfurt",2,1960,null,"Sigmund-Freud-Institut",[],"Alexander Mitscherlich","Opened April 27, 1960, as a state-supported institute for psychoanalysis and psychosomatic medicine, and renamed for Freud in 1964. Under Mitscherlich (director until 1976), with help from émigré analysts abroad, it became West Germany's most important psychoanalytic training institute."],
+ ["sgp","Zurich",0,1919,null,"Swiss Society for Psychoanalysis",[],"Oskar Pfister, Emil Oberholzer","A non-Jungian society, founded in 1919 after Jung's break with Freud had taken the earlier Zurich group with him."],
+ ["jung","Zurich",1,1948,null,"C. G. Jung Institute",[],"C. G. Jung","Training institute for analytical psychology."],
+ ["tav","London",3,1920,null,"Tavistock Clinic",[],"Hugh Crichton-Miller","Opened in 1920 to treat shell shock and other neuroses without fees; later home to Bion's group work, Balint groups and Bowlby."],
+ ["kh","London",4,1965,1970,"Kingsley Hall",[],"R. D. Laing and the Philadelphia Association","A community in East London where people in psychosis lived alongside therapists, outside hospital routine. It closed in 1970."],
+ ["wtc","London",5,1976,null,"Women's Therapy Centre",[],"Susie Orbach, Luise Eichenbaum","A feminist psychoanalytic clinic for women, founded in 1976."],
+ ["bps","London",0,1913,null,"British Psychoanalytical Society",[],"Ernest Jones","Founded by Jones with nine members after the 1913 Munich congress, following Ferenczi's lead, as the London Psycho-Analytical Society; refounded under this name in 1919; its Institute of Psychoanalysis opened in 1924. After the Controversial Discussions it settled in 1946 into three groups: Kleinian, Independent and Anna Freud's."],
+ ["lcp","London",1,1926,null,"London Clinic of Psychoanalysis",["bps"],"Ernest Jones","The British Society's free clinic, opened in 1926 on the Berlin model."],
+ ["afc","London",2,1947,null,"Anna Freud Centre",[],"Anna Freud","Began as the Hampstead Child Therapy Course in 1947, with a clinic from 1952."],
+ ["spp","Paris",0,1926,null,"Société Psychanalytique de Paris",[],"Marie Bonaparte, René Laforgue, Rudolph Loewenstein and others","The first French society."],
+ ["sfp","Paris",1,1953,1965,"Société Française de Psychanalyse",["spp"],"Daniel Lagache, Jacques Lacan, Françoise Dolto, Juliette Favez-Boutonier","Broke from the SPP in 1953 over training and Lacan's short sessions. Dissolved once the IPA required Lacan's removal as a training analyst."],
+ ["apf","Paris",2,1964,null,"Association Psychanalytique de France",["sfp"],"Daniel Lagache, Jean Laplanche, J.-B. Pontalis, Didier Anzieu","The SFP members who stayed with the IPA."],
+ ["efp","Paris",3,1964,1980,"École Freudienne de Paris",["sfp"],"Jacques Lacan","Lacan's school, dissolved by Lacan in 1980."],
+ ["q4","Paris",4,1969,null,"Quatrième Groupe",["efp"],"Piera Aulagnier, François Perrier, Jean-Paul Valabrega","Left the EFP over the pass, Lacan's procedure for becoming an analyst."],
+ ["ecf","Paris",5,1981,null,"École de la Cause freudienne",["efp"],"Jacques-Alain Miller and Lacan's circle","Formed after the EFP's dissolution."],
+ ["ipso","Paris",6,1972,null,"Institut de psychosomatique (IPSO)",[],"Pierre Marty, Michel Fain","Home of the Paris school of psychosomatics, built on Marty, de M'Uzan and David's L'Investigation psychosomatique (1963). Its hospital, opened in 1978, now bears Marty's name."],
+ ["stalban","Saint-Alban",0,1940,null,"Saint-Alban Hospital",[],"François Tosquelles","A rural psychiatric hospital in the Lozère where Tosquelles, a refugee from the Spanish Civil War, began institutional psychotherapy during the Occupation. Frantz Fanon trained here."],
+ ["blida","Blida (near Algiers)",0,1938,null,"Blida-Joinville Psychiatric Hospital",[],"","A colonial psychiatric hospital in Algeria. Frantz Fanon, who had trained with Tosquelles at Saint-Alban, ran a ward here from 1953, bringing institutional psychotherapy to his Muslim and European patients through film screenings, a café, football clubs and a ward newsletter. He resigned in 1956 to join the independence struggle and was expelled from Algeria in January 1957. The hospital now bears his name."],
+ ["gorizia","Gorizia",0,1961,1968,"Gorizia Psychiatric Hospital",[],"Franco Basaglia","Basaglia became director in 1961 and opened the locked wards, turning the asylum into a therapeutic community. He left in 1968 after the administration resisted his reforms; his team's account appeared as L'istituzione negata (The Negated Institution, 1968)."],
+ ["trieste","Trieste",0,1971,null,"San Giovanni Psychiatric Hospital",[],"Franco Basaglia","Basaglia took over the hospital in 1971 and closed it ward by ward, replacing it with community mental health centers. His movement led to Law 180 (1978), which began closing Italy's asylums."],
+ ["berrechid","Berrechid",0,1919,null,"Berrechid Psychiatric Hospital",[],"","Founded as the psychiatric department of a French military field hospital in colonial Morocco; a civilian institution from 1927. From 1979 to 1985, under its first Moroccan director, Abdeljebbar Ezzine, the psychiatrist Abdellah Ziou Ziou reorganized its chronic wards in the spirit of institutional psychotherapy: weekly meetings of patients and caregivers, gardening and football, music and trance at Aâchoura, and a 1981 week of painters working in the hospital. He was forced out in 1985."],
+ ["laborde","Cour-Cheverny",0,1953,null,"La Borde Clinic",[],"Jean Oury","Founded by Oury, who had trained with Tosquelles at Saint-Alban. Félix Guattari worked here from 1955; patients and staff share in running the clinic."],
+ ["pps","Palestine",0,1933,null,"Palestine Psychoanalytic Society",[],"Max Eitingon","Founded in Jerusalem by Eitingon after he left Berlin in 1933; it later became the Israel Psychoanalytic Society, with its own institute."],
+ ["nyps","New York",0,1911,null,"New York Psychoanalytic Society and Institute (NYPSI)",[],"A. A. Brill","The first psychoanalytic society in the United States. Its institute was organized in 1931 by Sándor Radó on the Berlin model."],
+ ["aip","New York",2,1941,null,"American Institute for Psychoanalysis",["nyps"],"Karen Horney, Clara Thompson and others","On April 29, 1941, the New York society demoted Horney to lecturer. She, Clara Thompson and three younger analysts walked out and founded the American Association for the Advancement of Psychoanalysis, with this institute as its training arm."],
+ ["wawi","New York",3,1943,null,"William Alanson White Institute",["aip"],"Clara Thompson, Erich Fromm, Harry Stack Sullivan, Frieda Fromm-Reichmann, David and Janet Rioch","In 1943 Fromm and Thompson left Horney's group, partly over Fromm's standing as a non-physician training analyst, and with Sullivan opened a New York branch of the Washington-based William Alanson White Psychiatric Foundation. Thompson renamed it the William Alanson White Institute in 1946. The home of interpersonal psychoanalysis."],
+ ["col","New York",1,1945,null,"Columbia Psychoanalytic Center",["nyps"],"Sándor Radó, Abram Kardiner, David Levy, George Daniels","The first university-based psychoanalytic training center, founded by analysts who left the New York Institute."],
+ ["nyu","New York",7,1961,null,"NYU Postdoctoral Program",[],"Bernard Kalinkowitz","Trained psychologists when medical institutes would not; later the birthplace of relational psychoanalysis."],
+ ["npap","New York",4,1948,null,"National Psychological Association for Psychoanalysis (NPAP)",[],"Theodor Reik and a group of his students","Founded to train non-physicians, in the spirit of Freud's The Question of Lay Analysis; runs the Theodor Reik Clinical Center and publishes The Psychoanalytic Review."],
+ ["nyfs","New York",5,1959,null,"Contemporary Freudian Society",["npap"],"Gisela Barinbaum","Began in 1959 as the New York Society of Freudian Psychologists, split from NPAP; later the New York Freudian Society, now the Contemporary Freudian Society."],
+ ["iptar","New York",6,1958,null,"Institute for Psychoanalytic Training and Research (IPTAR)",["npap"],"NPAP-trained analysts","Founded in 1958 as a membership society for analysts interested in Freud's theory and technique."],
+ ["cmps","New York",8,1971,null,"Center for Modern Psychoanalytic Studies (CMPS)",[],"Phyllis Meadow, Selwyn Brody, Louis and Joan Ormont, Harold Stern and others","Home of modern psychoanalysis, built on Hyman Spotnitz's work with severe disturbance."],
+ ["bos","Boston",0,1914,null,"Boston Psychoanalytic Society",[],"James Jackson Putnam, Isador Coriat","Founded in May 1914, the second society in the United States. Émigrés including Hanns Sachs, Helene Deutsch and Eduard Hitschmann trained analysts here."],
+ ["phps","Philadelphia",0,1937,2001,"Philadelphia Psychoanalytic Society and Institute",[],"O. Spurgeon English, Sidney G. Biddle, LeRoy M. A. Maeder, George W. Smeltz, Robert Waelder","Founded October 27, 1937, and accepted by the American Psychoanalytic Association in 1939. Waelder, who arrived from Vienna by way of Boston in 1943, became a training analyst at its institute."],
+ ["pap","Philadelphia",1,1949,2001,"Philadelphia Association for Psychoanalysis",["phps"],"","Broke away from the Philadelphia Psychoanalytic Institute and Society in 1949, over differences between liberal and conservative camps as well as personal conflicts. Robert Waelder later served as its president, 1953–55."],
+ ["pcop","Philadelphia",2,2001,null,"Psychoanalytic Center of Philadelphia",["phps","pap"],"","The two Philadelphia groups voted to reunite in 2001, ending the split of 1949."],
+ ["wbps","Washington–Baltimore",0,1930,null,"Washington–Baltimore Psychoanalytic Society",[],"Clara Thompson (first president), Harry Stack Sullivan","Founded in 1930 and accredited by the American Psychoanalytic Association in 1932. Frieda Fromm-Reichmann, of nearby Chestnut Lodge, was its president from 1939 to 1941."],
+ ["wsp","Washington–Baltimore",1,1936,null,"Washington School of Psychiatry",[],"Harry Stack Sullivan","Sullivan's school for interpersonal psychiatry; its New York branch became the William Alanson White Institute."],
+ ["riggs","Stockbridge",0,1919,null,"Austen Riggs Center",[],"Austen Fox Riggs","An open psychiatric hospital in the Berkshires; Erik Erikson, David Rapaport and Robert Knight worked here."],
+ ["chestnut","Washington–Baltimore",2,1910,2001,"Chestnut Lodge",[],"Ernest Bullard; later Dexter Bullard","A private hospital in Rockville, Maryland, that became the leading center for psychoanalytic treatment of schizophrenia, with Frieda Fromm-Reichmann and Harry Stack Sullivan. It closed in 2001."],
+ ["menn","Topeka",0,1925,null,"Menninger Clinic",[],"Karl, William and Charles Menninger","A family psychiatric hospital that became a center of American psychoanalytic psychiatry; moved to Houston in 2003."],
+ ["topeka","Topeka",1,1942,null,"Topeka Institute for Psychoanalysis",["menn"],"Karl Menninger","The training institute founded inside the Menninger Clinic."],
+ ["chi","Chicago",0,1932,null,"Chicago Institute for Psychoanalysis",[],"Franz Alexander","Founded by Alexander, who came from Berlin in 1930 and stayed after Hitler took power; he left for Los Angeles in 1953. Heinz Kohut trained and taught here and developed self psychology here in the 1970s. Chicago largely avoided the splits of other cities."],
+ ["lafargue","New York",9,1946,1958,"Lafargue Clinic",[],"Fredric Wertham, with Richard Wright and Ralph Ellison","A free psychiatric clinic in the basement of a Harlem church, open to anyone at a time when Black New Yorkers had almost no access to psychotherapy. It closed in 1958."],
+ ["la","Los Angeles",0,1935,2005,"Los Angeles Psychoanalytic Society and Institute",[],"Ernst Simmel, Otto Fenichel, Frances Deri","Began in 1935 as the Psychoanalytic Study Group of Los Angeles, with Simmel, who had arrived from Berlin in 1934, as president; Fenichel came to teach in 1938. Lay analysts trained alongside physicians, a point of conflict with the American Psychoanalytic Association."],
+ ["scp","Los Angeles",1,1950,2005,"Southern California Psychoanalytic Institute",["la"],"","Split from the Los Angeles society in 1950 over its many lay analysts. The breakaway group called itself the Society for Psychoanalytic Medicine of Southern California to stress its medical identity, and later dropped \"Medicine\" from its name."],
+ ["ncp","Los Angeles",2,2005,null,"New Center for Psychoanalysis",["la","scp"],"","The two Los Angeles institutes merged in 2005."],
+ ["laisps","Los Angeles",3,1970,null,"Los Angeles Institute and Society for Psychoanalytic Studies (LAISPS)",[],"Hedda Bolgar, Jean Sanville, Joel Shor, Charles Ansell and others","Grew out of the Los Angeles Society for Psychoanalytic Psychology (1968), formed by psychologists when the medical institutes would not train them. Its institute opened in 1970, was named LAIPS in 1978 and LAISPS in 1985; training open to psychologists, social workers and MFTs."],
+ ["pcc","Los Angeles",4,1984,null,"Psychoanalytic Center of California (PCC)",[],"James Gooch (first president); Richard Alexander (founding dean)","A Kleinian and Bionian institute, first recognized in 1984 and independent from 1987. Members of both older Los Angeles institutes joined it."],
+ ["icp","Los Angeles",5,1990,null,"Institute of Contemporary Psychoanalysis (ICP)",[],"","Founded in 1990."],
+ ["sf","San Francisco",0,1942,null,"San Francisco Psychoanalytic Society and Institute",[],"William Barrett, Bernhard Berliner, Otto Fenichel, George Gero, Bernard Kamm, Jascha Kasanin, Donald McFarlane, Douglass Orr, Ernst Simmel, Emanuel Windholz","Founded March 8, 1942, by ten physicians from San Francisco and Los Angeles, under the Topeka society's supervision. Lay analysts could be members but could not vote or hold office. Grew out of an informal study group of the late 1930s."],
+ ["pinc","San Francisco",1,1989,null,"Psychoanalytic Institute of Northern California (PINC)",[],"","Created in 1989 by people involved in the lawsuit that opened psychoanalytic training to non-physicians, with help from senior members of the San Francisco Institute. A center for comparative psychoanalysis; an IPA component society since 2009."],
+ ["spmfromm","Mexico City",1,1956,null,"Sociedad Psicoanalítica Mexicana",[],"Erich Fromm and his first Mexican trainees","Grew out of the training Fromm led at the National University from 1950; legally founded at the end of 1956. Its teaching arm became the Instituto Mexicano de Psicoanálisis in 1963. Humanist and outside the IPA."],
+ ["apm","Mexico City",0,1957,null,"Asociación Psicoanalítica Mexicana",[],"","Became Mexico's first IPA society in 1957. Marie Langer worked in Mexico City after leaving Argentina in 1974."],
+ ["apa","Buenos Aires",0,1942,null,"Asociación Psicoanalítica Argentina",[],"Ángel Garma, Celes Cárcamo, Marie Langer, Enrique Pichon-Rivière, Arnaldo Rascovsky, Guillermo Ferrari Hardoy","The first Latin American society; home of the Barangers' field theory."],
+ ["apdeba","Buenos Aires",1,1977,null,"Asociación Psicoanalítica de Buenos Aires",["apa"],"","Split from the APA in 1977."],
+ ["platdoc","Buenos Aires",2,1971,-1,"Plataforma and Documento",["apa"],"Marie Langer, Diego and Gilou García Reynoso and others","Left-wing groups that broke from the APA in 1971 over its politics and training hierarchy."],
+ ["efba","Buenos Aires",3,1974,null,"Escuela Freudiana de Buenos Aires",[],"Oscar Masotta","Founded June 28, 1974, after Masotta's study groups introduced Lacan in Argentina; described as the oldest continuously functioning Lacanian school."],
+ ["apch","Santiago",0,1949,null,"Asociación Psicoanalítica Chilena",[],"Ignacio Matte Blanco","Built around Matte Blanco after his return from London and the US in 1943, and recognized by the IPA in 1949. Increasingly Kleinian after Matte Blanco left for Rome in 1966."],
+ ["spp_pe","Lima",0,1977,null,"Sociedad Peruana de Psicoanálisis",[],"Saúl Peña, Carlos Crisanto, Max Hernández","Grew out of the Centro para el Desarrollo del Psicoanálisis, formed at the end of the 1960s by three analysts returning from training at the British Society. Recognized as an IPA study group in 1977, a provisional society in 1985 and a component society in 1987."],
+ ["nicteam","León and Managua",0,1981,-1,"Internationalist Team of Mental Health Workers, Mexico–Nicaragua",[],"Marie Langer and others","From 1981, a team of twelve psychologists, physicians and a psychopedagogue from Argentina, Mexico and Chile taught at the medical school in León and then at the psychiatric hospital in Managua, helping build the Sandinistas' new mental health system. They taught psychoanalysis, group therapy and family therapy, with a Marxist reading of the family, and trained others as a group."],
+ ["apu","Montevideo",0,1955,null,"Asociación Psicoanalítica del Uruguay",[],"Willy and Madeleine Baranger, with a group of Uruguayan doctors and psychologists","Founded September 27, 1955, after Willy Baranger was invited to lead training in Montevideo; recognized by the IPA as a study group in 1957."],
+ ["sbp","São Paulo",0,1951,null,"Brazilian Psychoanalytic Society of São Paulo",[],"Adelheid Koch, Durval Marcondes","Durval Marcondes founded a first Brazilian society in 1927. Koch, trained in Berlin, arrived in 1936; with her at its head the group gained official status in 1944 and joined the IPA as this society in 1951."],
+ ["scolp","Bogotá",0,1956,null,"Sociedad Colombiana de Psicoanálisis",[],"José Francisco Socarrás","Founded as a psychoanalytic study group in 1956 by Socarrás, who had trained in Paris; became the Colombian Psychoanalytic Society in 1961."],
+ ["sprj","Rio de Janeiro",0,1955,null,"Sociedade Psicanalítica do Rio de Janeiro",[],"Werner Kemper, Kattrin Kemper, Fabio Leite Lobo, Gerson Borsoi, Inaura Carneiro Leão Vetter, Luiz Guimarães Dahlheim, Noemy Rudolfer","Affiliated with the IPA in 1955. Werner Kemper had trained in Berlin."],
+ ["asovep","Caracas",0,1965,null,"Asociación Venezolana de Psicoanálisis",[],"Julio Aray, Antonio Briceño, Nicolás Cupello, Hugo Domínguez, Juan Antonio Olivares, Hans Voss and others","Recognized by the IPA as a working group in 1965; became an association in 1969 and an IPA society in 1971."],
+ ["eap","Cairo",0,2004,null,"Egyptian Association of Psychoanalysis",[],"","Psychoanalysis was practiced by Egyptians from the early 1930s and taught at Ain Shams University from 1950, when Mustafa Zewar founded its psychology department, but no analytic institution followed. Most analysts left under Nasser around 1959. This association was created only in 2004, and still defines itself through psychology rather than psychoanalysis."],
+ ["istanbul","Istanbul",0,1994,null,"Istanbul Psychoanalytical Association",[],"","Founded as a group in 1994 by analysts trained at the Société Psychanalytique de Paris; constituted as an association in 2001 and an IPA component society in 2017."],
+ ["aldep","Beirut",0,2009,null,"Lebanese Association for the Development of Psychoanalysis",[],"","Founded in 2009; the first society in the Arab world affiliated with the IPA."],
+ ["sapg","Johannesburg",0,1935,-1,"South African psychoanalytic study group",[],"Wulf Sachs","Founded in 1935 with the IPA's support by Sachs, who had trained in Berlin; he wrote Black Hamlet (1937) from his analysis of a Manyika healer."],
+ ["cnicolle","Tunis",0,1957,-1,"Charles-Nicolle Day Psychiatric Center",[],"Frantz Fanon","After his expulsion from Algeria and frustrations at La Manouba hospital, Fanon founded and directed this outpatient day center at the Charles-Nicolle General Hospital during his Tunis years (1957–61); its exact opening year is uncertain. It was his last site of psychiatric experimentation; he dictated The Wretched of the Earth to Marie-Jeanne Manuellan, a social worker there."],
+ ["pccpal","Palestine",1,1983,null,"Palestine Counseling Center",[],"Mubarak Awad and a group of Palestinian psychologists","Founded in 1983 in Jerusalem to serve Palestinians in Jerusalem, Gaza and the West Bank; it refuses Israeli state funding and works in the tradition of liberation psychology, offering subsidized individual and group therapy."],
+ ["fann","Dakar",0,1959,null,"Fann Psychiatric Clinic",[],"Henri Collomb","Collomb, a French military doctor, directed Fann from 1959, a year before independence, for nearly twenty years. The 'Fann school' joined psychodynamic theory and ethnopsychiatry, bringing traditional healers and the communal penc meeting into the clinic."],
+ ["ips","Kolkata",0,1922,null,"Indian Psychoanalytical Society",[],"Girindrasekhar Bose","The first society in Asia. Bose had practiced psychoanalysis in Calcutta since 1909, working from a colonial deck chair rather than a couch, and corresponded with Freud from 1921 to 1937. Membership made no distinction between British and Indian members. In the late 1920s the society sent Freud an ivory Vishnu, which he kept on his desk."],
+ ["sendai","Sendai",0,1933,-1,"Sendai Branch of the IPA",[],"Kiyoyasu Marui","Marui visited Freud in 1933 and won approval for a Sendai branch, Japan's first link to the IPA."],
+ ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa","Established in October 1955 by Kosawa, who had trained in Vienna in 1932–33 (analysis with Richard Sterba, supervision with Paul Federn) and opened a private clinic in Tokyo on his return. It remains Japan's only IPA-recognized psychoanalytic organization."]
+];
+const REGIONS=[
+ ["Africa & the Middle East", ["Beirut", "Berrechid", "Blida (near Algiers)", "Cairo", "Dakar", "Johannesburg", "Palestine", "Tunis"]],
+ ["Asia", ["Kolkata", "Sendai", "Tokyo"]],
+ ["Europe", ["Berlin", "Budapest", "Cour-Cheverny", "Frankfurt", "Gorizia", "Istanbul", "London", "Paris", "Saint-Alban", "Trieste", "Vienna", "Zagreb", "Zurich"]],
+ ["Latin America", ["Bogotá", "Buenos Aires", "Caracas", "León and Managua", "Lima", "Mexico City", "Montevideo", "Rio de Janeiro", "Santiago", "São Paulo"]],
+ ["North America", ["Boston", "Chicago", "Los Angeles", "New York", "Philadelphia", "San Francisco", "Stockbridge", "Topeka", "Washington–Baltimore"]]];
+const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
+const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
+const svg=document.getElementById("map"), card=document.getElementById("card");
+const byId=Object.fromEntries(I.map(r=>[r[0],r]));
+const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","isw","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","cnicolle","pccpal","nicteam","riggs","chestnut","menn","lafargue"]);
+let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
+const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
+function draw(){
+  const W=Math.max(980,svg.parentNode.clientWidth), px=(W-LEFT-RIGHT)/(Y1-Y0), X=y=>LEFT+(y-Y0)*px;
+  // band positions
+  // only what the toggle shows; lanes close up when clinics are hidden
+  const V=I.filter(r=>vis(r)&&CITIES.includes(r[1])), LN={}, SHOWN=CITIES.filter(c=>V.some(r=>r[1]===c));
+  SHOWN.forEach(c=>V.filter(r=>r[1]===c).sort((a,b)=>a[2]-b[2]).forEach((r,i)=>LN[r[0]]=i));
+  const par=r=>r[6].filter(p=>vis(byId[p]));
+  let y=TOP; const band={};
+  const heads=[]; let prevG=null;
+  SHOWN.forEach(c=>{ const g=REGION_OF[c]; if(g!==prevG){ heads.push({g,y}); y+=RHEAD; prevG=g; } const lanes=V.filter(r=>r[1]===c).length; band[c]={y, h:lanes*LANE+BANDPAD, first:heads.length&&heads[heads.length-1].y+RHEAD===y}; y+=lanes*LANE+BANDPAD; });
+  const H=y+8, LY=r=>band[r[1]].y+BANDPAD/2+LN[r[0]]*LANE+LANE*.62;
+  let s="";
+  for(let d=Y0; d<=2020; d+=10){ s+=`<line x1="${X(d)}" x2="${X(d)}" y1="${TOP-6}" y2="${H}" stroke="${d%50?"#F0F0EC":"#E2E2DC"}"/><text class="yr" x="${X(d)}" y="14" text-anchor="middle">${d}</text>`; }
+  heads.forEach(h=>{ s+=`<rect x="0" y="${h.y+4}" width="${W}" height="${RHEAD-4}" fill="var(--paper,#fff)"/><line x1="12" x2="${W-RIGHT}" y1="${h.y+RHEAD}" y2="${h.y+RHEAD}" stroke="#EF82C8" stroke-width="2.2" stroke-dasharray="0.1 6" stroke-linecap="round"/><text class="region" x="14" y="${h.y+RHEAD-9}">${h.g}</text>`; });
+  SHOWN.forEach((c,i)=>{ const b=band[c]; if(i&&!b.first) s+=`<line x1="12" x2="${W-RIGHT}" y1="${b.y}" y2="${b.y}" stroke="#E2E2DC"/>`;
+    s+=`<g class="band" data-city="${c}"><rect x="0" y="${b.y}" width="${LEFT-8}" height="${b.h}" fill="transparent"/><text class="city" x="14" y="${b.y+BANDPAD/2+LANE*.62+4}">${c}</text></g>`; });
+  // a split branches off its parent line; a merger is two lines running together into one
+  const BR=30, merged=new Set();
+  V.forEach(r=>{ if(par(r).length>1) par(r).forEach(p=>{ if(byId[p][4]===r[3]) merged.add(p); }); });
+  V.forEach(r=>{ const [id,c,l,a,e0,name]=r, unk=e0===-1, e=unk?a+12:e0, y0=LY(r), x0=X(a), x1=X(e||Y1), re=r[9], kids=par(r), cl=CLINICS.has(id);
+    let seg="", br="", start=x0, dot=!kids.length;
+    if(kids.length===1){ const P=byId[kids[0]], yp=LY(P), xs=Math.max(x0-BR,X(P[3])+2), m=(xs+x0)/2; br=`M${xs},${yp} C${m},${yp} ${m},${y0} ${x0},${y0} `; }
+    else if(kids.length>1){ kids.forEach(p=>{ const yp=LY(byId[p]); br+=`M${x0-BR},${yp} C${x0-BR/2},${yp} ${x0-BR/2},${y0} ${x0},${y0} `; }); }
+    seg+=re?`M${x0},${y0} L${x1},${y0} M${X(re)},${y0} L${X(Y1)},${y0}`:`M${x0},${y0} L${x1},${y0}`;
+    const bar=e&&!unk&&!merged.has(id), end=merged.has(id)?x1-BR:x1;
+    if(merged.has(id)) seg=seg.replace(`L${x1},${y0}`,`L${end},${y0}`);
+    s+=`<g class="inst${cl?" clin":""}" data-id="${id}" data-city="${c}" tabindex="0" role="button" aria-label="${name}"><rect x="${x0-6}" y="${y0-16}" width="${(re?X(Y1):x1)-x0+12}" height="24" fill="transparent"/>
+      ${unk?`<defs><linearGradient id="u_${id}" gradientUnits="userSpaceOnUse" x1="${x0}" y1="0" x2="${x1}" y2="0"><stop offset=".55" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}" stop-opacity="0"/></linearGradient></defs>`:""}<path class="ln${unk?" unk":""}" d="${seg}"${unk?` style="stroke:url(#u_${id})"`:""}/>${(!e||re)?`<path class="ln arw" d="M${X(Y1)-8},${y0-5.5} L${X(Y1)},${y0} L${X(Y1)-8},${y0+5.5}"/>`:""}${br?(()=>{ const FADE=110, g="g_"+id, xa=kids.length>1?x0-BR:Math.max(x0-BR,X(byId[kids[0]][3])+2), xb=Math.min(x0+FADE,x1);
+        const mg=kids.length>1;
+        return `<defs><linearGradient id="${g}" gradientUnits="userSpaceOnUse" x1="${xa}" y1="0" x2="${xb}" y2="0"><stop offset="0" stop-color="${mg?"#0038FF":"#FF5A1F"}"/><stop offset="1" stop-color="${cl?"#EF82C8":"#0E0E0E"}"/></linearGradient></defs><path class="brn" stroke="url(#${g})"${cl?' style="stroke-width:1.5"':""} d="${br} M${x0},${y0} L${xb},${y0}"/>`; })():""}${bar?`<line class="bar" x1="${x1}" x2="${x1}" y1="${y0-6}" y2="${y0+6}" stroke="var(--ink)" stroke-width="2.4"/>`:""}
+      ${dot?(cl?`<rect class="dot" x="${x0-3.6}" y="${y0-3.6}" width="7.2" height="7.2"/>`:`<circle class="dot" cx="${x0}" cy="${y0}" r="4.2"/>`):""}<text class="lab" x="${x0+14+name.length*6.4>W-RIGHT?x0-8:x0+8}" y="${y0-7}"${x0+14+name.length*6.4>W-RIGHT?' text-anchor="end"':""}>${name}</text></g>`; });
+  svg.setAttribute("width",W); svg.setAttribute("height",H); svg.setAttribute("viewBox",`0 0 ${W} ${H}`); svg.innerHTML=s;
+  // keep names clear of branch curves: slide a label right past any split that runs through it
+  const curves=[...svg.querySelectorAll(".brn")].map(pth=>{ const b=pth.getBBox(); b.own=pth.closest(".inst").dataset.id; return b; });
+  svg.querySelectorAll("text.lab").forEach(t=>{ if(t.getAttribute("text-anchor")==="end") return;
+    for(let n=0;n<4;n++){ const b=t.getBBox(); const own=t.closest(".inst").dataset.id; const hit=curves.find(c=>c.own!==own && c.x<b.x+b.width+4 && c.x+Math.min(c.width,40)>b.x-4 && c.y<b.y+b.height && c.y+c.height>b.y+2);
+      if(!hit) break; t.setAttribute("x", hit.x+Math.min(hit.width,40)+6); } });
+  svg.querySelectorAll(".band").forEach(b=>{ const c=b.dataset.city;
+    const on=()=>{ svg.classList.add("cityhl"); b.classList.add("hl"); svg.querySelectorAll(".inst").forEach(g=>g.classList.toggle("hl",g.dataset.city===c)); };
+    const off=()=>{ svg.classList.remove("cityhl"); b.classList.remove("hl"); svg.querySelectorAll(".inst.hl").forEach(g=>g.classList.remove("hl")); };
+    b.addEventListener("mouseenter",on); b.addEventListener("mouseleave",off); b.addEventListener("click",()=>b.classList.contains("hl")?off():on()); });
+  svg.querySelectorAll(".inst").forEach(g=>{ g.onclick=()=>show(g.dataset.id); g.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); show(g.dataset.id);} }; });
+  
+}
+let cur=null;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function mark(id){ svg.querySelectorAll(".inst").forEach(g=>g.classList.toggle("on",g.dataset.id===id)); }
+// founders link to their card on the Lines of Descent web, or else their school
+const fold=t=>String(t).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z ]/g,"").trim();
+const PEOPLE={}; (window.SEARCH||[]).forEach(([n,k,h])=>{ if(k==="School") return; const f=fold(n.replace(/\s*\(.*\)$/,"")); if(!PEOPLE[f]||k==="Analyst") PEOPLE[f]=h; });
+const ALIAS={"a a brill":"abraham brill","jb pontalis":"jeanbertrand pontalis","c g jung":"carl gustav jung"};
+function founders(t){ return t.split(/(,\s*|\s+and\s+|;\s*)/).map(part=>{ const raw=part.replace(/\s*\(.*?\)\s*$/,""), f=fold(raw), h=PEOPLE[f]||PEOPLE[ALIAS[f]];
+    if(!h) return esc(part); return `<a href="${h}">${esc(raw)}</a>`+esc(part.slice(raw.length)); }).join(""); }
+function show(id){ cur=id; mark(id); const r=byId[id], kids=I.filter(k=>k[6].includes(id)&&vis(k));
+  const row=x=>`<button type="button" data-go="${x[0]}"><span>${esc(x[5])}</span><span>${x[3]}</span></button>`;
+  card.innerHTML=`<button type="button" class="x" aria-label="Close">×</button><h2>${esc(r[5])}</h2>
+   <div class="meta"><span class="tag fill">${esc(r[1])}</span><span class="tag">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}</span>${r[9]?`<span class="tag">Refounded ${r[9]}</span>`:""}</div>
+   ${r[8]?`<p>${esc(r[8])}</p>`:""}
+   ${r[7]?`<h3>Founders</h3><p class="fd">${founders(r[7])}</p>`:""}
+   ${r[6].filter(p=>vis(byId[p])).length?`<h3>Came out of</h3><div class="list">${r[6].filter(p=>vis(byId[p])).map(p=>row(byId[p])).join("")}</div>`:""}
+   ${kids.length?`<h3>Gave rise to</h3><div class="list">${kids.map(row).join("")}</div>`:""}`;
+  card.hidden=false;
+  const g=svg.querySelector(`.inst[data-id="${id}"]`), dot=g.querySelector("text.lab"), st=svg.parentNode.getBoundingClientRect(), bb=dot.getBoundingClientRect();
+  const W=svg.parentNode.clientWidth, cw=card.offsetWidth;
+  // on phones the map scrolls sideways, so the card opens centered on screen instead of under the line
+  const sheet=innerWidth<760; card.classList.toggle("sheet",sheet);
+  if(sheet){ card.style.left=""; card.style.top=""; card.scrollTop=0; }
+  else { card.style.left=Math.max(16,Math.min(bb.left-st.left-10,W-cw-16))+"px"; card.style.top=(bb.bottom-st.top+22)+"px"; }
+  card.querySelector(".x").onclick=close; }
+function close(){ card.hidden=true; cur=null; mark(null); }
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!card.hidden) close(); });
+document.addEventListener("click",e=>{ if(!card.hidden&&!card.contains(e.target)&&!e.target.closest(".inst")) close(); });
+card.addEventListener("click",e=>{ const a=e.target.closest("[data-go]"); if(a){ e.preventDefault(); show(a.dataset.go); } });
+const togs=[...document.querySelectorAll(".tog button")], keyEl=document.querySelector(".key");
+function setTog(){ togs.forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===mode))); keyEl.classList.toggle("wc",mode!=="i"); }
+togs.forEach(b=>b.onclick=()=>{ mode=b.dataset.c; try{ localStorage.setItem("tm-clinics",mode); }catch(_){} if(cur&&!vis(byId[cur])) close(); setTog(); draw(); if(cur) show(cur); });
+setTog();
+addEventListener("resize",()=>{ draw(); if(cur) show(cur); }); draw();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+document.body.classList.add("mapview");
+const LL={"Vienna":[16.37,48.21],"Budapest":[19.04,47.5],"Zagreb":[15.98,45.81],"Berlin":[13.4,52.52],"Frankfurt":[8.68,50.11],"Zurich":[8.54,47.37],"London":[-0.13,51.51],"Paris":[2.35,48.86],"Saint-Alban":[3.39,44.76],"Cour-Cheverny":[1.46,47.51],"Gorizia":[13.62,45.94],"Trieste":[13.78,45.65],"Istanbul":[28.98,41.01],
+"Algeria":[3.06,36.75],"Morocco":[-6.84,34.02],"Tunisia":[10.18,36.81],"Dakar":[-17.45,14.69],"Cairo":[31.24,30.04],"Johannesburg":[28.05,-26.2],"Beirut":[35.5,33.89],"Palestine":[35.21,31.77],
+"New York":[-74.0,40.71],"Boston":[-71.06,42.36],"Stockbridge":[-73.32,42.28],"Philadelphia":[-75.17,39.95],"Washington–Baltimore":[-76.8,39.1],"Topeka":[-95.68,39.05],"Chicago":[-87.63,41.88],"Los Angeles":[-118.24,34.05],"San Francisco":[-122.42,37.77],
+"Mexico City":[-99.13,19.43],"León and Managua":[-86.6,12.3],"Bogotá":[-74.07,4.71],"Caracas":[-66.9,10.48],"Lima":[-77.04,-12.05],"Santiago":[-70.67,-33.45],"Buenos Aires":[-58.38,-34.6],"Montevideo":[-56.16,-34.9],"São Paulo":[-46.63,-23.55],"Rio de Janeiro":[-43.2,-22.91],
+"Kolkata":[88.36,22.57],"Sendai":[140.87,38.27],"Tokyo":[139.69,35.69]};
+const svgW=d3.select("#wsvg"), Wd=960, Hd=500;
+const proj=d3.geoNaturalEarth1().scale(175).translate([Wd/2,Hd/2+30]), path=d3.geoPath(proj);
+const root=svgW.append("g"), gl=root.append("g"), gc=root.append("g");
+gl.append("path").attr("class","grat").attr("d",path(d3.geoGraticule10()));
+let K=1; const zoom=d3.zoom().scaleExtent([1,12]).translateExtent([[0,0],[Wd,Hd]]).on("zoom",e=>{K=e.transform.k; root.attr("transform",e.transform); paint();});
+svgW.call(zoom); const zp=()=>sel&&LL[sel]?(()=>{const t=d3.zoomTransform(svgW.node());return t.apply(proj(LL[sel]));})():null;
+document.getElementById("zin").onclick=()=>svgW.transition().call(zoom.scaleBy,1.6,zp()); document.getElementById("zout").onclick=()=>svgW.transition().call(zoom.scaleBy,1/1.6,zp());
+fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-110m.json").then(r=>r.json()).then(w=>{ gl.insert("path",".grat").attr("class","land").attr("d",path(topojson.feature(w,w.objects.land))); });
+const slider=document.getElementById("wyr"), yl=document.getElementById("wyl"); let year=2025, sel=null;
+const live=(r,y)=>r[3]<=y && (r[4]===null || (r[4]===-1 ? y<=r[3]+12 : y<r[4]) || (r[9]&&y>=r[9]));
+function paint(){
+  const rows=I.filter(r=>vis(r)&&LL[r[1]]);
+  const by=d3.group(rows.filter(r=>live(r,year)),r=>r[1]);
+  const data=[...by].map(([c,rs])=>({c,i:rs.filter(r=>!CLINICS.has(r[0])).length,k:rs.filter(r=>CLINICS.has(r[0])).length})).sort((a,b)=>(b.i+b.k)-(a.i+a.k));
+  const g=gc.selectAll("g.city").data(data,d=>d.c).join(e=>{const g=e.append("g").attr("class","city"); g.append("circle").attr("class","c"); g.append("circle").attr("class","i"); g.append("text"); return g;});
+  g.attr("transform",d=>`translate(${proj(LL[d.c])})`).classed("on",d=>d.c===sel).on("click",(e,d)=>{sel=d.c; panel(); paint();});
+  const R=n=>(2.6+Math.sqrt(n)*2.6)/Math.pow(K,.85);
+  g.select("circle.i").attr("r",d=>d.i?R(d.i):0);
+  g.select("circle.c").attr("r",d=>d.k?R(d.i+d.k)+2.6/K:0).style("stroke-width",(2.2/K)+"px");
+  g.select("text").text(d=>d.c.replace(" (near Algiers)","")).attr("x",d=>R(d.i+d.k)+4/K+2).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px")
+   .style("display",d=>(K>=2.4||d.i+d.k>=3||d.c===sel)?null:"none");
+  yl.textContent=year;
+}
+function panel(){
+  const p=document.getElementById("wpanel"); if(!sel){return;}
+  const rs=I.filter(r=>r[1]===sel&&vis(r)).sort((a,b)=>a[3]-b[3]);
+  const reg=(REGIONS.find(x=>x[1].includes(sel))||[""])[0];
+  p.innerHTML=`<h2>${esc(sel)}</h2><p class="sub">${esc(reg)} · ${rs.length} ${rs.length===1?"entry":"entries"}</p><ul>${rs.map(r=>`<li class="${CLINICS.has(r[0])?"cl":""}${live(r,year)?"":" gone"}"><span>${esc(r[5])}</span><span>${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–"}</span></li>`).join("")}</ul><p class="sub" style="margin-top:14px"><a href="institutes.html">See the timeline →</a></p>`;
+}
+slider.oninput=()=>{year=+slider.value; paint(); panel();};
+let timer=null; const pb=document.getElementById("wplay");
+pb.onclick=()=>{ if(timer){clearInterval(timer);timer=null;pb.textContent="▶";return;} if(year>=2025){year=1900;slider.value=1900;} pb.textContent="❚❚";
+  timer=setInterval(()=>{ year++; slider.value=year; paint(); panel(); if(year>=2025){clearInterval(timer);timer=null;pb.textContent="▶";} },90); };
+document.querySelectorAll(".tog button").forEach(b=>b.addEventListener("click",()=>setTimeout(()=>{paint();panel();},0)));
+paint();
+</script><script src="search.js"></script>
+<script data-goatcounter="https://transferenceworld.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>
