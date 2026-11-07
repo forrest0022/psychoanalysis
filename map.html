@@ -39,6 +39,7 @@ h1 .tagline .rot.out{opacity:0}
 .viewtog{display:flex;gap:8px;margin:0 0 14px}
 .viewtog a{all:unset;cursor:pointer;font:600 13px var(--wide);letter-spacing:.04em;text-transform:uppercase;border:1.6px solid var(--ink);border-radius:999px;padding:5px 14px}
 .viewtog a.on{background:var(--ink);color:var(--paper)}
+.viewtog a:not(.on):hover{border-color:var(--link);color:var(--link)}
 body.mapview .key,body.mapview .scroll{display:none!important}
 #world{margin-top:8px}
 .wwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
@@ -90,8 +91,9 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 #wsvg .city:hover .i,#wsvg .city.on .i,#wsvg .city:hover .c,#wsvg .city.on .c{fill:var(--ink)}
 #wsvg .city text{display:none}#wsvg .city:hover text,#wsvg .city.on text{display:block;fill:var(--ink)}
 .wctl{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1.6px solid var(--ink)}
-.wctl button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font:600 14px var(--wide)}
-.wctl button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
+.wctl button{all:unset;cursor:pointer;width:34px;height:34px;display:grid;place-items:center;color:var(--link)}
+.wctl button svg{display:block}
+.wctl button:hover{color:var(--ink)}
 .wctl input{flex:1;accent-color:var(--clinic)}
 .wyear{font:800 28px var(--wide);font-stretch:88%;min-width:3.2em;text-align:right}
 .wzoom{position:absolute;top:12px;right:12px;display:flex;gap:6px}
@@ -223,12 +225,12 @@ svg.cityhl .inst.hl .dot{stroke:var(--link)}
 
 </style>
 <h1 class="ttl">Institutional Splits<em class="tagline">A genealogy of psychoanalytic institutes, clinics &amp; hospitals</em></h1>
-<div class="viewtog"><a href="institutes.html">Timeline</a><a class="on" href="#">Map</a></div>
+<div class="viewtog"><a href="institutes.html">Timeline</a><a class="on" href="map.html" aria-current="page">Map</a></div>
 <div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
 <div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
 <div id="world"><div class="wkey"><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#4A2A12"/></svg>Institute</span><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#0038FF"/></svg>Clinic or hospital</span><span>One mark per institution · drag to pan · scroll or +/− to zoom</span></div>
 <div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
-<div class="wctl"><button type="button" id="wplay" aria-label="Play">▶</button><input type="range" id="wyr" min="1900" max="2026" value="2026"><span class="wyear" id="wyl">Today</span></div></div>
+<div class="wctl"><button type="button" id="wplay" aria-label="Play"><svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg></button><input type="range" id="wyr" min="1900" max="2026" value="2026"><span class="wyear" id="wyl">Today</span></div></div>
 <aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a city to open its history. Drag the slider or press play to watch the field spread.</p></aside></div></div>
 <div class="cpop" id="cpop" hidden><div class="box" role="dialog" aria-modal="true"><button type="button" class="x" id="cpx" aria-label="Close">×</button><div id="cpbody"></div></div></div>
 <div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
@@ -472,9 +474,10 @@ function panel(){
   p.innerHTML=`<h2>${esc(sel)}</h2><p class="sub">${esc(reg)} · ${rs.length} ${rs.length===1?"entry":"entries"}</p><ul>${rs.map(r=>`<li class="${CLINICS.has(r[0])?"cl":""}${live(r,year)?"":" gone"}"><span>${esc(r[5])}</span><span>${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–"}</span></li>`).join("")}</ul><p class="sub" style="margin-top:14px"><a href="#" id="openpop">Open this city's history →</a></p>`; const op=document.getElementById("openpop"); if(op) op.onclick=e=>{e.preventDefault(); popCity(sel);};
 }
 slider.oninput=()=>{year=+slider.value; paint(); panel();};
+const PLAYI='<svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg>', PAUSEI='<svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><rect x="3" y="2" width="5.5" height="20" fill="currentColor"/><rect x="13.5" y="2" width="5.5" height="20" fill="currentColor"/></svg>';
 let timer=null; const pb=document.getElementById("wplay");
-pb.onclick=()=>{ if(timer){clearInterval(timer);timer=null;pb.textContent="▶";return;} if(year>=NOW){year=1900;slider.value=1900;} pb.textContent="❚❚";
-  timer=setInterval(()=>{ year++; slider.value=year; paint(); panel(); if(year>=NOW){clearInterval(timer);timer=null;pb.textContent="▶";} },90); };
+pb.onclick=()=>{ if(timer){clearInterval(timer);timer=null;pb.innerHTML=PLAYI;return;} if(year>=NOW){year=1900;slider.value=1900;} pb.innerHTML=PAUSEI;
+  timer=setInterval(()=>{ year++; slider.value=year; paint(); panel(); if(year>=NOW){clearInterval(timer);timer=null;pb.innerHTML=PLAYI;} },90); };
 document.querySelectorAll(".tog button").forEach(b=>b.addEventListener("click",()=>setTimeout(()=>{paint();panel();},0)));
 function cityHistory(c){
   const all=I.filter(r=>r[1]===c&&vis(r)).sort((a,b)=>a[3]-b[3]||a[2]-b[2]), ids=new Set(all.map(r=>r[0])), rows=[], done=new Set();
