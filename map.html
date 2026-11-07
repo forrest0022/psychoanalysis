@@ -64,7 +64,7 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 #wsvg .city .c{fill:var(--link)}
 #wsvg .city text{font:700 10px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
 #wsvg .city:hover .i,#wsvg .city.on .i,#wsvg .city:hover .c,#wsvg .city.on .c{fill:var(--ink)}
-#wsvg .city:hover text,#wsvg .city.on text{fill:var(--ink);text-decoration:underline}
+#wsvg .city text{display:none}#wsvg .city:hover text,#wsvg .city.on text{display:block;fill:var(--ink)}
 .wctl{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1.6px solid var(--ink)}
 .wctl button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font:600 14px var(--wide)}
 .wctl button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
@@ -180,7 +180,7 @@ svg.cityhl .inst.hl .dot{stroke:var(--link)}
 <div id="world"><div class="wkey"><span><svg width="14" height="14" viewBox="-7 -7 14 14" style="vertical-align:middle;margin-right:6px"><path d="M0,-6.5 Q0,0 6.5,0 Q0,0 0,6.5 Q0,0 -6.5,0 Q0,0 0,-6.5Z" fill="#EF82C8"/></svg>Institutes (size = number)</span><span><svg width="14" height="14" viewBox="-7 -7 14 14" style="vertical-align:middle;margin-right:6px"><path d="M0,-6.5 Q0,0 6.5,0 Q0,0 0,6.5 Q0,0 -6.5,0 Q0,0 0,-6.5Z" fill="#0038FF"/></svg>Clinics &amp; hospitals</span><span>Drag to pan · scroll or +/− to zoom</span></div>
 <div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
 <div class="wctl"><button type="button" id="wplay" aria-label="Play">▶</button><input type="range" id="wyr" min="1900" max="2025" value="2025"><span class="wyear" id="wyl">2025</span></div></div>
-<aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a dot to list its institutions. Drag the slider or press play to watch the field spread.</p></aside></div></div>
+<aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a star to list its institutions. Drag the slider or press play to watch the field spread.</p></aside></div></div>
 <div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
 </div>
 <script src="search-data.js"></script>
@@ -378,9 +378,10 @@ const LL={"Vienna":[16.37,48.21],"Budapest":[19.04,47.5],"Zagreb":[15.98,45.81],
 "New York":[-74.0,40.71],"Boston":[-71.06,42.36],"Stockbridge":[-73.32,42.28],"Philadelphia":[-75.17,39.95],"Washington–Baltimore":[-76.8,39.1],"Topeka":[-95.68,39.05],"Chicago":[-87.63,41.88],"Los Angeles":[-118.24,34.05],"San Francisco":[-122.42,37.77],
 "Mexico City":[-99.13,19.43],"León and Managua":[-86.6,12.3],"Bogotá":[-74.07,4.71],"Caracas":[-66.9,10.48],"Lima":[-77.04,-12.05],"Santiago":[-70.67,-33.45],"Buenos Aires":[-58.38,-34.6],"Montevideo":[-56.16,-34.9],"São Paulo":[-46.63,-23.55],"Rio de Janeiro":[-43.2,-22.91],
 "Kolkata":[88.36,22.57],"Sendai":[140.87,38.27],"Tokyo":[139.69,35.69]};
-const svgW=d3.select("#wsvg"), Wd=960, Hd=500;
-const STY=new URLSearchParams(location.search).get("style")||"grey"; document.body.classList.add("st-"+STY);
-const proj=STY==="globe"?d3.geoOrthographic().scale(235).translate([Wd/2,Hd/2]).rotate([-5,-28]).clipAngle(90):d3.geoNaturalEarth1().scale(175).translate([Wd/2,Hd/2+30]), path=d3.geoPath(proj);
+const svgW=d3.select("#wsvg"); let Wd=960, Hd=500;
+const STY=new URLSearchParams(location.search).get("style")||"pink"; document.body.classList.add("st-"+STY);
+const proj=STY==="globe"?d3.geoOrthographic().scale(235).translate([Wd/2,Hd/2]).rotate([-5,-28]).clipAngle(90):d3.geoNaturalEarth1().fitWidth(Wd-4,{type:"Sphere"}), path=d3.geoPath(proj);
+if(STY!=="globe"){ const bb=path.bounds({type:"Sphere"}); proj.translate([proj.translate()[0]+2-bb[0][0],proj.translate()[1]+2-bb[0][1]]); Hd=Math.ceil(bb[1][1]-bb[0][1])+4; svgW.attr("viewBox",`0 0 ${Wd} ${Hd}`); }
 svgW.append("defs").html('<pattern id="dotpat" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.05" fill="#BDBDB6"/></pattern>');
 const root=svgW.append("g"), gl=root.append("g"), gc=root.append("g");
 gl.append("path").attr("class","sphere").attr("d",path({type:"Sphere"})); gl.append("path").attr("class","grat").attr("d",path(d3.geoGraticule10()));
@@ -401,7 +402,7 @@ function paint(){
   g.select("path.i").attr("d",d=>d.i?star(R(d.i)):null);
   g.select("path.c").attr("d",d=>d.k?star(R(d.k)):null).attr("transform",d=>d.i&&d.k?`translate(${(R(d.i)+R(d.k))*0.95},${(R(d.i)+R(d.k))*0.35})`:null);
   g.select("text").text(d=>d.c.replace(" (near Algiers)","")).attr("x",d=>(d.i&&d.k?(R(d.i)+R(d.k))*0.95+R(d.k):R(d.i+d.k))+4/K).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px")
-   .style("display",d=>(K>=2.4||d.i+d.k>=3||d.c===sel)?null:"none");
+   ;
   yl.textContent=year;
 }
 function panel(){
