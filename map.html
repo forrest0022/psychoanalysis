@@ -167,7 +167,7 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .wpanel{display:none!important}
 @media (max-width:760px){.ctl{display:grid;grid-template-columns:auto auto;justify-content:start;gap:14px 22px}.fsw{display:contents}.vsw,.ctl button{font-size:12.5px;gap:8px}.trk{width:50px;height:26px}.trk i{width:20px;height:20px}.trk.r i{left:27px}}
 .brhit{fill:none;stroke:transparent;stroke-width:14;pointer-events:stroke;cursor:help}
-.brtip{position:fixed;z-index:20;pointer-events:none;max-width:280px;background:#fff;border:1.6px solid var(--ink,#0E0E0E);border-radius:12px;padding:8px 11px;font:13px/1.4 var(--wide,inherit)}.brtip b{display:block;font-weight:600}.brtip span{display:block;color:var(--muted,#55554F);font-size:12px;margin-bottom:4px}
+.brtip{position:fixed;z-index:500;pointer-events:none;max-width:280px;background:#fff;border:1.6px solid var(--ink,#0E0E0E);border-radius:12px;padding:8px 11px;font:13px/1.4 var(--wide,inherit)}.brtip b{display:block;font-weight:600}.brtip span{display:block;color:var(--muted,#55554F);font-size:12px;margin-bottom:4px}
 </style>
 </head>
 <body class="mapview">
@@ -548,7 +548,7 @@ function cityHistory(c){
   for(let d=Math.ceil(y0/10)*10; d<=2020; d+=10) s+=`<line x1="${X(d)}" x2="${X(d)}" y1="${TOP-8}" y2="${H}" stroke="#F0F0EC"/><text class="yr" x="${X(d)}" y="14" text-anchor="middle">${d}</text>`;
   rows.forEach(r=>{ const [id,,,a,e0,name,par]=r, cl=CLINICS.has(id), unk=e0===-1, e=unk?a+10:(e0||y1), yy=Y(r), xa=X(a), xb=X(Math.min(e,y1));
     const ps=par.filter(p=>lane[p]!==undefined); let br="";
-    ps.forEach(p=>{ const yp=Y(byId[p]), xs=Math.max(xa-26,X(byId[p][3])+2), m=(xs+xa)/2, col=ps.length>1?"#0038FF":"#FF5A1F"; br+=`<path class="brn" d="M${xs},${yp} C${m},${yp} ${m},${yy} ${xa},${yy}" stroke="${col}"/>`; });
+    ps.forEach(p=>{ const yp=Y(byId[p]), xs=Math.max(xa-26,X(byId[p][3])+2), m=(xs+xa)/2, col=ps.length>1?"#0038FF":ARM.has(id)?(cl?"#0038FF":"#0E0E0E"):"#FF5A1F", d=`M${xs},${yp} C${m},${yp} ${m},${yy} ${xa},${yy}`; br+=`<path class="brn" d="${d}" stroke="${col}"/>`+(ps.length===1&&SPLIT_WHY[id]?`<path class="brhit" data-p="${p}" d="${d}"/>`:""); });
     const cont=e0===null||r[9], end=!cont&&!unk;
     s+=`<g class="row${cl?" cl":""}" data-id="${id}">${br}<rect x="${xa-6}" y="${yy-18}" width="${Math.max(40,(cont?X(y1):xb)-xa+12)}" height="26" fill="transparent"/>`;
     s+= r[9] ? `<path class="ln" d="M${xa},${yy} L${xb},${yy} M${X(r[9])},${yy} L${X(y1)},${yy}"/>` : `<path class="ln" d="M${xa},${yy} L${xb},${yy}"${unk?' stroke-dasharray="2 5"':""}/>`;
@@ -564,9 +564,13 @@ function popCity(c){
   const pop=document.getElementById("cpop"); pop.hidden=false; document.body.style.overflow="hidden";
   pop.querySelectorAll(".row").forEach(g=>g.onclick=()=>{ pop.querySelectorAll(".row").forEach(x=>x.classList.toggle("on",x===g)); const r=byId[g.dataset.id];
     document.getElementById("cpnote").innerHTML=`<h3>${esc(r[5])}</h3><p class="meta">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}${r[9]?" · refounded "+r[9]:""}${CLINICS.has(r[0])?" · clinic":""}</p>${r[8]?`<p>${esc(r[8])}</p>`:""}${r[7]?`<p><b>Founders:</b> ${founders(r[7])}</p>`:""}`; });
+  const tip=document.getElementById("brtip")||document.body.appendChild(Object.assign(document.createElement("div"),{id:"brtip",className:"brtip",hidden:true}));
+  pop.querySelectorAll(".brhit").forEach(h=>{ const id=h.closest(".row").dataset.id, r=byId[id], P=byId[h.dataset.p];
+    h.addEventListener("mousemove",e=>{ tip.innerHTML=`<b>${esc(r[5])}</b><span>${ARM.has(id)?"founded by":"split from"} ${esc(P[5])}, ${r[3]}</span>${esc(SPLIT_WHY[id])}`; tip.hidden=false; tip.style.left=Math.min(e.clientX+14,innerWidth-300)+"px"; tip.style.top=(e.clientY+16)+"px"; });
+    h.addEventListener("mouseleave",()=>tip.hidden=true); });
   if(rows.length===1) pop.querySelector(".row").onclick();
 }
-function closePop(){ document.getElementById("cpop").hidden=true; document.body.style.overflow=""; }
+function closePop(){ const t=document.getElementById("brtip"); if(t) t.hidden=true; document.getElementById("cpop").hidden=true; document.body.style.overflow=""; }
 document.getElementById("cpx").onclick=closePop;
 document.getElementById("cpop").addEventListener("click",e=>{ if(e.target.id==="cpop") closePop(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") closePop(); });
