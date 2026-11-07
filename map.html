@@ -62,7 +62,7 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .st-pinkland #wsvg .land{fill:#F6C6E3;stroke:none}
 .st-pinkland #wsvg .grat{stroke:#FBE6F2;stroke-width:.7}
 .st-pinkland #wsvg .sphere{stroke:#EF82C8;stroke-width:2.6}
-.st-pinkline #wsvg .land{fill:#fff;stroke:#EF82C8;stroke-width:1.3;stroke-linejoin:round}
+.st-pinkline #wsvg .land{fill:#fff;stroke:#EF82C8;stroke-width:.9;stroke-linejoin:round}
 .st-pinkline #wsvg .grat{stroke:#FBE6F2;stroke-width:.7}
 .st-pinkline #wsvg .sphere{stroke:#EF82C8;stroke-width:2.6}
 #wsvg .borders{fill:none;stroke:none;vector-effect:non-scaling-stroke}
@@ -150,6 +150,13 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .fsw button[data-k="i"] .trk{background:#4A2A12}
 .fsw button[data-k="c"] .trk{background:#0038FF}
 .fsw .trk.off,.fsw button .trk.off{background:#E4E4DF}
+
+#wsvg .mv{fill:none;stroke:#7CF000;stroke-dasharray:.1 5;stroke-linecap:round;cursor:pointer;vector-effect:non-scaling-stroke}
+#wsvg .mv:hover{stroke:#3FA800}
+.wev{margin:0;padding:0 18px 14px;min-height:1.4em;font:italic 300 15px var(--wide);color:var(--ink)}
+.fsw button[data-k="m"] .trk{background:#7CF000}
+.wwrap{grid-template-columns:minmax(0,1fr)!important}
+.wpanel{display:none!important}
 </style>
 </head>
 <body>
@@ -244,117 +251,19 @@ svg.cityhl .inst.hl .dot{stroke:var(--link)}
 <div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinics / hospitals</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
 <div id="world"><div class="wkey"><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><circle r="4" fill="#4A2A12"/></svg>Institutes</span><span><svg width="12" height="12" viewBox="-6 -6 12 12" style="margin-right:6px"><rect x="-3.8" y="-3.8" width="7.6" height="7.6" fill="#0038FF"/></svg>Clinics / hospitals</span></div>
 <div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
-<div class="wctl"><button type="button" id="wplay" aria-label="Play"><svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg></button><input type="range" id="wyr" min="1900" max="2026" value="2026"><span class="wyear" id="wyl">Today</span></div></div>
+<div class="wctl"><button type="button" id="wplay" aria-label="Play"><svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg></button><input type="range" id="wyr" min="1900" max="2026" value="2026"><span class="wyear" id="wyl">Today</span></div><p class="wev" id="wev"></p></div>
 <aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a city to open its history. Drag the slider or press play to watch the field spread.</p></aside></div></div>
 <div class="cpop" id="cpop" hidden><div class="box" role="dialog" aria-modal="true"><button type="button" class="x" id="cpx" aria-label="Close">×</button><div id="cpbody"></div></div></div>
 <div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
 </div>
 <script src="search-data.js"></script>
+<script src="places-data.js"></script>
 <script>
 // [id, city, lane, start, end|null, name, parents[], founders, note]
-const I=[
- ["wpv","Vienna",0,1902,1938,"Vienna Psychoanalytic Society",[],"Sigmund Freud","Began as Freud's Wednesday Psychological Society in 1902 and took this name in 1908. Dissolved after the Anschluss in 1938; refounded in 1946 under August Aichhorn.",1946],
- ["sexpol","Vienna",2,1929,1934,"Sex-Pol clinics",[],"Wilhelm Reich","Free sexual counseling and mental-health clinics for working people, started by Reich in Vienna in 1929 and extended to Berlin; ended in 1934."],
- ["amb","Vienna",1,1922,1938,"Vienna Ambulatorium",["wpv"],"Eduard Hitschmann","The society's free outpatient clinic, opened on May 22, 1922, and closed after the Anschluss in 1938."],
- ["hun","Budapest",0,1913,1949,"Hungarian Psychoanalytical Society",[],"Sándor Ferenczi","Founded quickly by Ferenczi in 1913 to give Freud another voting bloc in the coming showdown with Jung. Home of the Budapest school; forced to dissolve under the Communist government in 1949."],
- ["bfc","Budapest",1,1929,1949,"Budapest Free Clinic",["hun"],"Sándor Ferenczi","Ferenczi opened the free outpatient clinic he had long planned in 1929, with Michael Bálint among its analysts. It closed in 1949, when the Communist government forced the Hungarian society to dissolve."],
- ["zfc","Zagreb",0,1928,1941,"Zagreb Free Clinic",[],"Stjepan Betlheim and others","A free psychoanalytic clinic founded in 1928 by Betlheim, who had trained in Vienna. It ended in 1941, when the fascist Independent State of Croatia took power: Betlheim, who was Jewish, was barred from public work and sent with other Jewish doctors to Bosnia, and later escaped to join the Partisans. After the war he founded Croatia's first outpatient psychotherapy ward, in 1953."],
- ["ffmc","Frankfurt",1,1930,1933,"Frankfurt Psychoanalytic Clinic",["ffm"],"Karl Landauer, Heinrich Meng; S. H. Foulkes, director","The outpatient clinic of the Frankfurt Institute and the last of the interwar free clinics, with close ties to the university and Horkheimer's Institute for Social Research. It lasted only a few years before the Nazis closed it."],
- ["bpv","Berlin",0,1908,1938,"Berlin Psychoanalytic Society",[],"Karl Abraham","Founded the year Abraham moved to Berlin from Zurich. The first psychoanalytic society outside Vienna. Taken over under the Nazi regime and dissolved in 1938."],
- ["poli","Berlin",1,1920,1933,"Berlin Poliklinik and Institute",["bpv"],"Max Eitingon, Ernst Simmel, Karl Abraham","The first psychoanalytic free clinic and the first training institute. It pioneered time-limited analysis and standardized training (personal analysis, supervision, seminars), the model institutes still follow. Aryanized in 1933, then folded into the Nazi-run Göring Institute in 1936."],
- ["isw","Berlin",3,1919,1933,"Institute for Sexual Science",[],"Magnus Hirschfeld","The world's first clinic devoted to sexuality, offering free sex advice, marriage counselling and treatment for venereal disease. Hirschfeld had helped found the Berlin Psychoanalytic Association in 1908. Nazi students raided and destroyed the institute on May 6, 1933."],
- ["tegel","Berlin",3,1927,1931,"Schloss Tegel Sanatorium",[],"Ernst Simmel","The first psychoanalytic inpatient clinic, opened April 10, 1927, in a manor outside Berlin. Freud stayed there while being treated in the city. It closed in 1931 for lack of money."],
- ["dpv","Berlin",2,1950,null,"German Psychoanalytical Association (DPV)",[],"Carl Müller-Braunschweig","Founded after the war and admitted to the IPA."],
- ["ffm","Frankfurt",0,1929,1933,"Frankfurt Psychoanalytic Institute",[],"Karl Landauer, Frieda Fromm-Reichmann, Heinrich Meng","Founded February 10, 1929, as the institute of the Southwest German Psychoanalytic Working Group, and housed beside the Institute for Social Research, where analysts and the Frankfurt School sociologists met. Erich Fromm and S. H. Foulkes taught here. Closed when the Nazis came to power."],
- ["sfi","Frankfurt",2,1960,null,"Sigmund-Freud-Institut",[],"Alexander Mitscherlich","Opened April 27, 1960, as a state-supported institute for psychoanalysis and psychosomatic medicine, and renamed for Freud in 1964. Under Mitscherlich (director until 1976), with help from émigré analysts abroad, it became West Germany's most important psychoanalytic training institute."],
- ["sgp","Zurich",0,1919,null,"Swiss Society for Psychoanalysis",[],"Oskar Pfister, Emil Oberholzer","A non-Jungian society, founded in 1919 after Jung's break with Freud had taken the earlier Zurich group with him."],
- ["jung","Zurich",1,1948,null,"C. G. Jung Institute",[],"C. G. Jung","Training institute for analytical psychology."],
- ["tav","London",3,1920,null,"Tavistock Clinic",[],"Hugh Crichton-Miller","Opened in 1920 to treat shell shock and other neuroses without fees; later home to Bion's group work, Balint groups and Bowlby."],
- ["kh","London",4,1965,1970,"Kingsley Hall",[],"R. D. Laing and the Philadelphia Association","A community in East London where people in psychosis lived alongside therapists, outside hospital routine. It closed in 1970."],
- ["wtc","London",5,1976,null,"Women's Therapy Centre",[],"Susie Orbach, Luise Eichenbaum","A feminist psychoanalytic clinic for women, founded in 1976."],
- ["bps","London",0,1913,null,"British Psychoanalytical Society",[],"Ernest Jones","Founded by Jones with nine members after the 1913 Munich congress, following Ferenczi's lead, as the London Psycho-Analytical Society; refounded under this name in 1919; its Institute of Psychoanalysis opened in 1924. After the Controversial Discussions it settled in 1946 into three groups: Kleinian, Independent and Anna Freud's."],
- ["lcp","London",1,1926,null,"London Clinic of Psychoanalysis",["bps"],"Ernest Jones","The British Society's free clinic, opened in 1926 on the Berlin model."],
- ["afc","London",2,1947,null,"Anna Freud Centre",[],"Anna Freud","Began as the Hampstead Child Therapy Course in 1947, with a clinic from 1952."],
- ["spp","Paris",0,1926,null,"Société Psychanalytique de Paris",[],"Marie Bonaparte, René Laforgue, Rudolph Loewenstein and others","The first French society."],
- ["sfp","Paris",1,1953,1965,"Société Française de Psychanalyse",["spp"],"Daniel Lagache, Jacques Lacan, Françoise Dolto, Juliette Favez-Boutonier","Broke from the SPP in 1953 over training and Lacan's short sessions. Dissolved once the IPA required Lacan's removal as a training analyst."],
- ["apf","Paris",2,1964,null,"Association Psychanalytique de France",["sfp"],"Daniel Lagache, Jean Laplanche, J.-B. Pontalis, Didier Anzieu","The SFP members who stayed with the IPA."],
- ["efp","Paris",3,1964,1980,"École Freudienne de Paris",["sfp"],"Jacques Lacan","Lacan's school, dissolved by Lacan in 1980."],
- ["q4","Paris",4,1969,null,"Quatrième Groupe",["efp"],"Piera Aulagnier, François Perrier, Jean-Paul Valabrega","Left the EFP over the pass, Lacan's procedure for becoming an analyst."],
- ["ecf","Paris",5,1981,null,"École de la Cause freudienne",["efp"],"Jacques-Alain Miller and Lacan's circle","Formed after the EFP's dissolution."],
- ["ipso","Paris",6,1972,null,"Institut de psychosomatique (IPSO)",[],"Pierre Marty, Michel Fain","Home of the Paris school of psychosomatics, built on Marty, de M'Uzan and David's L'Investigation psychosomatique (1963). Its hospital, opened in 1978, now bears Marty's name."],
- ["stalban","Saint-Alban",0,1940,null,"Saint-Alban Hospital",[],"François Tosquelles","A rural psychiatric hospital in the Lozère where Tosquelles, a refugee from the Spanish Civil War, began institutional psychotherapy during the Occupation. Frantz Fanon trained here."],
- ["blida","Blida (near Algiers)",0,1938,null,"Blida-Joinville Psychiatric Hospital",[],"","A colonial psychiatric hospital in Algeria. Frantz Fanon, who had trained with Tosquelles at Saint-Alban, ran a ward here from 1953, bringing institutional psychotherapy to his Muslim and European patients through film screenings, a café, football clubs and a ward newsletter. He resigned in 1956 to join the independence struggle and was expelled from Algeria in January 1957. The hospital now bears his name."],
- ["gorizia","Gorizia",0,1961,1968,"Gorizia Psychiatric Hospital",[],"Franco Basaglia","Basaglia became director in 1961 and opened the locked wards, turning the asylum into a therapeutic community. He left in 1968 after the administration resisted his reforms; his team's account appeared as L'istituzione negata (The Negated Institution, 1968)."],
- ["trieste","Trieste",0,1971,null,"San Giovanni Psychiatric Hospital",[],"Franco Basaglia","Basaglia took over the hospital in 1971 and closed it ward by ward, replacing it with community mental health centers. His movement led to Law 180 (1978), which began closing Italy's asylums."],
- ["berrechid","Berrechid",0,1919,null,"Berrechid Psychiatric Hospital",[],"","Founded as the psychiatric department of a French military field hospital in colonial Morocco; a civilian institution from 1927. From 1979 to 1985, under its first Moroccan director, Abdeljebbar Ezzine, the psychiatrist Abdellah Ziou Ziou reorganized its chronic wards in the spirit of institutional psychotherapy: weekly meetings of patients and caregivers, gardening and football, music and trance at Aâchoura, and a 1981 week of painters working in the hospital. He was forced out in 1985."],
- ["laborde","Cour-Cheverny",0,1953,null,"La Borde Clinic",[],"Jean Oury","Founded by Oury, who had trained with Tosquelles at Saint-Alban. Félix Guattari worked here from 1955; patients and staff share in running the clinic."],
- ["pps","Palestine",0,1933,null,"Palestine Psychoanalytic Society",[],"Max Eitingon","Founded in Jerusalem by Eitingon after he left Berlin in 1933; it later became the Israel Psychoanalytic Society, with its own institute."],
- ["nyps","New York",0,1911,null,"New York Psychoanalytic Society and Institute (NYPSI)",[],"A. A. Brill","The first psychoanalytic society in the United States. Its institute was organized in 1931 by Sándor Radó on the Berlin model."],
- ["aip","New York",2,1941,null,"American Institute for Psychoanalysis",["nyps"],"Karen Horney, Clara Thompson and others","On April 29, 1941, the New York society demoted Horney to lecturer. She, Clara Thompson and three younger analysts walked out and founded the American Association for the Advancement of Psychoanalysis, with this institute as its training arm."],
- ["wawi","New York",3,1943,null,"William Alanson White Institute",["aip"],"Clara Thompson, Erich Fromm, Harry Stack Sullivan, Frieda Fromm-Reichmann, David and Janet Rioch","In 1943 Fromm and Thompson left Horney's group, partly over Fromm's standing as a non-physician training analyst, and with Sullivan opened a New York branch of the Washington-based William Alanson White Psychiatric Foundation. Thompson renamed it the William Alanson White Institute in 1946. The home of interpersonal psychoanalysis."],
- ["col","New York",1,1945,null,"Columbia Psychoanalytic Center",["nyps"],"Sándor Radó, Abram Kardiner, David Levy, George Daniels","The first university-based psychoanalytic training center, founded by analysts who left the New York Institute."],
- ["nyu","New York",7,1961,null,"NYU Postdoctoral Program",[],"Bernard Kalinkowitz","Trained psychologists when medical institutes would not; later the birthplace of relational psychoanalysis."],
- ["npap","New York",4,1948,null,"National Psychological Association for Psychoanalysis (NPAP)",[],"Theodor Reik and a group of his students","Founded to train non-physicians, in the spirit of Freud's The Question of Lay Analysis; runs the Theodor Reik Clinical Center and publishes The Psychoanalytic Review."],
- ["nyfs","New York",5,1959,null,"Contemporary Freudian Society",["npap"],"Gisela Barinbaum","Began in 1959 as the New York Society of Freudian Psychologists, split from NPAP; later the New York Freudian Society, now the Contemporary Freudian Society."],
- ["iptar","New York",6,1958,null,"Institute for Psychoanalytic Training and Research (IPTAR)",["npap"],"NPAP-trained analysts","Founded in 1958 as a membership society for analysts interested in Freud's theory and technique."],
- ["cmps","New York",8,1971,null,"Center for Modern Psychoanalytic Studies (CMPS)",[],"Phyllis Meadow, Selwyn Brody, Louis and Joan Ormont, Harold Stern and others","Home of modern psychoanalysis, built on Hyman Spotnitz's work with severe disturbance."],
- ["bos","Boston",0,1914,null,"Boston Psychoanalytic Society",[],"James Jackson Putnam, Isador Coriat","Founded in May 1914, the second society in the United States. Émigrés including Hanns Sachs, Helene Deutsch and Eduard Hitschmann trained analysts here."],
- ["phps","Philadelphia",0,1937,2001,"Philadelphia Psychoanalytic Society and Institute",[],"O. Spurgeon English, Sidney G. Biddle, LeRoy M. A. Maeder, George W. Smeltz, Robert Waelder","Founded October 27, 1937, and accepted by the American Psychoanalytic Association in 1939. Waelder, who arrived from Vienna by way of Boston in 1943, became a training analyst at its institute."],
- ["pap","Philadelphia",1,1949,2001,"Philadelphia Association for Psychoanalysis",["phps"],"","Broke away from the Philadelphia Psychoanalytic Institute and Society in 1949, over differences between liberal and conservative camps as well as personal conflicts. Robert Waelder later served as its president, 1953–55."],
- ["pcop","Philadelphia",2,2001,null,"Psychoanalytic Center of Philadelphia",["phps","pap"],"","The two Philadelphia groups voted to reunite in 2001, ending the split of 1949."],
- ["wbps","Washington–Baltimore",0,1930,null,"Washington–Baltimore Psychoanalytic Society",[],"Clara Thompson (first president), Harry Stack Sullivan","Founded in 1930 and accredited by the American Psychoanalytic Association in 1932. Frieda Fromm-Reichmann, of nearby Chestnut Lodge, was its president from 1939 to 1941."],
- ["wsp","Washington–Baltimore",1,1936,null,"Washington School of Psychiatry",[],"Harry Stack Sullivan","Sullivan's school for interpersonal psychiatry; its New York branch became the William Alanson White Institute."],
- ["riggs","Stockbridge",0,1919,null,"Austen Riggs Center",[],"Austen Fox Riggs","An open psychiatric hospital in the Berkshires; Erik Erikson, David Rapaport and Robert Knight worked here."],
- ["chestnut","Washington–Baltimore",2,1910,2001,"Chestnut Lodge",[],"Ernest Bullard; later Dexter Bullard","A private hospital in Rockville, Maryland, that became the leading center for psychoanalytic treatment of schizophrenia, with Frieda Fromm-Reichmann and Harry Stack Sullivan. It closed in 2001."],
- ["menn","Topeka",0,1925,null,"Menninger Clinic",[],"Karl, William and Charles Menninger","A family psychiatric hospital that became a center of American psychoanalytic psychiatry; moved to Houston in 2003."],
- ["topeka","Topeka",1,1942,null,"Topeka Institute for Psychoanalysis",["menn"],"Karl Menninger","The training institute founded inside the Menninger Clinic."],
- ["chi","Chicago",0,1932,null,"Chicago Institute for Psychoanalysis",[],"Franz Alexander","Founded by Alexander, who came from Berlin in 1930 and stayed after Hitler took power; he left for Los Angeles in 1953. Heinz Kohut trained and taught here and developed self psychology here in the 1970s. Chicago largely avoided the splits of other cities."],
- ["lafargue","New York",9,1946,1958,"Lafargue Clinic",[],"Fredric Wertham, with Richard Wright and Ralph Ellison","A free psychiatric clinic in the basement of a Harlem church, open to anyone at a time when Black New Yorkers had almost no access to psychotherapy. It closed in 1958."],
- ["la","Los Angeles",0,1935,2005,"Los Angeles Psychoanalytic Society and Institute",[],"Ernst Simmel, Otto Fenichel, Frances Deri","Began in 1935 as the Psychoanalytic Study Group of Los Angeles, with Simmel, who had arrived from Berlin in 1934, as president; Fenichel came to teach in 1938. Lay analysts trained alongside physicians, a point of conflict with the American Psychoanalytic Association."],
- ["scp","Los Angeles",1,1950,2005,"Southern California Psychoanalytic Institute",["la"],"","Split from the Los Angeles society in 1950 over its many lay analysts. The breakaway group called itself the Society for Psychoanalytic Medicine of Southern California to stress its medical identity, and later dropped \"Medicine\" from its name."],
- ["ncp","Los Angeles",2,2005,null,"New Center for Psychoanalysis",["la","scp"],"","The two Los Angeles institutes merged in 2005."],
- ["laisps","Los Angeles",3,1970,null,"Los Angeles Institute and Society for Psychoanalytic Studies (LAISPS)",[],"Hedda Bolgar, Jean Sanville, Joel Shor, Charles Ansell and others","Grew out of the Los Angeles Society for Psychoanalytic Psychology (1968), formed by psychologists when the medical institutes would not train them. Its institute opened in 1970, was named LAIPS in 1978 and LAISPS in 1985; training open to psychologists, social workers and MFTs."],
- ["pcc","Los Angeles",4,1984,null,"Psychoanalytic Center of California (PCC)",[],"James Gooch (first president); Richard Alexander (founding dean)","A Kleinian and Bionian institute, first recognized in 1984 and independent from 1987. Members of both older Los Angeles institutes joined it."],
- ["icp","Los Angeles",5,1990,null,"Institute of Contemporary Psychoanalysis (ICP)",[],"","Founded in 1990."],
- ["sf","San Francisco",0,1942,null,"San Francisco Psychoanalytic Society and Institute",[],"William Barrett, Bernhard Berliner, Otto Fenichel, George Gero, Bernard Kamm, Jascha Kasanin, Donald McFarlane, Douglass Orr, Ernst Simmel, Emanuel Windholz","Founded March 8, 1942, by ten physicians from San Francisco and Los Angeles, under the Topeka society's supervision. Lay analysts could be members but could not vote or hold office. Grew out of an informal study group of the late 1930s."],
- ["pinc","San Francisco",1,1989,null,"Psychoanalytic Institute of Northern California (PINC)",[],"","Created in 1989 by people involved in the lawsuit that opened psychoanalytic training to non-physicians, with help from senior members of the San Francisco Institute. A center for comparative psychoanalysis; an IPA component society since 2009."],
- ["spmfromm","Mexico City",1,1956,null,"Sociedad Psicoanalítica Mexicana",[],"Erich Fromm and his first Mexican trainees","Grew out of the training Fromm led at the National University from 1950; legally founded at the end of 1956. Its teaching arm became the Instituto Mexicano de Psicoanálisis in 1963. Humanist and outside the IPA."],
- ["apm","Mexico City",0,1957,null,"Asociación Psicoanalítica Mexicana",[],"","Became Mexico's first IPA society in 1957. Marie Langer worked in Mexico City after leaving Argentina in 1974."],
- ["apa","Buenos Aires",0,1942,null,"Asociación Psicoanalítica Argentina",[],"Ángel Garma, Celes Cárcamo, Marie Langer, Enrique Pichon-Rivière, Arnaldo Rascovsky, Guillermo Ferrari Hardoy","The first Latin American society; home of the Barangers' field theory."],
- ["apdeba","Buenos Aires",1,1977,null,"Asociación Psicoanalítica de Buenos Aires",["apa"],"","Split from the APA in 1977."],
- ["platdoc","Buenos Aires",2,1971,-1,"Plataforma and Documento",["apa"],"Marie Langer, Diego and Gilou García Reynoso and others","Left-wing groups that broke from the APA in 1971 over its politics and training hierarchy."],
- ["efba","Buenos Aires",3,1974,null,"Escuela Freudiana de Buenos Aires",[],"Oscar Masotta","Founded June 28, 1974, after Masotta's study groups introduced Lacan in Argentina; described as the oldest continuously functioning Lacanian school."],
- ["apch","Santiago",0,1949,null,"Asociación Psicoanalítica Chilena",[],"Ignacio Matte Blanco","Built around Matte Blanco after his return from London and the US in 1943, and recognized by the IPA in 1949. Increasingly Kleinian after Matte Blanco left for Rome in 1966."],
- ["spp_pe","Lima",0,1977,null,"Sociedad Peruana de Psicoanálisis",[],"Saúl Peña, Carlos Crisanto, Max Hernández","Grew out of the Centro para el Desarrollo del Psicoanálisis, formed at the end of the 1960s by three analysts returning from training at the British Society. Recognized as an IPA study group in 1977, a provisional society in 1985 and a component society in 1987."],
- ["nicteam","León and Managua",0,1981,-1,"Internationalist Team of Mental Health Workers, Mexico–Nicaragua",[],"Marie Langer and others","From 1981, a team of twelve psychologists, physicians and a psychopedagogue from Argentina, Mexico and Chile taught at the medical school in León and then at the psychiatric hospital in Managua, helping build the Sandinistas' new mental health system. They taught psychoanalysis, group therapy and family therapy, with a Marxist reading of the family, and trained others as a group."],
- ["apu","Montevideo",0,1955,null,"Asociación Psicoanalítica del Uruguay",[],"Willy and Madeleine Baranger, with a group of Uruguayan doctors and psychologists","Founded September 27, 1955, after Willy Baranger was invited to lead training in Montevideo; recognized by the IPA as a study group in 1957."],
- ["sbp","São Paulo",0,1951,null,"Brazilian Psychoanalytic Society of São Paulo",[],"Adelheid Koch, Durval Marcondes","Durval Marcondes founded a first Brazilian society in 1927. Koch, trained in Berlin, arrived in 1936; with her at its head the group gained official status in 1944 and joined the IPA as this society in 1951."],
- ["scolp","Bogotá",0,1956,null,"Sociedad Colombiana de Psicoanálisis",[],"José Francisco Socarrás","Founded as a psychoanalytic study group in 1956 by Socarrás, who had trained in Paris; became the Colombian Psychoanalytic Society in 1961."],
- ["sprj","Rio de Janeiro",0,1955,null,"Sociedade Psicanalítica do Rio de Janeiro",[],"Werner Kemper, Kattrin Kemper, Fabio Leite Lobo, Gerson Borsoi, Inaura Carneiro Leão Vetter, Luiz Guimarães Dahlheim, Noemy Rudolfer","Affiliated with the IPA in 1955. Werner Kemper had trained in Berlin."],
- ["asovep","Caracas",0,1965,null,"Asociación Venezolana de Psicoanálisis",[],"Julio Aray, Antonio Briceño, Nicolás Cupello, Hugo Domínguez, Juan Antonio Olivares, Hans Voss and others","Recognized by the IPA as a working group in 1965; became an association in 1969 and an IPA society in 1971."],
- ["eap","Cairo",0,2004,null,"Egyptian Association of Psychoanalysis",[],"","Psychoanalysis was practiced by Egyptians from the early 1930s and taught at Ain Shams University from 1950, when Mustafa Zewar founded its psychology department, but no analytic institution followed. Most analysts left under Nasser around 1959. This association was created only in 2004, and still defines itself through psychology rather than psychoanalysis."],
- ["istanbul","Istanbul",0,1994,null,"Istanbul Psychoanalytical Association",[],"","Founded as a group in 1994 by analysts trained at the Société Psychanalytique de Paris; constituted as an association in 2001 and an IPA component society in 2017."],
- ["aldep","Beirut",0,2009,null,"Lebanese Association for the Development of Psychoanalysis",[],"","Founded in 2009; the first society in the Arab world affiliated with the IPA."],
- ["sapg","Johannesburg",0,1935,-1,"South African psychoanalytic study group",[],"Wulf Sachs","Founded in 1935 with the IPA's support by Sachs, who had trained in Berlin; he wrote Black Hamlet (1937) from his analysis of a Manyika healer."],
- ["cnicolle","Tunis",0,1957,-1,"Charles-Nicolle Day Psychiatric Center",[],"Frantz Fanon","After his expulsion from Algeria and frustrations at La Manouba hospital, Fanon founded and directed this outpatient day center at the Charles-Nicolle General Hospital during his Tunis years (1957–61); its exact opening year is uncertain. It was his last site of psychiatric experimentation; he dictated The Wretched of the Earth to Marie-Jeanne Manuellan, a social worker there."],
- ["pccpal","Palestine",1,1983,null,"Palestine Counseling Center",[],"Mubarak Awad and a group of Palestinian psychologists","Founded in 1983 in Jerusalem to serve Palestinians in Jerusalem, Gaza and the West Bank; it refuses Israeli state funding and works in the tradition of liberation psychology, offering subsidized individual and group therapy."],
- ["fann","Dakar",0,1959,null,"Fann Psychiatric Clinic",[],"Henri Collomb","Collomb, a French military doctor, directed Fann from 1959, a year before independence, for nearly twenty years. The 'Fann school' joined psychodynamic theory and ethnopsychiatry, bringing traditional healers and the communal penc meeting into the clinic."],
- ["ips","Kolkata",0,1922,null,"Indian Psychoanalytical Society",[],"Girindrasekhar Bose","The first society in Asia. Bose had practiced psychoanalysis in Calcutta since 1909, working from a colonial deck chair rather than a couch, and corresponded with Freud from 1921 to 1937. Membership made no distinction between British and Indian members. In the late 1920s the society sent Freud an ivory Vishnu, which he kept on his desk."],
- ["sendai","Sendai",0,1933,-1,"Sendai Branch of the IPA",[],"Kiyoyasu Marui","Marui visited Freud in 1933 and won approval for a Sendai branch, Japan's first link to the IPA."],
- ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa","Established in October 1955 by Kosawa, who had trained in Vienna in 1932–33 (analysis with Richard Sterba, supervision with Paul Federn) and opened a private clinic in Tokyo on his return. It remains Japan's only IPA-recognized psychoanalytic organization."]
-];
-const REGIONS=[
- ["Africa & the Middle East", ["Beirut", "Berrechid", "Blida (near Algiers)", "Cairo", "Dakar", "Johannesburg", "Palestine", "Tunis"]],
- ["Asia", ["Kolkata", "Sendai", "Tokyo"]],
- ["Europe", ["Berlin", "Budapest", "Cour-Cheverny", "Frankfurt", "Gorizia", "Istanbul", "London", "Paris", "Saint-Alban", "Trieste", "Vienna", "Zagreb", "Zurich"]],
- ["Latin America", ["Bogotá", "Buenos Aires", "Caracas", "León and Managua", "Lima", "Mexico City", "Montevideo", "Rio de Janeiro", "Santiago", "São Paulo"]],
- ["North America", ["Boston", "Chicago", "Los Angeles", "New York", "Philadelphia", "San Francisco", "Stockbridge", "Topeka", "Washington–Baltimore"]]];
-const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
-const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","isw","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","cnicolle","pccpal","nicteam","riggs","chestnut","menn","lafargue"]);
-let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
+let mode="ic"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"ic"); }catch(_){}
 const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
 function draw(){
   const W=Math.max(980,svg.parentNode.clientWidth), px=(W-LEFT-RIGHT)/(Y1-Y0), X=y=>LEFT+(y-Y0)*px;
@@ -460,13 +369,67 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then
   gl.append("path").attr("class","borders").attr("d",path(topojson.mesh(w,w.objects.countries,(a,b)=>a!==b))); });
 const slider=document.getElementById("wyr"), yl=document.getElementById("wyl"); const NOW=new Date().getFullYear(); slider.max=NOW; slider.value=NOW; let year=NOW, sel=null;
 const live=(r,y)=>r[3]<=y && (r[4]===null || (r[4]===-1 ? y<=r[3]+12 : y<r[4]) || (r[9]&&y>=r[9]));
+// ---- Movements prototype ----
+const EX={"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
+const P_=c=>proj(LL[c]||EX[c]);
+// [id or "", name, from, to, year, reason, note]
+const MOVES=[
+ ["klein","Melanie Klein","Berlin","London",1926,"invitation","Invited by Ernest Jones to lecture, she settled in London."],
+ ["spielrein","Sabina Spielrein","Geneva","Moscow",1923,"return","Returned to Russia, where she taught until psychoanalysis was banned."],
+ ["rado","Sándor Radó","Berlin","New York",1931,"invitation","Came to organize training at the New York Psychoanalytic Institute."],
+ ["horney","Karen Horney","Berlin","Chicago",1932,"invitation","Joined Franz Alexander at the new Chicago Institute."],
+ ["eitingon","Max Eitingon","Berlin","Palestine",1933,"fascism","Left Berlin after the Nazi takeover and founded the society in Jerusalem."],
+ ["simmel","Ernst Simmel","Berlin","Los Angeles",1934,"fascism","Briefly imprisoned by the Nazis; reached Los Angeles in 1934."],
+ ["fromm","Erich Fromm","Frankfurt","New York",1934,"fascism","Left Germany as the Frankfurt Institute moved into exile."],
+ ["deutsch","Helene Deutsch","Vienna","Boston",1935,"fascism","Emigrated to Boston as fascism rose in Austria."],
+ ["koch","Adelheid Koch","Berlin","São Paulo",1936,"fascism","Forced out of Nazi Germany, she became Brazil's first training analyst."],
+ ["langer","Marie Langer","Vienna","Montevideo",1938,"fascism","After the International Brigades in Spain, four years in Uruguay."],
+ ["freud","Sigmund Freud","Vienna","London",1938,"fascism","Left Vienna after the Anschluss; died in London in 1939."],
+ ["anna","Anna Freud","Vienna","London",1938,"fascism","Left Vienna with her father after the Anschluss."],
+ ["reik","Theodor Reik","The Hague","New York",1938,"fascism","Fled Berlin for The Hague in 1934, then New York."],
+ ["fenichel","Otto Fenichel","Berlin","Los Angeles",1938,"fascism","Left Berlin in 1933 for Oslo and Prague; came to Los Angeles in 1938."],
+ ["garma","Ángel Garma","Madrid","Buenos Aires",1938,"fascism","Left Spain during the Civil War; a founder of the APA."],
+ ["tosquelles","François Tosquelles","Barcelona","Saint-Alban",1939,"fascism","A Republican psychiatrist interned after Franco's victory, transferred to Saint-Alban in December 1939."],
+ ["zewar","Mustafa Zewar","Paris","Cairo",1941,"return","Returned to Egypt after training in Paris."],
+ ["langer","Marie Langer","Montevideo","Buenos Aires",1942,"exile","Settled in Buenos Aires."],
+ ["matteblanco","Ignacio Matte Blanco","London","Santiago",1943,"return","Returned to Chile after training in London and work in the US."],
+ ["safouan","Moustapha Safouan","Alexandria","Paris",1945,"training","Moved to Paris and began analysis."],
+ ["fromm","Erich Fromm","New York","Mexico City",1950,"invitation","Invited to lead psychoanalytic training at the National University."],
+ ["fanon","Frantz Fanon","Saint-Alban","Algeria",1953,"work","Took up a post at Blida-Joinville after his residency with Tosquelles."],
+ ["wbaranger","Willy Baranger","Buenos Aires","Montevideo",1954,"invitation","Invited to lead training in Montevideo."],
+ ["fanon","Frantz Fanon","Algeria","Tunisia",1957,"decolonization","Expelled from Algeria in January 1957; moved to Tunis."],
+ ["safouan","Moustapha Safouan","Alexandria","Paris",1959,"exile","Left Nasser's Egypt for exile in France."],
+ ["matteblanco","Ignacio Matte Blanco","Santiago","Rome",1966,"emigration","Settled in Rome."],
+ ["bion","Wilfred Bion","London","Los Angeles",1968,"invitation","Moved to Los Angeles, where he worked until 1979."],
+ ["langer","Marie Langer","Buenos Aires","Mexico City",1974,"dictatorship","Fled to Mexico after threats from the Argentine Anticommunist Alliance."]
+];
+const EVENTS=[[1900,"Freud publishes The Interpretation of Dreams"],[1910,"The International Psychoanalytical Association is founded"],[1920,"The Berlin Poliklinik opens: the first free clinic and training institute"],[1926,"Melanie Klein moves to London"],[1933,"The Nazis take power; analysts begin to leave Berlin"],[1936,"Civil war in Spain"],[1938,"The Anschluss: Freud and much of the Vienna Society flee"],[1942,"The Argentine Psychoanalytic Association is founded in Buenos Aires"],[1953,"The first Paris split: Lacan and Lagache leave the SPP"],[1954,"War of independence begins in Algeria; Fanon is at Blida"],[1961,"Basaglia opens the wards at Gorizia"],[1968,"Bion moves to Los Angeles"],[1971,"Plataforma and Documento break with the Argentine association"],[1974,"Langer flees to Mexico; the Escuela Freudiana is founded in Buenos Aires"],[1976,"A military coup in Argentina sends analysts into exile"],[1978,"Italy's Law 180 begins closing the asylums"],[1980,"Lacan dissolves the École Freudienne de Paris"],[2009,"Beirut: the first IPA society in the Arab world"]];
+const gm=root.insert("g",()=>gc.node()).attr("class","moves");
+svgW.select("defs").append("marker").attr("id","mvarr").attr("viewBox","0 0 10 10").attr("refX",8).attr("refY",5).attr("markerWidth",7).attr("markerHeight",7).attr("orient","auto-start-reverse").attr("markerUnits","userSpaceOnUse")
+  .append("path").attr("d","M0,0 L10,5 L0,10 Z").attr("fill","#7CF000");
+let SHOWMV=false; try{ SHOWMV=localStorage.getItem("tm-moves")==="1"; }catch(_){}
+function arcD(m){ const a=P_(m[2]), b=P_(m[3]); if(!a||!b) return null; const dx=b[0]-a[0], dy=b[1]-a[1], d=Math.hypot(dx,dy), k=Math.min(.32,26/d+.12);
+  const cx=(a[0]+b[0])/2-dy*k, cy=(a[1]+b[1])/2+dx*k; return `M${a[0]},${a[1]} Q${cx},${cy} ${b[0]},${b[1]}`; }
+function paintMoves(){
+  const data=SHOWMV?MOVES.filter(m=>m[4]<=year):[];
+  const p=gm.selectAll("path").data(data,m=>m.join("|")).join(e=>{const p=e.append("path").attr("class","mv"); p.append("title"); return p;})
+    .attr("d",arcD).attr("marker-end","url(#mvarr)")
+    .style("opacity",m=>year>=NOW?.85:(year-m[4]<=6?1:.32))
+    .on("click",(e,m)=>{ if(m[0]) location.href="analysts.html#"+m[0]; });
+  p.select("title").text(m=>`${m[1]}: ${m[2]} → ${m[3]}, ${m[4]}. ${m[6]}`);
+  gm.selectAll("path").attr("stroke-width",1.8/K);
+  svgW.select("#mvarr").attr("markerWidth",8/K).attr("markerHeight",8/K);
+  const ev=[...EVENTS].reverse().find(e=>e[0]<=year&&year-e[0]<=5&&year<NOW);
+  document.getElementById("wev").textContent=ev?`${ev[0]} · ${ev[1]}`:"";
+}
+
 function paint(){
   const rows=I.filter(r=>vis(r)&&LL[r[1]]);
   const by=d3.group(rows.filter(r=>live(r,year)),r=>r[1]);
   const data=[...by].map(([c,rs])=>({c,items:rs.slice().sort((a,b)=>CLINICS.has(a[0])-CLINICS.has(b[0])||a[3]-b[3])}));
   const g=gc.selectAll("g.city").data(data,d=>d.c).join(e=>{const g=e.append("g").attr("class","city"); g.append("circle").attr("class","hit").attr("fill","transparent"); g.append("g").attr("class","mk"); g.append("text"); return g;});
   g.attr("transform",d=>`translate(${proj(LL[d.c])})`).classed("on",d=>d.c===sel).on("click",(e,d)=>{sel=d.c; panel(); paint(); popCity(d.c);});
-  const SP=7.2/K, r0=3.1/K, GA=Math.PI*(3-Math.sqrt(5));
+  const SP=9.6/K, r0=4.6/K, GA=Math.PI*(3-Math.sqrt(5));
   const pos=i=>i===0?[0,0]:[SP*.62*Math.sqrt(i+.4)*Math.cos(i*GA), SP*.62*Math.sqrt(i+.4)*Math.sin(i*GA)];
   const ext=d=>{ const n=d.items.length; return n<2?r0:SP*.62*Math.sqrt(n-1+.4)+r0; };
   const RING=MK.startsWith("ring");
@@ -480,6 +443,7 @@ function paint(){
     .select("title").text(x=>`${x.r[5]} (${x.r[3]}${x.r[4]===-1?"–?":x.r[4]?"–"+x.r[4]:"–"})`);
   g.select("text").text(d=>d.c).attr("x",d=>ext(d)+4/K).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px");
   yl.textContent=year>=NOW?"Today":year;
+  paintMoves();
 }
 function panel(){
   const p=document.getElementById("wpanel"); if(!sel){return;}
@@ -536,7 +500,7 @@ paint();
   ctl.innerHTML=`<a class="vsw" href="${IS_MAP?"institutes.html":"map.html"}" role="switch" aria-checked="${IS_MAP?"false":"true"}" aria-label="Switch between map and timeline"><span class="${IS_MAP?"":"dim"}">Map</span><span class="trk${IS_MAP?"":" r"}"><i></i></span><span class="${IS_MAP?"dim":""}">Timeline</span></a>
   <div class="fsw" role="group" aria-label="Show"><button type="button" data-k="i" role="switch"><span class="trk r"><i></i></span><span>Institutes</span></button><button type="button" data-k="c" role="switch"><span class="trk r"><i></i></span><span>Clinics / Hospitals</span></button></div>`;
   const anchor=document.querySelector(".viewtog"); anchor.parentNode.insertBefore(ctl,anchor);
-  const getMode=()=>{ try{ const m=localStorage.getItem("tm-clinics"); return m==="1"?"ic":(["i","c","ic"].includes(m)?m:"i"); }catch(_){ return "i"; } };
+  const getMode=()=>{ try{ const m=localStorage.getItem("tm-clinics"); return m==="1"?"ic":(["i","c","ic"].includes(m)?m:"ic"); }catch(_){ return "ic"; } };
   const btns=[...ctl.querySelectorAll(".fsw button")];
   function render(){ const m=getMode(); btns.forEach(b=>{ const on=m.includes(b.dataset.k); b.setAttribute("aria-checked",String(on)); b.querySelector(".trk").className="trk"+(on?" r":" off"); b.querySelector("span:last-child").className=on?"":"dim"; }); }
   btns.forEach(b=>b.onclick=()=>{ const m=getMode(); let i=m.includes("i"), c=m.includes("c");
@@ -544,6 +508,10 @@ paint();
     const nm=i&&c?"ic":(i?"i":"c"); const t=document.querySelector(`.tog button[data-c="${nm}"]`); if(t) t.click(); try{ localStorage.setItem("tm-clinics",nm); }catch(_){} render(); });
   render();
 })();</script>
+<script>(function(){ const f=document.querySelector(".fsw"); if(!f||!location.pathname.endsWith("map.html")) return;
+  const b=document.createElement("button"); b.type="button"; b.dataset.k="m"; b.setAttribute("role","switch"); b.innerHTML='<span class="trk"><i></i></span><span>Movements</span>'; f.appendChild(b);
+  const r=()=>{ b.querySelector(".trk").className="trk"+(SHOWMV?" r":" off"); b.querySelector("span:last-child").className=SHOWMV?"":"dim"; b.setAttribute("aria-checked",String(SHOWMV)); };
+  b.onclick=()=>{ SHOWMV=!SHOWMV; try{ localStorage.setItem("tm-moves",SHOWMV?"1":"0"); }catch(_){} r(); paintMoves(); }; r(); })();</script>
 <script src="search.js"></script>
 <script data-goatcounter="https://transferenceworld.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
