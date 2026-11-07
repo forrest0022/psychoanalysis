@@ -140,16 +140,16 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:14px 34px;margin:0 0 14px}
 .viewtog,.tog{display:none!important}
 .vsw{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font:600 14px var(--wide);letter-spacing:.04em;text-transform:uppercase}
-.vsw .dim,.fsw .dim{color:#B5B5AF}
+.vsw .dim,.ctl .dim{color:#B5B5AF}
 .trk{position:relative;flex:none;width:58px;height:30px;border-radius:999px;background:#EF82C8;transition:background .15s}
 .trk i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;border:1.6px solid var(--ink);box-sizing:border-box;transition:left .18s}
 .trk.r i{left:31px}
-.vsw:hover .trk,.fsw button:hover .trk{outline:2px solid var(--ink);outline-offset:1px}
+.vsw:hover .trk,.ctl button:hover .trk{outline:2px solid var(--ink);outline-offset:1px}
 .fsw{display:inline-flex;gap:22px}
-.fsw button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font:600 14px var(--wide);letter-spacing:.04em;text-transform:uppercase}
-.fsw button[data-k="i"] .trk{background:#4A2A12}
-.fsw button[data-k="c"] .trk{background:#0038FF}
-.fsw .trk.off,.fsw button .trk.off{background:#E4E4DF}
+.ctl button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font:600 14px var(--wide);letter-spacing:.04em;text-transform:uppercase}
+.ctl button[data-k="i"] .trk{background:#4A2A12}
+.ctl button[data-k="c"] .trk{background:#0038FF}
+.ctl .trk.off,.ctl button .trk.off{background:#E4E4DF}
 
 #wsvg .mv{fill:none;stroke:#55E000;stroke-width:1.15;stroke-linecap:round;pointer-events:none;vector-effect:non-scaling-stroke}
 #wsvg .mv.hov{stroke:#0E0E0E}
@@ -161,10 +161,11 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 #wsvg .mvh{fill:none;stroke:#fff;stroke-width:3.2;stroke-linecap:round;opacity:.9;pointer-events:none;vector-effect:non-scaling-stroke}
 
 .wev{margin:0;padding:0 18px;height:3.1em;box-sizing:content-box;padding-bottom:12px;overflow:hidden;font:italic 300 15px/1.4 var(--wide);color:var(--ink)}
-.fsw button[data-k="m"] .trk{background:#7CF000}
-.fsw button[data-k] .trk.off{background:#E4E4DF}
+.ctl button[data-k="m"] .trk{background:#7CF000}
+.ctl button[data-k] .trk.off{background:#E4E4DF}
 .wwrap{grid-template-columns:minmax(0,1fr)!important}
 .wpanel{display:none!important}
+@media (max-width:760px){.ctl{display:grid;grid-template-columns:auto auto;justify-content:start;gap:14px 22px}.fsw{display:contents}.vsw,.ctl button{font-size:12.5px;gap:8px}.trk{width:50px;height:26px}.trk i{width:20px;height:20px}.trk.r i{left:27px}}
 </style>
 </head>
 <body>
@@ -378,7 +379,7 @@ fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then
 const slider=document.getElementById("wyr"), yl=document.getElementById("wyl"); const NOW=new Date().getFullYear(); slider.max=NOW; slider.value=NOW; let year=NOW, sel=null;
 const live=(r,y)=>r[3]<=y && (r[4]===null || (r[4]===-1 ? y<=r[3]+12 : y<r[4]) || (r[9]&&y>=r[9]));
 // ---- Movements prototype ----
-const EX={"Oslo":[10.75,59.91],"Manchester":[-2.24,53.48],"Detroit":[-83.05,42.33],"Nuremberg":[11.08,49.45],"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
+const EX={"Oslo":[10.75,59.91],"Heidelberg":[8.67,49.4],"Strasbourg":[7.75,48.58],"Menton":[7.5,43.78],"Marseille":[5.37,43.3],"Manchester":[-2.24,53.48],"Detroit":[-83.05,42.33],"Nuremberg":[11.08,49.45],"Madrid":[-3.7,40.42],"Barcelona":[2.17,41.39],"Alexandria":[29.92,31.2],"Rome":[12.5,41.9],"Moscow":[37.62,55.75],"Geneva":[6.14,46.2],"St Petersburg":[30.32,59.94],"The Hague":[4.3,52.08],"Montevideo":[-56.16,-34.9]};
 const P_=c=>proj(LL[c]||EX[c]);
 // [id or "", name, from, to, year, reason, note]
 const MOVES=[
@@ -404,6 +405,17 @@ const MOVES=[
  ["jacobson","Edith Jacobson","Berlin","New York",1941,"fascism","Emigrated to the United States in 1941."],
  ["","Grete Bibring","London","Boston",1941,"emigration","Moved on to Boston, where she became a training analyst."],
  ["hitschmann","Eduard Hitschmann","London","Boston",1944,"emigration","Moved from London to Boston, where he worked as a training analyst."],
+ ["sachs","Hanns Sachs","Berlin","Boston",1932,"fascism","Left Germany in 1932, anticipating what was coming, and settled in Boston."],
+ ["heimann","Paula Heimann","Berlin","London",1933,"fascism","Emigrated to London after training at the Berlin Institute."],
+ ["","Moshe Wulff","Berlin","Palestine",1933,"fascism","Emigrated to Tel Aviv to found the Palestine society with Eitingon."],
+ ["freichmann","Frieda Fromm-Reichmann","Heidelberg","Strasbourg",1933,"fascism","Left Germany for Alsace."],
+ ["freichmann","Frieda Fromm-Reichmann","Strasbourg","Palestine",1934,"fascism","Spent 1934 in Palestine."],
+ ["freichmann","Frieda Fromm-Reichmann","Palestine","Washington–Baltimore",1935,"fascism","Came to the United States in 1935 and joined Chestnut Lodge."],
+ ["","Siegfried Bernfeld","Menton","San Francisco",1937,"fascism","After exile in France from 1932, emigrated to California and taught in San Francisco."],
+ ["mahler","Margaret Mahler","Vienna","London",1938,"fascism","Left Vienna for England after the Anschluss."],
+ ["mahler","Margaret Mahler","London","New York",1938,"fascism","After a short stay in London, settled in New York."],
+ ["reich","Wilhelm Reich","Oslo","New York",1939,"fascism","Sailed from Norway on August 19, 1939, for New York."],
+ ["loewenstein","Rudolph Loewenstein","Marseille","New York",1942,"fascism","Left Marseille for the United States in 1942; settled in New York in 1943."],
  ["eitingon","Max Eitingon","Berlin","Palestine",1933,"fascism","Left Berlin after the Nazi takeover and founded the society in Jerusalem."],
  ["simmel","Ernst Simmel","Berlin","Los Angeles",1934,"fascism","Briefly imprisoned by the Nazis; reached Los Angeles in 1934."],
  ["fromm","Erich Fromm","Frankfurt","New York",1933,"fascism","Fled Nazi Germany in 1933 for the United States."],
@@ -566,7 +578,7 @@ paint();
   render();
 })();</script>
 <script>(function(){ const f=document.querySelector(".fsw"); if(!f||!location.pathname.endsWith("map.html")) return;
-  const b=document.createElement("button"); b.type="button"; b.dataset.k="m"; b.setAttribute("role","switch"); b.innerHTML='<span class="trk"><i></i></span><span>Migrations</span>'; f.appendChild(b);
+  const b=document.createElement("button"); b.type="button"; b.dataset.k="m"; b.setAttribute("role","switch"); b.innerHTML='<span class="trk"><i></i></span><span>Migrations</span>'; const v=document.querySelector(".vsw"); v.after(b);
   const r=()=>{ b.querySelector(".trk").className="trk"+(SHOWMV?" r":" off"); b.querySelector("span:last-child").className=SHOWMV?"":"dim"; b.setAttribute("aria-checked",String(SHOWMV)); };
   b.onclick=()=>{ SHOWMV=!SHOWMV; try{ localStorage.setItem("tm-moves",SHOWMV?"1":"0"); }catch(_){} r(); paintMoves(); }; r(); })();</script>
 <script src="search.js"></script>

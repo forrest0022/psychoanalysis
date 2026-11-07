@@ -43,16 +43,17 @@ h1 .tagline .rot.out{opacity:0}
 .ctl{display:flex;flex-wrap:wrap;align-items:center;gap:14px 34px;margin:0 0 14px}
 .viewtog,.tog{display:none!important}
 .vsw{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font:600 14px var(--wide);letter-spacing:.04em;text-transform:uppercase}
-.vsw .dim,.fsw .dim{color:#B5B5AF}
+.vsw .dim,.ctl .dim{color:#B5B5AF}
 .trk{position:relative;flex:none;width:58px;height:30px;border-radius:999px;background:#EF82C8;transition:background .15s}
 .trk i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;border:1.6px solid var(--ink);box-sizing:border-box;transition:left .18s}
 .trk.r i{left:31px}
-.vsw:hover .trk,.fsw button:hover .trk{outline:2px solid var(--ink);outline-offset:1px}
+.vsw:hover .trk,.ctl button:hover .trk{outline:2px solid var(--ink);outline-offset:1px}
 .fsw{display:inline-flex;gap:22px}
-.fsw button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font:600 14px var(--wide);letter-spacing:.04em;text-transform:uppercase}
-.fsw button[data-k="i"] .trk{background:#4A2A12}
-.fsw button[data-k="c"] .trk{background:#0038FF}
-.fsw .trk.off,.fsw button .trk.off{background:#E4E4DF}
+.ctl button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:12px;font:600 14px var(--wide);letter-spacing:.04em;text-transform:uppercase}
+.ctl button[data-k="i"] .trk{background:#4A2A12}
+.ctl button[data-k="c"] .trk{background:#0038FF}
+.ctl .trk.off,.ctl button .trk.off{background:#E4E4DF}
+@media (max-width:760px){.ctl{display:grid;grid-template-columns:auto auto;justify-content:start;gap:14px 22px}.fsw{display:contents}.vsw,.ctl button{font-size:12.5px;gap:8px}.trk{width:50px;height:26px}.trk i{width:20px;height:20px}.trk.r i{left:27px}}
 </style>
 </head>
 <body>
