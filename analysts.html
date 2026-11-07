@@ -205,6 +205,11 @@ const P=[
 ["pontalis","J.-B. Pontalis","1924–2013","Paris","Analyzed by Lacan; co-author of The Language of Psychoanalysis."],
 ["leclaire","Serge Leclaire","1924–1994","Paris","Analyzed by Lacan; a leading Lacanian."],
 ["garma","Ángel Garma","1904–1993","Berlin, then Buenos Aires","Analyzed by Reik; a founder of the Argentine Psychoanalytic Association."],
+["pichon", "Enrique Pichon-Rivière", "1907–1977", "Geneva, then Buenos Aires", "Analyzed by Garma; a founder of the Argentine Psychoanalytic Association whose operative groups joined psychoanalysis to social psychology."],
+["aberastury", "Arminda Aberastury", "1910–1972", "Buenos Aires", "Analyzed by Garma; pioneer of child analysis in Latin America and translator of Klein into Spanish."],
+["bleger", "José Bleger", "1922–1972", "Buenos Aires", "Trained with Pichon-Rivière; a Marxist analyst known for his work on the frame and symbiosis."],
+["anzieu", "Didier Anzieu", "1923–1999", "Paris", "Analyzed by Lacan from 1949 (his mother was Lacan's patient \"Aimée\"); later trained with Lagache and helped found the APF. Known for the skin-ego."],
+["bollas", "Christopher Bollas", "b. 1943", "Buffalo, then London", "Trained at the British Institute; Paula Heimann and John Bowlby were among his teachers. An Independent, known for the unthought known."],
 ["federn","Paul Federn","1871–1950","Vienna, then New York","Early member of Freud's circle; Aichhorn's analyst."],
 ["connell","E. H. Connell","dates unknown","Edinburgh","Australian-trained analyst; Fairbairn's analyst when Fairbairn was a medical student. Who analyzed him is undocumented."],
 ["fenichel","Otto Fenichel","1897–1946","Vienna, Berlin, then Los Angeles","Analyzed by Federn, then Radó; Marxist analyst whose circular letters chronicled the movement in exile."],
@@ -226,6 +231,7 @@ const P=[
 ["payne","Sylvia Payne","1880–1976","London","Analyzed by Sachs; one of Klein's later analysts."],
 ];
 const E=[
+["garma", "pichon"],["garma", "aberastury"],["lacan", "anzieu"],
 ["freud","stekel"],["stekel","greenson"],["fenichel","greenson"],
 ["freud","ferenczi"],["freud","anna"],["freud","eitingon"],["freud","jstrachey"],["freud","astrachey"],["freud","riviere"],["freud","deutsch"],["freud","hd"],["freud","burlingham"],["freud","rickman"],["freud","hartmann"],
 ["ferenczi","jones"],["ferenczi","klein"],["ferenczi","balint"],["ferenczi","thompson"],["ferenczi","rickman"],
@@ -241,7 +247,7 @@ const E=[
 ["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"],["garma","racker"],["langer","racker"]];
 const byId=Object.fromEntries(P.map(([id,name,dates,city,blurb])=>[id,{id,name,dates,city,blurb,born:(dates.match(/\d{4}/)?+dates.match(/\d{4}/)[0]:({connell:1880}[id]||1900))}]));
 const nodes=Object.values(byId);
-const WK=[["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
+const WK=[["pichon", "bleger"],["heimann", "bollas"],["bowlby", "bollas"],["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
 const links=E.map(([s,t])=>({source:s,target:t,w:false})).concat(WK.map(([s,t])=>({source:s,target:t,w:true})));
 const TR=new Set(WK.map(e=>e[0]+">"+e[1]));
 const trainUp=id=>WK.filter(e=>e[1]===id&&TR.has(e[0]+">"+e[1])).map(e=>e[0]);
