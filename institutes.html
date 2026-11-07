@@ -216,11 +216,11 @@ const I=[
  ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa","Established in October 1955 by Kosawa, who had trained in Vienna in 1932–33 (analysis with Richard Sterba, supervision with Paul Federn) and opened a private clinic in Tokyo on his return. It remains Japan's only IPA-recognized psychoanalytic organization."]
 ];
 const REGIONS=[
- ["Europe",["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Gorizia","Trieste"]],
- ["North America",["New York","Boston","Stockbridge","Philadelphia","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco"]],
- ["Latin America",["Mexico City","León and Managua","Bogotá","Caracas","Lima","Santiago","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro"]],
- ["Africa and the Middle East",["Blida (near Algiers)","Berrechid","Tunis","Dakar","Johannesburg","Cairo","Beirut","Istanbul","Palestine"]],
- ["Asia",["Kolkata","Sendai","Tokyo"]]];
+ ["Africa and the Middle East", ["Blida (near Algiers)", "Berrechid", "Tunis", "Dakar", "Johannesburg", "Cairo", "Beirut", "Istanbul", "Palestine"]],
+ ["Asia", ["Kolkata", "Sendai", "Tokyo"]],
+ ["Europe", ["Vienna", "Budapest", "Zagreb", "Berlin", "Frankfurt", "Zurich", "London", "Paris", "Saint-Alban", "Cour-Cheverny", "Gorizia", "Trieste"]],
+ ["Latin America", ["Mexico City", "León and Managua", "Bogotá", "Caracas", "Lima", "Santiago", "Buenos Aires", "Montevideo", "São Paulo", "Rio de Janeiro"]],
+ ["North America", ["New York", "Boston", "Stockbridge", "Philadelphia", "Washington–Baltimore", "Topeka", "Chicago", "Los Angeles", "San Francisco"]]];
 const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
 const svg=document.getElementById("map"), card=document.getElementById("card");
