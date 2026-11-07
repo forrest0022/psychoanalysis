@@ -226,7 +226,8 @@ function show(id){ cur=id; mark(id); const r=byId[id], kids=I.filter(k=>k[6].inc
   card.innerHTML=`<button type="button" class="x" aria-label="Close">×</button><h2>${esc(r[5])}</h2>
    <div class="meta"><span class="tag fill">${esc(r[1])}</span><span class="tag">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}</span>${r[9]?`<span class="tag">Refounded ${r[9]}</span>`:""}</div>
    ${r[8]?`<p>${esc(r[8])}</p>`:""}
-   ${r[7]?`<h3>Founders</h3><p class="fd">${founders(r[7])}</p>`:""}
+   ${r[7]||FIGURES[r[0]]?`<h3>Founders / figures</h3><p class="fd">${founders([r[7],FIGURES[r[0]]].filter(Boolean).join(", "))}</p>`:""}
+   ${SCHOOLS_OF[r[0]]?`<h3>Schools</h3><p class="fd">${SCHOOLS_OF[r[0]].map(k=>`<a href="schools.html#${k}">${SCHOOL_NAME[k]}</a>`).join(", ")}</p>`:""}
    ${r[6].filter(p=>vis(byId[p])).length?`<h3>Came out of</h3><div class="list">${r[6].filter(p=>vis(byId[p])).map(p=>row(byId[p])).join("")}</div>`:""}
    ${kids.length?`<h3>Gave rise to</h3><div class="list">${kids.map(row).join("")}</div>`:""}`;
   card.hidden=false;
@@ -238,6 +239,8 @@ function show(id){ cur=id; mark(id); const r=byId[id], kids=I.filter(k=>k[6].inc
   else { card.style.left=Math.max(16,Math.min(bb.left-st.left-10,W-cw-16))+"px"; card.style.top=(bb.bottom-st.top+22)+"px"; }
   card.querySelector(".x").onclick=close; }
 function close(){ card.hidden=true; cur=null; mark(null); }
+function fromHash(){ const id=decodeURIComponent(location.hash.slice(1)); if(!byId[id]) return; if(!svg.querySelector(`.inst[data-id="${id}"]`)){ try{ localStorage.setItem("tm-clinics","ic"); }catch(_){} location.reload(); return; } const g=svg.querySelector(`.inst[data-id="${id}"]`); g.scrollIntoView({block:"start",inline:"center"}); scrollBy(0,-140); setTimeout(()=>show(id),60); }
+addEventListener("hashchange",fromHash); setTimeout(fromHash,0);
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!card.hidden) close(); });
 document.addEventListener("click",e=>{ if(!card.hidden&&!card.contains(e.target)&&!e.target.closest(".inst")) close(); });
 card.addEventListener("click",e=>{ const a=e.target.closest("[data-go]"); if(a){ e.preventDefault(); show(a.dataset.go); } });

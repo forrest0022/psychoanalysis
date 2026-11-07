@@ -131,3 +131,8 @@ const SPLIT_WHY={
 };
 // branches that are a society's own clinic or training arm, not splits
 const ARM=new Set(["amb","bfc","ffmc","poli","lcp","topeka"]);
+// schools of thought each institution is clearly identified with (links to schools.html)
+const SCHOOLS_OF={"wpv": ["freud"], "bps": ["klein", "independents", "contemporary-freudian"], "tav": ["attachment"], "afc": ["contemporary-freudian"], "wawi": ["interpersonal"], "wsp": ["interpersonal"], "chestnut": ["interpersonal"], "nyu": ["relational"], "efp": ["lacan"], "ecf": ["lacan"], "efba": ["lacan"], "jung": ["jung"], "pcc": ["klein"], "nyps": ["ego-psychology"], "nyfs": ["contemporary-freudian"], "chi": ["self-psychology"], "icp": ["self-psychology", "intersubjective"], "blida": ["fanon"]};
+const SCHOOL_NAME={"freud": "Freudian", "jung": "Jungian", "lacan": "Lacanian", "fanon": "Fanonian", "klein": "Kleinian", "ego-psychology": "Ego psychology", "independents": "British object relations", "interpersonal": "Interpersonal", "self-psychology": "Self psychology", "contemporary-freudian": "Contemporary Freudian", "attachment": "Attachment", "relational": "Relational", "intersubjective": "Intersubjective"};
+// major figures beyond the founders
+const FIGURES={"wpv": "Alfred Adler, Otto Rank, Paul Federn, Helene Deutsch, Anna Freud", "bps": "Melanie Klein, Anna Freud, Donald Winnicott, Wilfred Bion, Paula Heimann", "tav": "John Bowlby, Michael Balint, Wilfred Bion", "chestnut": "Frieda Fromm-Reichmann", "nyu": "Emmanuel Ghent, Stephen Mitchell, Lewis Aron", "efp": "Françoise Dolto, Serge Leclaire", "chi": "Heinz Kohut", "icp": "Robert Stolorow", "nyps": "Heinz Hartmann, Ernst Kris, Rudolph Loewenstein", "blida": "Frantz Fanon"};

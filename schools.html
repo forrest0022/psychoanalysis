@@ -110,6 +110,7 @@ nav button:hover,nav button.on{font-weight:700;color:var(--link)}
 .concepts dd{margin:0;font-size:16px;line-height:1.65}
 .links{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
 .links .lab{flex-basis:100%;font-size:12.5px;font-weight:600;font-stretch:112%;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+a.chip{text-decoration:none;display:inline-block}
 .chip{font:500 14px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.02em;color:var(--ink);background:none;border:1.6px solid var(--ink);border-radius:999px;padding:4px 12px;cursor:pointer}
 .chip:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
 .back{font:500 14px var(--wide);font-stretch:112%;text-transform:uppercase;letter-spacing:.04em;color:var(--ink);background:none;border:0;padding:0;margin:0 0 16px;cursor:pointer}
@@ -264,6 +265,7 @@ h1 .tagline .rot.out{opacity:0}
   <div class="fab" id="fab"></div>
 </div>
 
+<script src="places-data.js"></script>
 <script>window.PILL=true;
 
 const LINEAGE={root:"Roots",british:"Kleinian and British line",relational:"Interpersonal and relational line",self:"Self psychology line",side:"Others"};
@@ -563,6 +565,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const treeEl=document.getElementById("tree"), edgesEl=document.getElementById("edges");
 const chip=k=>`<button type="button" class="chip" data-go="${k}">${esc(N[k].name)}</button>`;
 
+const INST_OF={}; I.forEach(r=>(SCHOOLS_OF[r[0]]||[]).forEach(k=>(INST_OF[k]=INST_OF[k]||[]).push(r)));
 function nodeDetail(id){
   const n=N[id], up=n.parents, down=kids(id), [place,reg]=P[id], infIn=n.infl||[], infOut=ids.filter(k=>(N[k].infl||[]).includes(id));
   return `<h2>${esc(n.full)}</h2>
@@ -581,6 +584,7 @@ function nodeDetail(id){
       <div class="list">${n.th.map(t=>`<button type="button" class="trow" data-th="${t}"><span>${esc(T[t][0])}</span><span class="d">${esc(T[t][1])} →</span></button>`).join("")}${(n.br||[]).map(t=>`<button type="button" class="trow also" data-th="${t}"><span>${esc(T[t][0])} <em>also</em></span><span class="d">${esc(T[t][1])} →</span></button>`).join("")}</div>
       <h3>Key texts</h3>
       <dl class="texts">${n.tx.map(([y,ti,by])=>`<dt>${y}</dt><dd><i>${esc(ti)}</i> <span class="by">· ${esc(by)}</span></dd>`).join("")}</dl>
+      ${INST_OF[id]?`<h3>Institutes &amp; clinics</h3><div class="links">${INST_OF[id].map(r=>`<a class="chip" href="institutes.html#${r[0]}">${esc(r[5])}</a>`).join("")}</div>`:""}
       <h3>On the tree</h3>
       ${up.length?`<div class="links"><span class="lab">Descends from</span>${up.map(chip).join("")}</div>`:""}
       ${infIn.length?`<div class="links"><span class="lab">Influenced by</span>${infIn.map(chip).join("")}</div>`:""}

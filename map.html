@@ -341,7 +341,8 @@ function show(id){ cur=id; mark(id); const r=byId[id], kids=I.filter(k=>k[6].inc
   card.innerHTML=`<button type="button" class="x" aria-label="Close">×</button><h2>${esc(r[5])}</h2>
    <div class="meta"><span class="tag fill">${esc(r[1])}</span><span class="tag">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}</span>${r[9]?`<span class="tag">Refounded ${r[9]}</span>`:""}</div>
    ${r[8]?`<p>${esc(r[8])}</p>`:""}
-   ${r[7]?`<h3>Founders</h3><p class="fd">${founders(r[7])}</p>`:""}
+   ${r[7]||FIGURES[r[0]]?`<h3>Founders / figures</h3><p class="fd">${founders([r[7],FIGURES[r[0]]].filter(Boolean).join(", "))}</p>`:""}
+   ${SCHOOLS_OF[r[0]]?`<h3>Schools</h3><p class="fd">${SCHOOLS_OF[r[0]].map(k=>`<a href="schools.html#${k}">${SCHOOL_NAME[k]}</a>`).join(", ")}</p>`:""}
    ${r[6].filter(p=>vis(byId[p])).length?`<h3>Came out of</h3><div class="list">${r[6].filter(p=>vis(byId[p])).map(p=>row(byId[p])).join("")}</div>`:""}
    ${kids.length?`<h3>Gave rise to</h3><div class="list">${kids.map(row).join("")}</div>`:""}`;
   card.hidden=false;
@@ -563,7 +564,7 @@ function popCity(c){
   document.getElementById("cpbody").innerHTML=`<h2>${esc(c)}</h2><p class="reg">${esc(reg)}</p><div class="tl">${svg}</div><div class="note" id="cpnote"><p class="hint">Click a line to read its history.</p></div>`;
   const pop=document.getElementById("cpop"); pop.hidden=false; document.body.style.overflow="hidden";
   pop.querySelectorAll(".row").forEach(g=>g.onclick=()=>{ pop.querySelectorAll(".row").forEach(x=>x.classList.toggle("on",x===g)); const r=byId[g.dataset.id];
-    document.getElementById("cpnote").innerHTML=`<h3>${esc(r[5])}</h3><p class="meta">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}${r[9]?" · refounded "+r[9]:""}${CLINICS.has(r[0])?" · clinic":""}</p>${r[8]?`<p>${esc(r[8])}</p>`:""}${r[7]?`<p><b>Founders:</b> ${founders(r[7])}</p>`:""}`; });
+    document.getElementById("cpnote").innerHTML=`<h3>${esc(r[5])}</h3><p class="meta">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}${r[9]?" · refounded "+r[9]:""}${CLINICS.has(r[0])?" · clinic":""}</p>${r[8]?`<p>${esc(r[8])}</p>`:""}${r[7]||FIGURES[r[0]]?`<p><b>Founders / figures:</b> ${founders([r[7],FIGURES[r[0]]].filter(Boolean).join(", "))}</p>`:""}${SCHOOLS_OF[r[0]]?`<p><b>Schools:</b> ${SCHOOLS_OF[r[0]].map(k=>`<a href="schools.html#${k}">${SCHOOL_NAME[k]}</a>`).join(", ")}</p>`:""}`; });
   const tip=document.getElementById("brtip")||document.body.appendChild(Object.assign(document.createElement("div"),{id:"brtip",className:"brtip",hidden:true}));
   pop.querySelectorAll(".brhit").forEach(h=>{ const id=h.closest(".row").dataset.id, r=byId[id], P=byId[h.dataset.p];
     h.addEventListener("mousemove",e=>{ tip.innerHTML=`<b>${esc(r[5])}</b><span>${ARM.has(id)?"founded by":"split from"} ${esc(P[5])}, ${r[3]}</span>${esc(SPLIT_WHY[id])}`; tip.hidden=false; tip.style.left=Math.min(e.clientX+14,innerWidth-300)+"px"; tip.style.top=(e.clientY+16)+"px"; });
