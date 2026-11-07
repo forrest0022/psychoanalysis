@@ -108,12 +108,12 @@ const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","isw","ta
 
 // why each split happened (hover on the branch)
 const SPLIT_WHY={
-"amb": "Not a split: the Vienna society opened it as its free outpatient clinic.",
-"bfc": "Not a split: Ferenczi opened it as the Hungarian society's free clinic.",
-"ffmc": "Not a split: the Frankfurt Institute's own outpatient clinic.",
-"poli": "Not a split: the Berlin society's free clinic and training institute.",
-"lcp": "Not a split: the British Society's free clinic, on the Berlin model.",
-"topeka": "Not a split: the Menninger Clinic's own training institute.",
+"amb": "The Vienna society opened it as its free outpatient clinic.",
+"bfc": "Ferenczi opened it as the Hungarian society's free clinic.",
+"ffmc": "The Frankfurt Institute's own outpatient clinic.",
+"poli": "The Berlin society's free clinic and training institute.",
+"lcp": "The British Society's free clinic, on the Berlin model.",
+"topeka": "The Menninger Clinic's own training institute.",
 "sfp": "Training, and Lacan's short sessions.",
 "apf": "Stayed with the IPA when it required Lacan's removal as a training analyst.",
 "efp": "Lacan founded his own school after the IPA barred him as a training analyst.",
@@ -129,3 +129,5 @@ const SPLIT_WHY={
 "apdeba": "Disputes over institutional attitudes and training.",
 "platdoc": "The APA's politics and training hierarchy."
 };
+// branches that are a society's own clinic or training arm, not splits
+const ARM=new Set(["amb","bfc","ffmc","poli","lcp","topeka"]);
