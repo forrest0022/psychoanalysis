@@ -196,6 +196,7 @@ const I=[
  ["efba","Buenos Aires",3,1974,null,"Escuela Freudiana de Buenos Aires",[],"Oscar Masotta","Founded June 28, 1974, after Masotta's study groups introduced Lacan in Argentina; described as the oldest continuously functioning Lacanian school."],
  ["apch","Santiago",0,1949,null,"Asociación Psicoanalítica Chilena",[],"Ignacio Matte Blanco","Built around Matte Blanco after his return from London and the US in 1943, and recognized by the IPA in 1949. Increasingly Kleinian after Matte Blanco left for Rome in 1966."],
  ["spp_pe","Lima",0,1977,null,"Sociedad Peruana de Psicoanálisis",[],"Saúl Peña, Carlos Crisanto, Max Hernández","Grew out of the Centro para el Desarrollo del Psicoanálisis, formed at the end of the 1960s by three analysts returning from training at the British Society. Recognized as an IPA study group in 1977, a provisional society in 1985 and a component society in 1987."],
+ ["nicteam","León and Managua",0,1981,-1,"Internationalist Team of Mental Health Workers, Mexico–Nicaragua",[],"Marie Langer and others","From 1981, a team of twelve psychologists, physicians and a psychopedagogue from Argentina, Mexico and Chile taught at the medical school in León and then at the psychiatric hospital in Managua, helping build the Sandinistas' new mental health system. They taught psychoanalysis, group therapy and family therapy, with a Marxist reading of the family, and trained others as a group."],
  ["apu","Montevideo",0,1955,null,"Asociación Psicoanalítica del Uruguay",[],"Willy and Madeleine Baranger, with a group of Uruguayan doctors and psychologists","Founded September 27, 1955, after Willy Baranger was invited to lead training in Montevideo; recognized by the IPA as a study group in 1957."],
  ["sbp","São Paulo",0,1951,null,"Brazilian Psychoanalytic Society of São Paulo",[],"Adelheid Koch, Durval Marcondes","Durval Marcondes founded a first Brazilian society in 1927. Koch, trained in Berlin, arrived in 1936; with her at its head the group gained official status in 1944 and joined the IPA as this society in 1951."],
  ["scolp","Bogotá",0,1956,null,"Sociedad Colombiana de Psicoanálisis",[],"José Francisco Socarrás","Founded as a psychoanalytic study group in 1956 by Socarrás, who had trained in Paris; became the Colombian Psychoanalytic Society in 1961."],
@@ -213,14 +214,14 @@ const I=[
 const REGIONS=[
  ["Europe",["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Gorizia","Trieste"]],
  ["North America",["New York","Boston","Stockbridge","Philadelphia","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco"]],
- ["Latin America",["Mexico City","Bogotá","Caracas","Lima","Santiago","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro"]],
+ ["Latin America",["Mexico City","León and Managua","Bogotá","Caracas","Lima","Santiago","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro"]],
  ["Africa and the Middle East",["Blida (near Algiers)","Berrechid","Dakar","Johannesburg","Cairo","Beirut","Istanbul","Jerusalem"]],
  ["Asia",["Kolkata","Sendai","Tokyo"]]];
 const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
-const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","riggs","chestnut","menn","lafargue"]);
+const CLINICS=new Set(["bfc","zfc","ffmc","amb","lcp","sexpol","tegel","tav","kh","wtc","stalban","laborde","blida","gorizia","trieste","berrechid","fann","nicteam","riggs","chestnut","menn","lafargue"]);
 let mode="i"; try{ const m=localStorage.getItem("tm-clinics"); mode=m==="1"?"ic":(["i","ic","c"].includes(m)?m:"i"); }catch(_){}
 const vis=r=>mode==="ic"||(mode==="c")===CLINICS.has(r[0]);
 function draw(){
