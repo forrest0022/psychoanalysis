@@ -471,7 +471,7 @@ function panel(){
   const p=document.getElementById("wpanel"); if(!sel){return;}
   const rs=I.filter(r=>r[1]===sel&&vis(r)).sort((a,b)=>a[3]-b[3]);
   const reg=(REGIONS.find(x=>x[1].includes(sel))||[""])[0];
-  p.innerHTML=`<h2>${esc(sel)}</h2><p class="sub">${esc(reg)} · ${rs.length} ${rs.length===1?"entry":"entries"}</p><ul>${rs.map(r=>`<li class="${CLINICS.has(r[0])?"cl":""}${live(r,year)?"":" gone"}"><span>${esc(r[5])}</span><span>${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–"}</span></li>`).join("")}</ul><p class="sub" style="margin-top:14px"><a href="#" id="openpop">Open this city's history →</a></p>`; const op=document.getElementById("openpop"); if(op) op.onclick=e=>{e.preventDefault(); popCity(sel);};
+  p.innerHTML=`<h2>${esc(sel)}</h2><p class="sub">${esc(reg)}</p><ul>${rs.map(r=>`<li class="${CLINICS.has(r[0])?"cl":""}${live(r,year)?"":" gone"}"><span>${esc(r[5])}</span><span>${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–"}</span></li>`).join("")}</ul><p class="sub" style="margin-top:14px"><a href="#" id="openpop">Open this city's history →</a></p>`; const op=document.getElementById("openpop"); if(op) op.onclick=e=>{e.preventDefault(); popCity(sel);};
 }
 slider.oninput=()=>{year=+slider.value; paint(); panel();};
 const PLAYI='<svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5 L20 12 L2 22.5 Z" fill="currentColor"/></svg>', PAUSEI='<svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><rect x="3" y="2" width="5.5" height="20" fill="currentColor"/><rect x="13.5" y="2" width="5.5" height="20" fill="currentColor"/></svg>';
@@ -504,7 +504,7 @@ function cityHistory(c){
 }
 function popCity(c){
   const {svg,rows}=cityHistory(c), reg=(REGIONS.find(x=>x[1].includes(c))||[""])[0];
-  document.getElementById("cpbody").innerHTML=`<h2>${esc(c)}</h2><p class="reg">${esc(reg)} · ${rows.length} ${rows.length===1?"institution":"institutions"}</p><div class="tl">${svg}</div><div class="note" id="cpnote"><p class="hint">Click a line to read its history.</p></div>`;
+  document.getElementById("cpbody").innerHTML=`<h2>${esc(c)}</h2><p class="reg">${esc(reg)}</p><div class="tl">${svg}</div><div class="note" id="cpnote"><p class="hint">Click a line to read its history.</p></div>`;
   const pop=document.getElementById("cpop"); pop.hidden=false; document.body.style.overflow="hidden";
   pop.querySelectorAll(".row").forEach(g=>g.onclick=()=>{ pop.querySelectorAll(".row").forEach(x=>x.classList.toggle("on",x===g)); const r=byId[g.dataset.id];
     document.getElementById("cpnote").innerHTML=`<h3>${esc(r[5])}</h3><p class="meta">${r[3]}${r[4]===-1?"–?":r[4]?"–"+r[4]:"–present"}${r[9]?" · refounded "+r[9]:""}${CLINICS.has(r[0])?" · clinic":""}</p>${r[8]?`<p>${esc(r[8])}</p>`:""}${r[7]?`<p><b>Founders:</b> ${founders(r[7])}</p>`:""}`; });
