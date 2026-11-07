@@ -16,7 +16,7 @@
 <style>
 /* Layout: same header as Lines of Descent; below, a web of analysts placed by birth year (top = oldest), with a reading card for the selected person. */
 :root{
-  --paper:#FFFFFF; --ink:#0E0E0E; --muted:#55554F; --faint:#B9BBB3; --link:#0038FF; --train:#FF5A1F;
+  --paper:#FFFFFF; --ink:#0E0E0E; --muted:#55554F; --faint:#B9BBB3; --link:#0038FF; --train:#FF5A1F; --fam:#EF82C8;
   --wide:"Archivo","Helvetica Neue",Arial,sans-serif;
   --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,monospace;
   color-scheme:light;
@@ -55,6 +55,11 @@ nav a:hover{color:var(--link);font-weight:700}
 .edge.wk{stroke:var(--ink);stroke-opacity:1;stroke-width:2.2}
 .node.wk rect{stroke-dasharray:4 3;stroke-width:2.2}
 .legend i.d{border-top-style:dashed}
+.legend i.f{border-color:var(--fam)}
+.fam{fill:none;stroke:var(--fam);stroke-width:2;stroke-opacity:.7}
+.fam.on{stroke-opacity:1;stroke-width:2.6}
+.fam.dim{stroke-opacity:.15}
+.chip.f{border-color:var(--fam)}
 .node{cursor:pointer}
 .node rect{fill:var(--paper);stroke:var(--ink);stroke-width:1.6}
 .node text{font:500 12.5px var(--wide);font-stretch:112%;text-transform:uppercase;fill:var(--ink);letter-spacing:.01em}
@@ -137,7 +142,7 @@ header nav{display:flex!important;justify-content:flex-end;margin:0 0 .6rem;posi
   <div class="stage">
     <div class="web" id="web">
       <svg id="svg" role="img" aria-label="Network of psychoanalysts linked by training analyses, arranged by birth year"></svg>
-      <div class="legend"><span><i></i>↑ Analysts</span><span><i class="b"></i>↓ Analysands</span><span><i class="o"></i>Trained/supervised</span></div>
+      <div class="legend"><span><i></i>↑ Analysts</span><span><i class="b"></i>↓ Analysands</span><span><i class="o"></i>Trained/supervised</span><span><i class="f"></i>Parent/child</span></div>
       <div class="zoom"><button type="button" id="zin" aria-label="Zoom in">+</button><button type="button" id="zout" aria-label="Zoom out">−</button><button type="button" id="zfit" aria-label="Reset view">⤢</button></div>
     </div>
     <aside class="card" id="card" aria-live="polite">
@@ -209,7 +214,20 @@ const P=[
 ["aberastury", "Arminda Aberastury", "1910–1972", "Buenos Aires", "Analyzed by Garma; pioneer of child analysis in Latin America and translator of Klein into Spanish."],
 ["bleger", "José Bleger", "1922–1972", "Buenos Aires", "Trained with Pichon-Rivière; a Marxist analyst known for his work on the frame and symbiosis."],
 ["anzieu", "Didier Anzieu", "1923–1999", "Paris", "Analyzed by Lacan from 1949 (his mother was Lacan's patient \"Aimée\"); later trained with Lagache and helped found the APF. Known for the skin-ego."],
-["bollas", "Christopher Bollas", "b. 1943", "Buffalo, then London", "Trained at the British Institute; Paula Heimann and John Bowlby were among his teachers. An Independent, known for the unthought known."],
+["sokolnicka","Eugénie Sokolnicka","1884–1934","Warsaw, then Paris","Analyzed by Freud and then Ferenczi; brought psychoanalysis to Paris in the 1920s and analyzed Laforgue."],
+["laforgue","René Laforgue","1894–1962","Paris","A founder of the Société Psychanalytique de Paris; analyst of Françoise Dolto and Marc Schlumberger."],
+["dolto","Françoise Dolto","1908–1988","Paris","Analyzed by Laforgue from 1931; a child analyst, and with Lacan and Lagache a founder of the SFP."],
+["schlumberger","Marc Schlumberger","1900–1977","Paris","Analyzed by Laforgue, then by Sacha Nacht; analyst of Pierre Marty."],
+["marty","Pierre Marty","1918–1993","Paris","Analyzed by Schlumberger from 1947; led the Paris school of psychosomatics and, with Michel Fain, founded the Institut de psychosomatique in 1972."],
+["lagache","Daniel Lagache","1903–1972","Paris","Training analysis with Loewenstein, 1933–36; led the 1953 break that founded the SFP, then the APF."],
+["bouvet","Maurice Bouvet","1911–1960","London, then Paris","Analyzed by Joan Riviere; the SPP's theorist of object relations, and André Green's analyst."],
+["green","André Green","1927–2012","Cairo, then Paris","Analyzed by Bouvet from 1956, then by Jean Mallet and Catherine Parat; known for the dead mother and negative narcissism."],
+["aulagnier","Piera Aulagnier","1923–1990","Milan, then Paris","Analyzed by Lacan, 1955–61; broke with him in 1969 to found the Quatrième Groupe."],
+["rascovsky","Arnaldo Rascovsky","1907–1995","Buenos Aires","Analyzed by Garma from 1938; a founder of the Argentine Psychoanalytic Association."],
+["wbaranger","Willy Baranger","1922–1994","Buenos Aires, then Montevideo","Analyzed by Pichon-Rivière; led training in Montevideo from 1954 and, with Madeleine Baranger, developed the analytic field."],
+["liberman","David Liberman","1920–1983","Buenos Aires","Pichon-Rivière was his mentor; joined psychoanalysis to communication theory and semiotics."],
+["melitta","Melitta Schmideberg","1904–1983","Berlin, then London and New York","Melanie Klein's daughter. Analyzed by Edward Glover, and became one of her mother's sharpest critics."],
+["bollas", "Christopher Bollas", "b. 1943", "Buffalo, then London", "Analyzed by Masud Khan; trained at the British Institute, where Paula Heimann and John Bowlby were among his teachers. An Independent, known for the unthought known."],
 ["federn","Paul Federn","1871–1950","Vienna, then New York","Early member of Freud's circle; Aichhorn's analyst."],
 ["connell","E. H. Connell","dates unknown","Edinburgh","Australian-trained analyst; Fairbairn's analyst when Fairbairn was a medical student. Who analyzed him is undocumented."],
 ["fenichel","Otto Fenichel","1897–1946","Vienna, Berlin, then Los Angeles","Analyzed by Federn, then Radó; Marxist analyst whose circular letters chronicled the movement in exile."],
@@ -231,6 +249,7 @@ const P=[
 ["payne","Sylvia Payne","1880–1976","London","Analyzed by Sachs; one of Klein's later analysts."],
 ];
 const E=[
+["khan","bollas"],["freud","sokolnicka"],["ferenczi","sokolnicka"],["sokolnicka","laforgue"],["laforgue","dolto"],["laforgue","schlumberger"],["schlumberger","marty"],["loewenstein","lagache"],["riviere","bouvet"],["bouvet","green"],["lacan","aulagnier"],["garma","rascovsky"],["pichon","wbaranger"],["glover","melitta"],
 ["garma", "pichon"],["garma", "aberastury"],["lacan", "anzieu"],
 ["freud","stekel"],["stekel","greenson"],["fenichel","greenson"],
 ["freud","ferenczi"],["freud","anna"],["freud","eitingon"],["freud","jstrachey"],["freud","astrachey"],["freud","riviere"],["freud","deutsch"],["freud","hd"],["freud","burlingham"],["freud","rickman"],["freud","hartmann"],
@@ -247,7 +266,8 @@ const E=[
 ["wittenberg","freichmann"],["wittenberg","fromm"],["ferenczi","freichmann"],["aichhorn","mahler"],["sachs","payne"],["payne","klein"],["eiminder","tosquelles"],["federn","aichhorn"],["reik","burlingham"],["connell","fairbairn"],["federn","fenichel"],["rado","fenichel"],["fenichel","koch"],["fenichel","jacobson"],["aichhorn","kohut"],["hitschmann","sterba"],["sterba","langer"],["koch","bicudo"],["sterba","kosawa"],["reik","eissler"],["sterba","eissler"],["eissler","kohut"],["garma","racker"],["langer","racker"]];
 const byId=Object.fromEntries(P.map(([id,name,dates,city,blurb])=>[id,{id,name,dates,city,blurb,born:(dates.match(/\d{4}/)?+dates.match(/\d{4}/)[0]:({connell:1880}[id]||1900))}]));
 const nodes=Object.values(byId);
-const WK=[["pichon", "bleger"],["heimann", "bollas"],["bowlby", "bollas"],["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
+const WK=[["pichon","liberman"],["pichon", "bleger"],["heimann", "bollas"],["bowlby", "bollas"],["tosquelles","fanon"],["tosquelles","oury"],["oury","guattari"],["klein","winnicott"],["klein","bowlby"],["riviere","segal"],["riviere","rosenfeld"],["sullivan","freichmann"],["aichhorn","erikson"],["aichhorn","eiminder"],["freud","abraham"],["freud","sachs"],["freud","federn"],["freud","hitschmann"],["federn","kosawa"]];
+const FAM=[["freud","anna"],["klein","melitta"]];
 const links=E.map(([s,t])=>({source:s,target:t,w:false})).concat(WK.map(([s,t])=>({source:s,target:t,w:true})));
 const TR=new Set(WK.map(e=>e[0]+">"+e[1]));
 const trainUp=id=>WK.filter(e=>e[1]===id&&TR.has(e[0]+">"+e[1])).map(e=>e[0]);
@@ -270,6 +290,8 @@ const yrL=[]; for(let y=1860;y<=1950;y+=10) if(y>=yrs[0]&&y<=yrs.at(-1)) yrL.pus
 svg.append("defs").html(`<marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1L9 5L1 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>`);
 const isTr=l=>TR.has((l.source.id||l.source)+">"+(l.target.id||l.target));
 const edge=g.append("g").selectAll("path").data(links).join("path").attr("class",l=>"edge"+(isTr(l)?" train":l.w?" work":""));
+const famL=FAM.map(([s,t])=>({s:byId[s],t:byId[t]}));
+const fam=g.append("g").selectAll("path").data(famL).join("path").attr("class","fam");
 const node=g.append("g").selectAll("g").data(nodes).join("g").attr("class","node").attr("tabindex",0).attr("role","button").attr("aria-label",d=>d.name);
 node.append("rect").attr("rx",12).attr("ry",12);
 node.append("text").attr("text-anchor","middle").attr("dominant-baseline","central").text(d=>short(d));
@@ -298,7 +320,9 @@ function edgePath(l){
   const my=(y1+y2)/2;
   return `M${x1},${y1} C${x1},${my} ${x2},${my} ${x2},${y2}`;
 }
-function draw(){ node.attr("transform",d=>`translate(${d.x},${d.y})`); edge.attr("d",edgePath); }
+function famPath(l){ const s=l.s,t=l.t, x1=s.x+s.w/2, y1=s.y, x2=t.x+t.w/2, y2=t.y, bx=Math.max(x1,x2)+46;
+  return `M${x1},${y1} C${bx},${y1} ${bx},${y2} ${x2},${y2}`; }
+function draw(){ node.attr("transform",d=>`translate(${d.x},${d.y})`); edge.attr("d",edgePath); fam.attr("d",famPath); }
 
 let sel=null;
 function select(id,fromSearch){
@@ -311,6 +335,8 @@ function select(id,fromSearch){
   node.classed("sel",d=>d.id===id).classed("up",d=>A.has(d.id)).classed("down",d=>D.has(d.id)).classed("wk",d=>K.has(d.id)).classed("tr",d=>TU.has(d.id)||TD.has(d.id)).classed("dim",d=>d.id!==id&&!A.has(d.id)&&!D.has(d.id)&&!K.has(d.id)&&!TD.has(d.id));
   edge.classed("up",isUp).classed("down",isDown).classed("wk",isWk).classed("dim",l=>!isUp(l)&&!isDown(l)&&!isWk(l)).attr("marker-end",l=>(isUp(l)||isDown(l))?"url(#ah)":null);
   edge.filter(l=>isUp(l)||isDown(l)||isWk(l)).raise();
+  const FP=FAM.filter(e=>e[1]===id).map(e=>e[0]), FC=FAM.filter(e=>e[0]===id).map(e=>e[1]);
+  fam.classed("on",l=>l.s.id===id||l.t.id===id).classed("dim",l=>l.s.id!==id&&l.t.id!==id); node.filter(d=>FP.includes(d.id)||FC.includes(d.id)).classed("dim",false);
   const n=byId[id];
   const chips=(arr,b)=>arr.length?`<div class="chips">${arr.map(k=>`<button type="button" class="chip${b?" b":""}" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:`<p class="none">None documented here</p>`;
   document.getElementById("info").innerHTML=`<button type="button" class="cx" data-clear aria-label="Clear selection">×</button><h2>${esc(n.name)}</h2><p class="dates">${esc(n.dates)} · ${esc(n.city)}</p><p>${esc(n.blurb)}</p>
@@ -320,11 +346,13 @@ function select(id,fromSearch){
     ${A.size>U.size?`<p class="lab">Full lineage</p>${chips([...A].filter(k=>!U.has(k)).sort((a,b)=>byId[a].born-byId[b].born),false)}`:""}
     <p class="lab">Analysands</p>${chips([...D],true)}
     ${TD.size?`<p class="lab">Trained/supervised</p><div class="chips">${[...TD].map(k=>`<button type="button" class="chip o" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
+    ${FP.length?`<p class="lab">Parent</p><div class="chips">${FP.map(k=>`<button type="button" class="chip f" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
+    ${FC.length?`<p class="lab">Child</p><div class="chips">${FC.map(k=>`<button type="button" class="chip f" data-go="${k}">${esc(byId[k].name)}</button>`).join("")}</div>`:""}
     ${[...K].filter(k=>!A.has(k)).length?`<p class="lab">Collaborated with</p>${chips([...K].filter(k=>!A.has(k)),false)}`:""}`;
   try{ history.replaceState(null,"","#"+id);}catch(e){}
   if(fromSearch) focusOn(n);
 }
-function clearSel(){ sel=null; node.classed("sel up down dim wk tr",false); edge.classed("up down dim wk",false).attr("marker-end",null);
+function clearSel(){ sel=null; node.classed("sel up down dim wk tr",false); fam.classed("on dim",false); edge.classed("up down dim wk",false).attr("marker-end",null);
   document.getElementById("info").innerHTML=`<p class="hint">Click anyone on the web to see who analyzed them and their full lineage.</p>`;
   try{ history.replaceState(null,"",location.pathname+location.search);}catch(e){} }
 svg.on("click",()=>{ if(sel) clearSel(); });

@@ -146,6 +146,7 @@ const I=[
  ["efp","Paris",3,1964,1980,"École Freudienne de Paris",["sfp"],"Jacques Lacan","Lacan's school, dissolved by Lacan in 1980."],
  ["q4","Paris",4,1969,null,"Quatrième Groupe",["efp"],"Piera Aulagnier, François Perrier, Jean-Paul Valabrega","Left the EFP over the pass, Lacan's procedure for becoming an analyst."],
  ["ecf","Paris",5,1981,null,"École de la Cause freudienne",["efp"],"Jacques-Alain Miller and Lacan's circle","Formed after the EFP's dissolution."],
+ ["ipso","Paris",6,1972,null,"Institut de psychosomatique (IPSO)",[],"Pierre Marty, Michel Fain","Home of the Paris school of psychosomatics, built on Marty, de M'Uzan and David's L'Investigation psychosomatique (1963). Its hospital, opened in 1978, now bears Marty's name."],
  ["stalban","Saint-Alban",0,1940,null,"Saint-Alban Hospital",[],"François Tosquelles","A rural psychiatric hospital in the Lozère where Tosquelles, a refugee from the Spanish Civil War, began institutional psychotherapy during the Occupation. Frantz Fanon trained here."],
  ["laborde","Cour-Cheverny",0,1953,null,"La Borde Clinic",[],"Jean Oury","Founded by Oury, who had trained with Tosquelles at Saint-Alban. Félix Guattari worked here from 1955; patients and staff share in running the clinic."],
  ["pps","Jerusalem",0,1933,null,"Palestine (later Israel) Psychoanalytic Society",[],"Max Eitingon","Founded by Eitingon after he left Berlin in 1933; it later became the Israel Psychoanalytic Society, with its own institute."],
@@ -178,11 +179,15 @@ const I=[
  ["apm","Mexico City",0,1957,null,"Asociación Psicoanalítica Mexicana",[],"","Became Mexico's first IPA society in 1957. Marie Langer worked in Mexico City after leaving Argentina in 1974."],
  ["apa","Buenos Aires",0,1942,null,"Asociación Psicoanalítica Argentina",[],"Ángel Garma, Celes Cárcamo, Marie Langer, Enrique Pichon-Rivière, Arnaldo Rascovsky, Guillermo Ferrari Hardoy","The first Latin American society; home of the Barangers' field theory."],
  ["apdeba","Buenos Aires",1,1977,null,"Asociación Psicoanalítica de Buenos Aires",["apa"],"","Split from the APA in 1977."],
+ ["platdoc","Buenos Aires",2,1971,-1,"Plataforma and Documento",["apa"],"Marie Langer, Diego and Gilou García Reynoso and others","Left-wing groups that broke from the APA in 1971 over its politics and training hierarchy."],
+ ["apu","Montevideo",0,1955,null,"Asociación Psicoanalítica del Uruguay",[],"Willy and Madeleine Baranger, with a group of Uruguayan doctors and psychologists","Founded September 27, 1955, after Willy Baranger was invited to lead training in Montevideo; recognized by the IPA as a study group in 1957."],
  ["sbp","São Paulo",0,1951,null,"Brazilian Psychoanalytic Society of São Paulo",[],"Adelheid Koch","Koch, trained in Berlin, arrived in 1936 and built the group that became Brazil's first society."],
+ ["sprj","Rio de Janeiro",0,1955,null,"Sociedade Psicanalítica do Rio de Janeiro",[],"Werner Kemper, Kattrin Kemper, Fabio Leite Lobo, Gerson Borsoi, Inaura Carneiro Leão Vetter, Luiz Guimarães Dahlheim, Noemy Rudolfer","Affiliated with the IPA in 1955. Werner Kemper had trained in Berlin."],
+ ["asovep","Caracas",0,1965,null,"Asociación Venezolana de Psicoanálisis",[],"Julio Aray, Antonio Briceño, Nicolás Cupello, Hugo Domínguez, Juan Antonio Olivares, Hans Voss and others","Recognized by the IPA as a working group in 1965; became an association in 1969 and an IPA society in 1971."],
  ["ips","Kolkata",0,1922,null,"Indian Psychoanalytical Society",[],"Girindrasekhar Bose","The first society in Asia."],
  ["jps","Tokyo",0,1955,null,"Japan Psychoanalytic Society",[],"Heisaku Kosawa",""]
 ];
-const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","São Paulo","Kolkata","Tokyo"];
+const CITIES=["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Jerusalem","New York","Boston","Stockbridge","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco","Mexico City","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro","Caracas","Kolkata","Tokyo"];
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26;
 const svg=document.getElementById("map"), card=document.getElementById("card");
 const byId=Object.fromEntries(I.map(r=>[r[0],r]));
