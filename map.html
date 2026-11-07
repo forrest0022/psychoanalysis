@@ -46,13 +46,25 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .wbox{border:2px solid var(--ink);border-radius:22px;overflow:hidden;position:relative;background:var(--paper)}
 #wsvg{display:block;width:100%;height:auto;touch-action:none;cursor:grab}
 #wsvg .land{fill:#EDEDE7}
+#wsvg .sphere{fill:none;stroke:none}
+.st-line #wsvg .land{fill:#fff;stroke:#0E0E0E;stroke-width:1.1;stroke-linejoin:round}
+.st-line #wsvg .grat{display:none}
+.st-line #wsvg .sphere{stroke:#0E0E0E;stroke-width:2}
+.st-pink #wsvg .land{fill:#fff;stroke:#0E0E0E;stroke-width:1.1;stroke-linejoin:round}
+.st-pink #wsvg .grat{stroke:#F7D4EA;stroke-width:.7}
+.st-pink #wsvg .sphere{stroke:#EF82C8;stroke-width:2.6}
+.st-globe #wsvg .land{fill:#fff;stroke:#0E0E0E;stroke-width:1.2;stroke-linejoin:round}
+.st-globe #wsvg .grat{stroke:#EEE;stroke-width:.7}
+.st-globe #wsvg .sphere{fill:#fff;stroke:#EF82C8;stroke-width:3}
+.st-dots #wsvg .land{fill:url(#dotpat)}
+.st-dots #wsvg .grat{display:none}
 #wsvg .grat{fill:none;stroke:#F2F2EE;stroke-width:.6}
 #wsvg .city{cursor:pointer}
-#wsvg .city .i{fill:var(--ink)}
-#wsvg .city .c{fill:none;stroke:var(--clinic);stroke-width:2.4}
+#wsvg .city .i{fill:var(--clinic)}
+#wsvg .city .c{fill:var(--link)}
 #wsvg .city text{font:700 10px var(--wide);letter-spacing:.06em;text-transform:uppercase;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round;pointer-events:none}
-#wsvg .city:hover .i,#wsvg .city.on .i{fill:var(--link)}
-#wsvg .city:hover text,#wsvg .city.on text{fill:var(--link)}
+#wsvg .city:hover .i,#wsvg .city.on .i,#wsvg .city:hover .c,#wsvg .city.on .c{fill:var(--ink)}
+#wsvg .city:hover text,#wsvg .city.on text{fill:var(--ink);text-decoration:underline}
 .wctl{display:flex;align-items:center;gap:14px;padding:14px 18px;border-top:1.6px solid var(--ink)}
 .wctl button{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font:600 14px var(--wide)}
 .wctl button:hover{background:var(--link);border-color:var(--link);color:var(--paper)}
@@ -72,6 +84,7 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .wpanel li.gone{opacity:.45}
 .wkey{display:flex;gap:18px;flex-wrap:wrap;font:12px var(--mono);margin:0 0 10px}
 .wkey i{display:inline-block;vertical-align:middle;margin-right:6px}
+.wkey span{display:inline-flex;align-items:center;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -164,7 +177,7 @@ svg.cityhl .inst.hl .dot{stroke:var(--link)}
 <div class="viewtog"><a href="institutes.html">Timeline</a><a class="on" href="#">Map</a></div>
 <div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
 <div class="key"><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#fff" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
-<div id="world"><div class="wkey"><span><i style="width:10px;height:10px;border-radius:50%;background:#0E0E0E"></i>Institutes (size = number)</span><span><i style="width:10px;height:10px;border-radius:50%;border:2.4px solid #EF82C8"></i>Clinics</span><span>Drag to pan · scroll or +/− to zoom</span></div>
+<div id="world"><div class="wkey"><span><svg width="14" height="14" viewBox="-7 -7 14 14" style="vertical-align:middle;margin-right:6px"><path d="M0,-6.5 Q0,0 6.5,0 Q0,0 0,6.5 Q0,0 -6.5,0 Q0,0 0,-6.5Z" fill="#EF82C8"/></svg>Institutes (size = number)</span><span><svg width="14" height="14" viewBox="-7 -7 14 14" style="vertical-align:middle;margin-right:6px"><path d="M0,-6.5 Q0,0 6.5,0 Q0,0 0,6.5 Q0,0 -6.5,0 Q0,0 0,-6.5Z" fill="#0038FF"/></svg>Clinics &amp; hospitals</span><span>Drag to pan · scroll or +/− to zoom</span></div>
 <div class="wwrap"><div class="wbox"><div class="wzoom"><button type="button" id="zin">+</button><button type="button" id="zout">−</button></div><svg id="wsvg" viewBox="0 0 960 500"></svg>
 <div class="wctl"><button type="button" id="wplay" aria-label="Play">▶</button><input type="range" id="wyr" min="1900" max="2025" value="2025"><span class="wyear" id="wyl">2025</span></div></div>
 <aside class="wpanel" id="wpanel"><h2>Choose a city</h2><p class="sub">Click a dot to list its institutions. Drag the slider or press play to watch the field spread.</p></aside></div></div>
@@ -366,9 +379,11 @@ const LL={"Vienna":[16.37,48.21],"Budapest":[19.04,47.5],"Zagreb":[15.98,45.81],
 "Mexico City":[-99.13,19.43],"León and Managua":[-86.6,12.3],"Bogotá":[-74.07,4.71],"Caracas":[-66.9,10.48],"Lima":[-77.04,-12.05],"Santiago":[-70.67,-33.45],"Buenos Aires":[-58.38,-34.6],"Montevideo":[-56.16,-34.9],"São Paulo":[-46.63,-23.55],"Rio de Janeiro":[-43.2,-22.91],
 "Kolkata":[88.36,22.57],"Sendai":[140.87,38.27],"Tokyo":[139.69,35.69]};
 const svgW=d3.select("#wsvg"), Wd=960, Hd=500;
-const proj=d3.geoNaturalEarth1().scale(175).translate([Wd/2,Hd/2+30]), path=d3.geoPath(proj);
+const STY=new URLSearchParams(location.search).get("style")||"grey"; document.body.classList.add("st-"+STY);
+const proj=STY==="globe"?d3.geoOrthographic().scale(235).translate([Wd/2,Hd/2]).rotate([-5,-28]).clipAngle(90):d3.geoNaturalEarth1().scale(175).translate([Wd/2,Hd/2+30]), path=d3.geoPath(proj);
+svgW.append("defs").html('<pattern id="dotpat" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.05" fill="#BDBDB6"/></pattern>');
 const root=svgW.append("g"), gl=root.append("g"), gc=root.append("g");
-gl.append("path").attr("class","grat").attr("d",path(d3.geoGraticule10()));
+gl.append("path").attr("class","sphere").attr("d",path({type:"Sphere"})); gl.append("path").attr("class","grat").attr("d",path(d3.geoGraticule10()));
 let K=1; const zoom=d3.zoom().scaleExtent([1,12]).translateExtent([[0,0],[Wd,Hd]]).on("zoom",e=>{K=e.transform.k; root.attr("transform",e.transform); paint();});
 svgW.call(zoom); const zp=()=>sel&&LL[sel]?(()=>{const t=d3.zoomTransform(svgW.node());return t.apply(proj(LL[sel]));})():null;
 document.getElementById("zin").onclick=()=>svgW.transition().call(zoom.scaleBy,1.6,zp()); document.getElementById("zout").onclick=()=>svgW.transition().call(zoom.scaleBy,1/1.6,zp());
@@ -379,12 +394,13 @@ function paint(){
   const rows=I.filter(r=>vis(r)&&LL[r[1]]);
   const by=d3.group(rows.filter(r=>live(r,year)),r=>r[1]);
   const data=[...by].map(([c,rs])=>({c,i:rs.filter(r=>!CLINICS.has(r[0])).length,k:rs.filter(r=>CLINICS.has(r[0])).length})).sort((a,b)=>(b.i+b.k)-(a.i+a.k));
-  const g=gc.selectAll("g.city").data(data,d=>d.c).join(e=>{const g=e.append("g").attr("class","city"); g.append("circle").attr("class","c"); g.append("circle").attr("class","i"); g.append("text"); return g;});
+  const g=gc.selectAll("g.city").data(data,d=>d.c).join(e=>{const g=e.append("g").attr("class","city"); g.append("path").attr("class","c"); g.append("path").attr("class","i"); g.append("text"); return g;});
   g.attr("transform",d=>`translate(${proj(LL[d.c])})`).classed("on",d=>d.c===sel).on("click",(e,d)=>{sel=d.c; panel(); paint();});
   const R=n=>(2.6+Math.sqrt(n)*2.6)/Math.pow(K,.85);
-  g.select("circle.i").attr("r",d=>d.i?R(d.i):0);
-  g.select("circle.c").attr("r",d=>d.k?R(d.i+d.k)+2.6/K:0).style("stroke-width",(2.2/K)+"px");
-  g.select("text").text(d=>d.c.replace(" (near Algiers)","")).attr("x",d=>R(d.i+d.k)+4/K+2).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px")
+  const star=r=>{ r*=1.45; return `M0,${-r} Q0,0 ${r},0 Q0,0 0,${r} Q0,0 ${-r},0 Q0,0 0,${-r}Z`; };
+  g.select("path.i").attr("d",d=>d.i?star(R(d.i)):null);
+  g.select("path.c").attr("d",d=>d.k?star(R(d.k)):null).attr("transform",d=>d.i&&d.k?`translate(${(R(d.i)+R(d.k))*0.95},${(R(d.i)+R(d.k))*0.35})`:null);
+  g.select("text").text(d=>d.c.replace(" (near Algiers)","")).attr("x",d=>(d.i&&d.k?(R(d.i)+R(d.k))*0.95+R(d.k):R(d.i+d.k))+4/K).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px")
    .style("display",d=>(K>=2.4||d.i+d.k>=3||d.c===sel)?null:"none");
   yl.textContent=year;
 }
