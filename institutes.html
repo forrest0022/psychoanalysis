@@ -61,7 +61,7 @@ h1 .tagline .rot.out{opacity:0}
   <div class="menu">
     <a href="analysts.html">Analysts</a>
     <a href="schools.html">Schools</a>
-    <a href="institutes.html" aria-current="page">Institutions</a>
+    <a href="map.html" aria-current="page">Institutions</a>
     <a href="names.html">Index</a>
     <a href="about.html">About</a>
   </div>
@@ -92,15 +92,15 @@ svg.cityhl .inst{transition:opacity .15s}
 svg.cityhl .inst:not(.hl){opacity:.2}
 svg.cityhl .inst.hl .ln,svg.cityhl .inst.hl .bar,svg.cityhl .inst.hl .brn{stroke:var(--link)}
 svg.cityhl .inst.hl .lab{fill:var(--link)}
-svg.cityhl .inst.hl .dot{stroke:var(--link);fill:var(--link)}
+svg.cityhl .inst.hl .dot{stroke:var(--ink);fill:var(--ink)}
 
 .clin .lab{font-weight:500;font-style:italic}
 .inst .ln.arw{stroke-linejoin:round}
 .inst .ln{stroke:var(--ink);stroke-width:2.6;fill:none;stroke-linecap:round}
 .inst .lab{font-size:11.5px;font-weight:600;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
 .inst .dot{fill:#4A2A12;stroke:#4A2A12;stroke-width:2}
-g.inst.clin .dot{fill:var(--clinic);stroke:var(--clinic)}
-.inst:hover .dot,.inst.on .dot,g.inst.clin:hover .dot,g.inst.clin.on .dot{fill:var(--link)}
+g.inst.clin .dot{fill:#0038FF;stroke:#0038FF}
+.inst:hover .dot,.inst.on .dot,g.inst.clin:hover .dot,g.inst.clin.on .dot{fill:var(--ink);stroke:var(--ink)}
 .inst:hover .ln,.inst.on .ln{stroke:var(--link)}.inst:hover .lab,.inst.on .lab{fill:var(--link)}.inst:hover .dot,.inst.on .dot{stroke:var(--link)}
 .brn{stroke-width:2.6;fill:none;stroke-linecap:round}
 .inst:hover .brn,.inst.on .brn{stroke:var(--link)}
@@ -130,9 +130,9 @@ g.inst.clin .dot{fill:var(--clinic);stroke:var(--clinic)}
 
 </style>
 <h1 class="ttl">Institutional Splits<em class="tagline">A genealogy of psychoanalytic institutes, clinics &amp; hospitals</em></h1>
-<div class="viewtog"><a class="on" href="institutes.html" aria-current="page">Timeline</a><a href="map.html">Map</a></div>
+<div class="viewtog"><a href="map.html">Map</a><a class="on" href="institutes.html" aria-current="page">Timeline</a></div>
 <div class="tog" role="group" aria-label="Show"><button type="button" data-c="i">Institutes</button><button type="button" data-c="c">Clinics</button><button type="button" data-c="ic">Both</button></div>
-<div class="key"><span><svg width="14" height="14" style="vertical-align:middle;margin-right:6px"><circle cx="7" cy="7" r="4.6" fill="#4A2A12"/></svg>Institute</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#EF82C8" stroke="#EF82C8" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
+<div class="key"><span><svg width="14" height="14" style="vertical-align:middle;margin-right:6px"><circle cx="7" cy="7" r="4.6" fill="#4A2A12"/></svg>Institute</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,7 H28 M21,2 L28,7 L21,12" fill="none" stroke="#0E0E0E" stroke-width="2.2" stroke-linejoin="round"/></svg>Continues</span><span><b></b>Dissolved</span><span class="ck"><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><rect x="1" y="3.5" width="7" height="7" fill="#0038FF" stroke="#0038FF" stroke-width="1.6"/><path d="M8,7 H30" stroke="#EF82C8" stroke-width="1.5"/></svg>Clinic</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M0,3 H30 M20,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M6,3 C14,3 12,11 20,11" fill="none" stroke="#FF5A1F" stroke-width="2.2"/></svg>Split</span><span><svg width="30" height="14" style="vertical-align:middle;margin-right:6px"><path d="M14,11 H30" fill="none" stroke="#0E0E0E" stroke-width="2.2"/><path d="M0,3 C8,3 6,11 14,11 M0,11 H14" fill="none" stroke="#0038FF" stroke-width="2.2"/></svg>Merger</span></div>
 <div class="scroll"><div class="stage"><svg id="map" aria-label="Map of psychoanalytic institutes over time"></svg><div class="detail" id="card" role="dialog" aria-live="polite" hidden></div></div></div>
 </div>
 <script src="search-data.js"></script>
