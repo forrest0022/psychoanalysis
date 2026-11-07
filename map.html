@@ -64,6 +64,13 @@ body.mapview .key,body.mapview .scroll{display:none!important}
 .st-pinkline #wsvg .land{fill:#fff;stroke:#EF82C8;stroke-width:1.3;stroke-linejoin:round}
 .st-pinkline #wsvg .grat{stroke:#FBE6F2;stroke-width:.7}
 .st-pinkline #wsvg .sphere{stroke:#EF82C8;stroke-width:2.6}
+#wsvg .borders{fill:none;stroke:none;vector-effect:non-scaling-stroke}
+.st-pinkline #wsvg .borders{stroke:#F6C6E3;stroke-width:.6}
+.mk-ringpink #wsvg .city .i,.mk-ringblue #wsvg .city .i{fill:var(--ink)}
+.mk-ringpink #wsvg .city .c{fill:none;stroke:#EF82C8;stroke-width:2.2}
+.mk-ringblue #wsvg .city .c{fill:none;stroke:#0038FF;stroke-width:2}
+.mk-ringpink #wsvg .city:hover .i,.mk-ringpink #wsvg .city.on .i,.mk-ringblue #wsvg .city:hover .i,.mk-ringblue #wsvg .city.on .i{fill:#0038FF}
+.mk-ringblue #wsvg .city:hover .i,.mk-ringblue #wsvg .city.on .i{fill:#EF82C8}
 .mk-blue #wsvg .city .i,.mk-orange #wsvg .city .i{fill:var(--ink)}
 .mk-blue #wsvg .city .c{fill:#0038FF}
 .mk-orange #wsvg .city .c{fill:#FF5A1F}
@@ -417,7 +424,7 @@ const LL={"Vienna":[16.37,48.21],"Budapest":[19.04,47.5],"Zagreb":[15.98,45.81],
 "Mexico City":[-99.13,19.43],"León and Managua":[-86.6,12.3],"Bogotá":[-74.07,4.71],"Caracas":[-66.9,10.48],"Lima":[-77.04,-12.05],"Santiago":[-70.67,-33.45],"Buenos Aires":[-58.38,-34.6],"Montevideo":[-56.16,-34.9],"São Paulo":[-46.63,-23.55],"Rio de Janeiro":[-43.2,-22.91],
 "Kolkata":[88.36,22.57],"Sendai":[140.87,38.27],"Tokyo":[139.69,35.69]};
 const svgW=d3.select("#wsvg"); let Wd=960, Hd=500;
-const QS=new URLSearchParams(location.search), STY=QS.get("style")||"pink"; document.body.classList.add("st-"+STY); document.body.classList.add("mk-"+(QS.get("mk")||"pink"));
+const QS=new URLSearchParams(location.search), STY=QS.get("style")||"pinkline"; document.body.classList.add("st-"+STY); const MK=QS.get("mk")||"pink"; document.body.classList.add("mk-"+MK);
 const proj=STY==="globe"?d3.geoOrthographic().scale(235).translate([Wd/2,Hd/2]).rotate([-5,-28]).clipAngle(90):d3.geoNaturalEarth1().fitWidth(Wd-4,{type:"Sphere"}), path=d3.geoPath(proj);
 if(STY!=="globe"){ const bb=path.bounds({type:"Sphere"}); proj.translate([proj.translate()[0]+2-bb[0][0],proj.translate()[1]+2-bb[0][1]]); Hd=Math.ceil(bb[1][1]-bb[0][1])+4; svgW.attr("viewBox",`0 0 ${Wd} ${Hd}`); }
 svgW.append("defs").html('<pattern id="dotpat" width="5" height="5" patternUnits="userSpaceOnUse"><circle cx="2.5" cy="2.5" r="1.05" fill="#BDBDB6"/></pattern>');
@@ -426,7 +433,9 @@ gl.append("path").attr("class","sphere").attr("d",path({type:"Sphere"})); gl.app
 let K=1; const zoom=d3.zoom().scaleExtent([1,12]).translateExtent([[0,0],[Wd,Hd]]).on("zoom",e=>{K=e.transform.k; root.attr("transform",e.transform); paint();});
 svgW.call(zoom); const zp=()=>sel&&LL[sel]?(()=>{const t=d3.zoomTransform(svgW.node());return t.apply(proj(LL[sel]));})():null;
 document.getElementById("zin").onclick=()=>svgW.transition().call(zoom.scaleBy,1.6,zp()); document.getElementById("zout").onclick=()=>svgW.transition().call(zoom.scaleBy,1/1.6,zp());
-fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/land-110m.json").then(r=>r.json()).then(w=>{ gl.insert("path",".grat").attr("class","land").attr("d",path(topojson.feature(w,w.objects.land))); });
+fetch("https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json").then(r=>r.json()).then(w=>{
+  gl.insert("path",".grat").attr("class","land").attr("d",path(topojson.feature(w,w.objects.land)));
+  gl.append("path").attr("class","borders").attr("d",path(topojson.mesh(w,w.objects.countries,(a,b)=>a!==b))); });
 const slider=document.getElementById("wyr"), yl=document.getElementById("wyl"); const NOW=new Date().getFullYear(); slider.max=NOW; slider.value=NOW; let year=NOW, sel=null;
 const live=(r,y)=>r[3]<=y && (r[4]===null || (r[4]===-1 ? y<=r[3]+12 : y<r[4]) || (r[9]&&y>=r[9]));
 function paint(){
@@ -437,8 +446,13 @@ function paint(){
   g.attr("transform",d=>`translate(${proj(LL[d.c])})`).classed("on",d=>d.c===sel).on("click",(e,d)=>{sel=d.c; panel(); paint(); popCity(d.c);});
   const R=n=>(3.6+Math.sqrt(n)*2.4)/K;
   const star=r=>{ r*=1.45; return `M0,${-r} Q0,0 ${r},0 Q0,0 0,${r} Q0,0 ${-r},0 Q0,0 0,${-r}Z`; };
+  const circ=r=>`M${r},0A${r},${r} 0 1 1 ${-r},0A${r},${r} 0 1 1 ${r},0Z`, RING=MK.startsWith("ring");
+  if(RING){
+    g.select("path.i").attr("d",d=>d.i?circ(R(d.i)*.85):null).attr("transform",null);
+    g.select("path.c").attr("d",d=>d.k?circ((d.i?R(d.i)*.85:0)+(d.i?3.4:R(d.k)*.75)/ (d.i?K:1)):null).attr("transform",null);
+  } else {
   g.select("path.i").attr("d",d=>d.i?star(R(d.i)):null);
-  g.select("path.c").attr("d",d=>d.k?star(R(d.k)):null).attr("transform",d=>d.i&&d.k?`translate(${(R(d.i)+R(d.k))*0.95},${(R(d.i)+R(d.k))*0.35})`:null);
+  g.select("path.c").attr("d",d=>d.k?star(R(d.k)):null).attr("transform",d=>d.i&&d.k?`translate(${(R(d.i)+R(d.k))*0.95},${(R(d.i)+R(d.k))*0.35})`:null); }
   g.select("text").text(d=>d.c.replace(" (near Algiers)","")).attr("x",d=>(d.i&&d.k?(R(d.i)+R(d.k))*0.95+R(d.k):R(d.i+d.k))+4/K).attr("y",3/K).style("font-size",(10/K)+"px").style("stroke-width",(3.5/K)+"px")
    ;
   yl.textContent=year>=NOW?"Today":year;
