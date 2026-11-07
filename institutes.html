@@ -219,7 +219,7 @@ const REGIONS=[
  ["Europe",["Vienna","Budapest","Zagreb","Berlin","Frankfurt","Zurich","London","Paris","Saint-Alban","Cour-Cheverny","Gorizia","Trieste"]],
  ["North America",["New York","Boston","Stockbridge","Philadelphia","Washington–Baltimore","Topeka","Chicago","Los Angeles","San Francisco"]],
  ["Latin America",["Mexico City","León and Managua","Bogotá","Caracas","Lima","Santiago","Buenos Aires","Montevideo","São Paulo","Rio de Janeiro"]],
- ["Africa and the Middle East",["Blida (near Algiers)","Berrechid","Dakar","Johannesburg","Cairo","Beirut","Istanbul","Palestine"]],
+ ["Africa and the Middle East",["Blida (near Algiers)","Berrechid","Tunis","Dakar","Johannesburg","Cairo","Beirut","Istanbul","Palestine"]],
  ["Asia",["Kolkata","Sendai","Tokyo"]]];
 const CITIES=REGIONS.flatMap(r=>r[1]), REGION_OF=Object.fromEntries(REGIONS.flatMap(([g,cs])=>cs.map(c=>[c,g])));
 const Y0=1900,Y1=2025,LEFT=118,RIGHT=24,LANE=30,BANDPAD=14,TOP=26,RHEAD=34;
@@ -232,7 +232,7 @@ function draw(){
   const W=Math.max(980,svg.parentNode.clientWidth), px=(W-LEFT-RIGHT)/(Y1-Y0), X=y=>LEFT+(y-Y0)*px;
   // band positions
   // only what the toggle shows; lanes close up when clinics are hidden
-  const V=I.filter(vis), LN={}, SHOWN=CITIES.filter(c=>V.some(r=>r[1]===c));
+  const V=I.filter(r=>vis(r)&&CITIES.includes(r[1])), LN={}, SHOWN=CITIES.filter(c=>V.some(r=>r[1]===c));
   SHOWN.forEach(c=>V.filter(r=>r[1]===c).sort((a,b)=>a[2]-b[2]).forEach((r,i)=>LN[r[0]]=i));
   const par=r=>r[6].filter(p=>vis(byId[p]));
   let y=TOP; const band={};
