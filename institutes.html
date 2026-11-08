@@ -200,10 +200,10 @@ function draw(){
       if(!hit) break; t.setAttribute("x", hit.x+Math.min(hit.width,40)+6); } });
   // hover a split's branch to see why it happened
   const tip=document.getElementById("brtip")||document.body.appendChild(Object.assign(document.createElement("div"),{id:"brtip",className:"brtip",hidden:true}));
-  svg.querySelectorAll(".brn").forEach(p=>{ const g=p.closest(".inst"), id=g.dataset.id, w=(window.SPLIT_WHY||SPLIT_WHY)[id]; if(!w||par(byId[id]).length!==1) return;
+  svg.querySelectorAll(".brn").forEach(p=>{ const g=p.closest(".inst"), id=g.dataset.id, w=(window.SPLIT_WHY||SPLIT_WHY)[id]; if(!w) return;
     const h=document.createElementNS("http://www.w3.org/2000/svg","path"); h.setAttribute("class","brhit"); h.setAttribute("d",p.getAttribute("d")); g.appendChild(h);
     const P=byId[par(byId[id])[0]];
-    h.addEventListener("mousemove",e=>{ tip.innerHTML=`<b>${byId[id][5]}</b><span>${ARM.has(id)?"founded by":"split from"} ${P[5]}, ${byId[id][3]}</span>${w}`; tip.hidden=false; const x=Math.min(e.clientX+14,innerWidth-300); tip.style.left=x+"px"; tip.style.top=(e.clientY+16)+"px"; });
+    h.addEventListener("mousemove",e=>{ const ps=par(byId[id]); tip.innerHTML=`<b>${byId[id][5]}</b><span>${ps.length>1?"merger of "+ps.map(x=>byId[x][5]).join(" and "):(ARM.has(id)?"founded by ":"split from ")+P[5]}, ${byId[id][3]}</span>${w}`; tip.hidden=false; const x=Math.min(e.clientX+14,innerWidth-300); tip.style.left=x+"px"; tip.style.top=(e.clientY+16)+"px"; });
     h.addEventListener("mouseleave",()=>tip.hidden=true); });
   svg.querySelectorAll(".band").forEach(b=>{ const c=b.dataset.city;
     const on=()=>{ svg.classList.add("cityhl"); b.classList.add("hl"); svg.querySelectorAll(".inst").forEach(g=>g.classList.toggle("hl",g.dataset.city===c)); };
