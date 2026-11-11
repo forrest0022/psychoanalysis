@@ -68,7 +68,7 @@ nav button:hover,nav button.on{font-weight:700;color:var(--link)}
 .ln.sl{font-weight:400;text-transform:none}
 .ln.kl{font-size:10.5px;font-weight:600;letter-spacing:.07em;padding-top:9px;padding-bottom:1px}
 .ln.kv{font-size:13px;line-height:1.28;font-weight:400;font-stretch:100%;text-transform:none;letter-spacing:0;white-space:normal;max-width:164px;text-align:center;text-wrap:balance;padding:3px 12px 9px}
-.node.side .stack svg path{stroke-dasharray:6 5}
+.skey{display:flex;gap:22px;flex-wrap:wrap;font:12px var(--mono);color:var(--muted);margin:10px 0 0}.skey span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .node.hl .stack svg path{fill:var(--ink)}
 .head:hover .stack svg path{fill:var(--link);stroke:var(--link)}
 .node.sel .stack svg path{fill:var(--link);stroke:var(--link)}
@@ -260,6 +260,7 @@ h1 .tagline .rot.out{opacity:0}
       <button type="button" data-line="self">Ego and self psychology</button>
       <button type="button" data-line="side">Others</button>
     </nav>
+    <div class="skey" aria-label="Key"><span><svg width="30" height="10"><path d="M1,5 H29" stroke="var(--pink)" stroke-width="1.8"/></svg>Grew out of</span><span><svg width="30" height="10"><path d="M2,5 H29" stroke="var(--pink)" stroke-width="1.8" stroke-dasharray="3 5" stroke-linecap="round"/></svg>Influenced by</span></div>
   </header>
   <section class="cmpwrap" id="cmp" aria-label="Comparison" hidden></section>
   <div class="scroller"><div class="tree" id="tree"><svg class="edges" id="edges" aria-hidden="true"></svg></div></div>
@@ -700,7 +701,7 @@ function drawEdges(){
       else { const my=(pp.bot+cp.top)/2; d=`M${pp.x},${pp.bot} C${pp.x},${my} ${cp.x},${my} ${cp.x},${cp.top}`; }
       s+=`<path d="${d}" fill="none" stroke="${st}" stroke-width="${sw}" stroke-dasharray="3 5" stroke-linecap="round"/>`;});
     N[c].parents.forEach(p=>{ const pp=pos(p); if(!pp) return;
-      const dash=N[c].side?' stroke-dasharray="0.1 6" stroke-linecap="round"':'', on=selected===c||selected===p, st=on?"var(--link)":"var(--pink)", sw=on?2.4:(N[c].side?2.4:1.6);
+      const dash='', on=selected===c||selected===p, st=on?"var(--link)":"var(--pink)", sw=on?2.4:1.6;
       const my=(pp.bot+cp.top)/2;
       if(c==="contemporary-kleinian"){ const y1=pp.bot+46; s+=`<path d="M${pp.x},${pp.bot} C${pp.x},${y1} ${cp.x},${pp.bot} ${cp.x},${y1+30} L${cp.x},${cp.top}" fill="none" stroke="${st}" stroke-width="${sw}"/>`; return; }
       if(N[c].gen===N[p].gen && !N[c].side){ const L=cp.x<pp.x, x0=L?pp.sl:pp.sr, x1=L?cp.sr:cp.sl;
